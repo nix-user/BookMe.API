@@ -3,7 +3,31 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookMe.ShareProint.Data", "BookMe.ShareProint.Data\BookMe.ShareProint.Data.csproj", "{BE888970-27AF-49D6-9424-C6E31A424620}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookMe.BusinessLogic", "BookMe.BusinessLogic\BookMe.BusinessLogic.csproj", "{CE50CF28-5957-4835-8FF2-E74670598AF9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookMe.WebApi", "BookMe.WebApi\BookMe.WebApi.csproj", "{A375CC68-3286-4534-8E27-B9DECE2C27B8}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BE888970-27AF-49D6-9424-C6E31A424620}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE888970-27AF-49D6-9424-C6E31A424620}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE888970-27AF-49D6-9424-C6E31A424620}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE888970-27AF-49D6-9424-C6E31A424620}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE50CF28-5957-4835-8FF2-E74670598AF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE50CF28-5957-4835-8FF2-E74670598AF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE50CF28-5957-4835-8FF2-E74670598AF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE50CF28-5957-4835-8FF2-E74670598AF9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A375CC68-3286-4534-8E27-B9DECE2C27B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A375CC68-3286-4534-8E27-B9DECE2C27B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A375CC68-3286-4534-8E27-B9DECE2C27B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A375CC68-3286-4534-8E27-B9DECE2C27B8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection

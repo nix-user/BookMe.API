@@ -1,0 +1,4 @@
+BookMe/packages/
+**/bin/
+**/obj/
+**/.vs/
