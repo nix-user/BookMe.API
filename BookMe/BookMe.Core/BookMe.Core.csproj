@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{CE50CF28-5957-4835-8FF2-E74670598AF9}</ProjectGuid>
+    <ProjectGuid>{762A809B-7236-4FC3-8E3C-F0CBA88D6FE4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BookMe.BusinessLogic</RootNamespace>
-    <AssemblyName>BookMe.BusinessLogic</AssemblyName>
+    <RootNamespace>BookMe.Core</RootNamespace>
+    <AssemblyName>BookMe.Core</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -40,11 +40,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Interfaces\SharePoint\ISharePointReservationService.cs" />
-    <Compile Include="Interfaces\SharePoint\ISharePointResourceService.cs" />
+    <Compile Include="Models\BaseEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -40,14 +40,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\BaseConverter.cs" />
+    <Compile Include="Parsers\BaseParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\ReservationsService.cs" />
-    <Compile Include="Services\RoomsService.cs" />
+    <Compile Include="Services\ReservationService.cs" />
+    <Compile Include="Services\ResourceService.cs" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\BookMe.BusinessLogic\BookMe.BusinessLogic.csproj">
       <Project>{ce50cf28-5957-4835-8ff2-e74670598af9}</Project>
       <Name>BookMe.BusinessLogic</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BookMe.Core\BookMe.Core.csproj">
+      <Project>{762a809b-7236-4fc3-8e3c-f0cba88d6fe4}</Project>
+      <Name>BookMe.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

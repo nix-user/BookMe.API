@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookMe.BusinessLogic", "Boo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookMe.WebApi", "BookMe.WebApi\BookMe.WebApi.csproj", "{A375CC68-3286-4534-8E27-B9DECE2C27B8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookMe.Core", "BookMe.Core\BookMe.Core.csproj", "{762A809B-7236-4FC3-8E3C-F0CBA88D6FE4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{A375CC68-3286-4534-8E27-B9DECE2C27B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A375CC68-3286-4534-8E27-B9DECE2C27B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A375CC68-3286-4534-8E27-B9DECE2C27B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{762A809B-7236-4FC3-8E3C-F0CBA88D6FE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{762A809B-7236-4FC3-8E3C-F0CBA88D6FE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{762A809B-7236-4FC3-8E3C-F0CBA88D6FE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{762A809B-7236-4FC3-8E3C-F0CBA88D6FE4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
