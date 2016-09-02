@@ -10,21 +10,23 @@ namespace BookMe.WebApi.Controllers
 {
     public class BookController : ApiController
     {
-        private static List<Booking> bookings = new List<Booking>();
+        private static List<ReservationModel> bookings = new List<ReservationModel>();
 
-        public IEnumerable<Booking> Get()
+        public IEnumerable<ReservationModel> Get()
         {
             return bookings.Where(x => true);
         }
 
-        public Booking Get(int id)
+        public ReservationModel Get(int id)
         {
             return bookings.FirstOrDefault(x => x.Id == id);
         }
 
-        public void Post([FromBody]Booking value)
+        [HttpPost]
+        public void Post([FromBody]ReservationModel value)
         {
             bookings.Add(value);
+            RoomController.Rooms.FirstOrDefault(x => x.Id == value.Room.Id).Bookings.Add(value);
         }
 
         public void Put(int id, [FromBody]string value)
@@ -33,8 +35,9 @@ namespace BookMe.WebApi.Controllers
 
         public void Delete(int id)
         {
-            Booking removeBook = bookings.FirstOrDefault(x => x.Id == id);
+            ReservationModel removeBook = bookings.FirstOrDefault(x => x.Id == id);
             bookings.Remove(removeBook);
+            RoomController.Rooms.FirstOrDefault(x => x.Id == removeBook.Room.Id).Bookings.Remove(removeBook);
         }
     }
 }

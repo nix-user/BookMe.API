@@ -10,7 +10,7 @@ namespace BookMe.WebApi.Controllers
 {
     public class RoomController : ApiController
     {
-        private static List<Room> rooms = new List<Room>()
+        public static List<Room> Rooms = new List<Room>()
         {
               new Room()
             {
@@ -18,7 +18,7 @@ namespace BookMe.WebApi.Controllers
                 IsHasPolykom = false,
                 Number = "304D",
                 Id = 6,
-                Bookings = new List<Booking>()
+                Bookings = new List<ReservationModel>()
             },
             new Room()
             {
@@ -26,7 +26,7 @@ namespace BookMe.WebApi.Controllers
                 IsHasPolykom = false,
                 Number = "505E",
                 Id = 5,
-                Bookings = new List<Booking>()
+                Bookings = new List<ReservationModel>()
             },
             new Room()
             {
@@ -34,7 +34,7 @@ namespace BookMe.WebApi.Controllers
                 IsHasPolykom = false,
                 Number = "403D",
                 Id = 1,
-                Bookings = new List<Booking>()
+                Bookings = new List<ReservationModel>()
             },
             new Room()
             {
@@ -42,7 +42,7 @@ namespace BookMe.WebApi.Controllers
                 IsHasPolykom = false,
                 Number = "202K",
                 Id = 2,
-                Bookings = new List<Booking>()
+                Bookings = new List<ReservationModel>()
             },
             new Room()
             {
@@ -50,7 +50,7 @@ namespace BookMe.WebApi.Controllers
                 IsHasPolykom = false,
                 Number = "323P",
                 Id = 3,
-                Bookings = new List<Booking>()
+                Bookings = new List<ReservationModel>()
             },
             new Room()
             {
@@ -58,18 +58,18 @@ namespace BookMe.WebApi.Controllers
                 IsHasPolykom = true,
                 Number = "678T",
                 Id = 4,
-                Bookings = new List<Booking>()
+                Bookings = new List<ReservationModel>()
             }
         };
 
         public IEnumerable<Room> Get()
         {
-            return rooms.Where(x => true);
+            return Rooms.Where(x => true);
         }
 
         public Room Get(int id)
         {
-            return rooms.FirstOrDefault(x => x.Id == id);
+            return Rooms.FirstOrDefault(x => x.Id == id);
         }
         
         public void Post([FromBody]string value)
@@ -80,7 +80,7 @@ namespace BookMe.WebApi.Controllers
         {
         }
 
-        // DELETE api/<controller>/5
+        
         public void Delete(int id)
         {
         }
