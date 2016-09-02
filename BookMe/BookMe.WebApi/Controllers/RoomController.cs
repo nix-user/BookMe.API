@@ -10,7 +10,7 @@ namespace BookMe.WebApi.Controllers
 {
     public class RoomController : ApiController
     {
-        private static List<Room> rooms = new List<Room>()
+        public static List<Room> Rooms = new List<Room>()
         {
               new Room()
             {
@@ -64,12 +64,12 @@ namespace BookMe.WebApi.Controllers
 
         public IEnumerable<Room> Get()
         {
-            return rooms.Where(x => true);
+            return Rooms.Where(x => true);
         }
 
         public Room Get(int id)
         {
-            return rooms.FirstOrDefault(x => x.Id == id);
+            return Rooms.FirstOrDefault(x => x.Id == id);
         }
         
         public void Post([FromBody]string value)
@@ -80,7 +80,7 @@ namespace BookMe.WebApi.Controllers
         {
         }
 
-        // DELETE api/<controller>/5
+        
         public void Delete(int id)
         {
         }

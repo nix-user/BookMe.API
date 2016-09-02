@@ -22,9 +22,11 @@ namespace BookMe.WebApi.Controllers
             return bookings.FirstOrDefault(x => x.Id == id);
         }
 
+        [HttpPost]
         public void Post([FromBody]Booking value)
         {
             bookings.Add(value);
+            RoomController.Rooms.FirstOrDefault(x => x.Id == value.Id).Bookings.Add(value);
         }
 
         public void Put(int id, [FromBody]string value)
@@ -35,6 +37,7 @@ namespace BookMe.WebApi.Controllers
         {
             Booking removeBook = bookings.FirstOrDefault(x => x.Id == id);
             bookings.Remove(removeBook);
+            RoomController.Rooms.FirstOrDefault(x => x.Id == removeBook.Room.Id).Bookings.Remove(removeBook);
         }
     }
 }

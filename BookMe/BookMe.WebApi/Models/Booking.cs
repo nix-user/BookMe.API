@@ -3,7 +3,7 @@ using System;
 
 namespace BookMe.WebApi.Models
 {
-    public class Booking
+    public class Booking : IEquatable<Booking>
     {
         public int Id { get; set; }
 
@@ -20,5 +20,10 @@ namespace BookMe.WebApi.Models
         public bool IsRecursive { get; set; }
 
         public TimeSpan Duration { get; set; }
+
+        public bool Equals(Booking other)
+        {
+            return this.Id == other.Id;
+        }
     }
 }
