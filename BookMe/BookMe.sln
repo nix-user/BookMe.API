@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookMe.WebApi", "BookMe.Web
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookMe.Core", "BookMe.Core\BookMe.Core.csproj", "{762A809B-7236-4FC3-8E3C-F0CBA88D6FE4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookMe.UnitTests", "BookMe.UnitTests\BookMe.UnitTests.csproj", "{BF544F40-E1B9-4076-B589-1AB6395C1E78}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{762A809B-7236-4FC3-8E3C-F0CBA88D6FE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{762A809B-7236-4FC3-8E3C-F0CBA88D6FE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{762A809B-7236-4FC3-8E3C-F0CBA88D6FE4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF544F40-E1B9-4076-B589-1AB6395C1E78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF544F40-E1B9-4076-B589-1AB6395C1E78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF544F40-E1B9-4076-B589-1AB6395C1E78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF544F40-E1B9-4076-B589-1AB6395C1E78}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
