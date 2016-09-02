@@ -12,20 +12,11 @@ namespace BookMe.ShareProint.Data.Parsers
     {
         public ListItemCollection GetAll()
         {
-            var context = new ClientContext(Constants.BaseAddress);
-            var resourcesList = context.Web.Lists.GetByTitle(ListNames.Resources);
+            var resourcesList = this.context.Web.Lists.GetByTitle(ListNames.Resources);
 
-            string query = string.Empty;
-            var qry = new CamlQuery();
-            qry.ViewXml = "<View Scope=\"RecursiveAll\">" + query + "</View>";
+            ListItemCollection items = resourcesList.GetItems(this.CreateCamlQuery(string.Empty));
 
-
-            ListItemCollection items = resourcesList.GetItems(qry);
-
-            context.Load(items);
-            context.ExecuteQuery();
-
-            return items;
+            return this.LoadCollectionFromServer(items);
         }
     }
 }

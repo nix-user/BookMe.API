@@ -11,27 +11,24 @@ namespace BookMe.ShareProint.Data.Parsers
 {
     public class ReservationParser : BaseParser
     {
+        private const string ReservationStartFieldName = "EventDate";
+        private const string ReservationEndFieldName = "EndDate";
+        private const string RecurrentFieldName = "fRecurrence";
+
         public ListItemCollection GetPossibleIntersecting(DateTime intervalStart, DateTime intervalEnd)
         {
-            var context = new ClientContext(Constants.BaseAddress);
-            var resourcesList = context.Web.Lists.GetByTitle(ListNames.Reservations);
+            var reservationsList = this.context.Web.Lists.GetByTitle(ListNames.Reservations);
 
             Expression<Func<ListItem, bool>> recurrentBookingCondition =
-                reservation => (bool)reservation["fRecurrence"] && (DateTime)reservation["EndDate"] > DateTime.Now;
+                reservation => (bool)reservation[RecurrentFieldName] && (DateTime)reservation[ReservationEndFieldName] > DateTime.Now;
 
-            Expression<Func<ListItem, bool>> regularBookingCondition = reservation => !(bool)reservation["fRecurrence"]
-            && (DateTime)reservation["EventDate"] < intervalEnd && (DateTime)reservation["EndDate"] > intervalStart;
+            Expression<Func<ListItem, bool>> regularBookingCondition = reservation => !(bool)reservation[RecurrentFieldName]
+            && (DateTime)reservation[ReservationStartFieldName] < intervalEnd && (DateTime)reservation[ReservationEndFieldName] > intervalStart;
 
-            var qry = new CamlQuery();
-            qry.ViewXml = "<View Scope=\"RecursiveAll\">" + Camlex.Query().WhereAny(new List<Expression<Func<ListItem, bool>>>() { recurrentBookingCondition, regularBookingCondition}) + "</View>";
+            string queryConditions = Camlex.Query().WhereAny(new List<Expression<Func<ListItem, bool>>>() { recurrentBookingCondition, regularBookingCondition }).ToString();
+            ListItemCollection items = reservationsList.GetItems(this.CreateCamlQuery(queryConditions));
 
-
-            ListItemCollection items = resourcesList.GetItems(qry);
-
-            context.Load(items);
-            context.ExecuteQuery();
-
-            return items;
+            return this.LoadCollectionFromServer(items);
         }
     }
 }
