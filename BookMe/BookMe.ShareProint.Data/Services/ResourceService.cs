@@ -4,6 +4,5 @@ namespace BookMe.ShareProint.Data.Services
 {
     public class ResourceService : ISharePointResourceService
     {
-         
     }
 }
