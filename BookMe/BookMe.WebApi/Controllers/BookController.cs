@@ -26,7 +26,7 @@ namespace BookMe.WebApi.Controllers
         public void Post([FromBody]Booking value)
         {
             bookings.Add(value);
-            RoomController.Rooms.FirstOrDefault(x => x.Id == value.Id).Bookings.Add(value);
+            RoomController.Rooms.FirstOrDefault(x => x.Id == value.Room.Id).Bookings.Add(value);
         }
 
         public void Put(int id, [FromBody]string value)
