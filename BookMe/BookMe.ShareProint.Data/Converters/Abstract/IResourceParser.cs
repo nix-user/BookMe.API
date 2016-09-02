@@ -2,7 +2,7 @@
 
 namespace BookMe.ShareProint.Data.Converters.Abstract
 {
-    interface IResourceParser
+    public interface IResourceParser
     {
         ListItemCollection GetAll();
     }
