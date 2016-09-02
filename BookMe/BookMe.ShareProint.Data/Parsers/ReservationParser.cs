@@ -4,12 +4,13 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using BookMe.ShareProint.Data.Converters.Abstract;
 using CamlexNET;
 using Microsoft.SharePoint.Client;
 
 namespace BookMe.ShareProint.Data.Parsers
 {
-    public class ReservationParser : BaseParser
+    public class ReservationParser : BaseParser, IReservationParser
     {
         private const string ReservationStartFieldName = "EventDate";
         private const string ReservationEndFieldName = "EndDate";
@@ -25,8 +26,8 @@ namespace BookMe.ShareProint.Data.Parsers
             Expression<Func<ListItem, bool>> regularBookingCondition = reservation => !(bool)reservation[RecurrentFieldName]
             && (DateTime)reservation[ReservationStartFieldName] < intervalEnd && (DateTime)reservation[ReservationEndFieldName] > intervalStart;
 
-            string queryConditions = Camlex.Query().WhereAny(new List<Expression<Func<ListItem, bool>>>() { recurrentBookingCondition, regularBookingCondition }).ToString();
-            ListItemCollection items = reservationsList.GetItems(this.CreateCamlQuery(queryConditions));
+            var queryConditions = Camlex.Query().WhereAny(new List<Expression<Func<ListItem, bool>>>() { recurrentBookingCondition, regularBookingCondition });
+            ListItemCollection items = reservationsList.GetItems(this.CreateCamlQuery(queryConditions.ToString()));
 
             return this.LoadCollectionFromServer(items);
         }

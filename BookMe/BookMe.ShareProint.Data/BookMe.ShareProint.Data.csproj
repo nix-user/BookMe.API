@@ -52,6 +52,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Constants.resx</DependentUpon>
     </Compile>
+    <Compile Include="Converters\Abstract\IReservationService.cs" />
+    <Compile Include="Converters\Abstract\IResourceParser.cs" />
     <Compile Include="Parsers\BaseParser.cs" />
     <Compile Include="Parsers\ReservationParser.cs" />
     <Compile Include="Parsers\ResourceParser.cs" />
