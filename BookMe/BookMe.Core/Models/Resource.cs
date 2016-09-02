@@ -8,5 +8,14 @@ namespace BookMe.Core.Models
 {
     public class Resource : BaseEntity
     {
+        public string Title { get; set; }
+
+        public string Description { get; set; }
+
+        public bool HasTv { get; set; }
+
+        public bool HasPolycom { get; set; }
+
+        public RoomSize? RoomSize { get; set; }
     }
 }
