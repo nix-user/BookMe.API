@@ -17,9 +17,9 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
 
         private readonly IDictionary<string, RoomSize> roomSizeByString = new Dictionary<string, RoomSize>()
         {
-            {"S", RoomSize.Small},
-            {"M", RoomSize.Middle},
-            {"L", RoomSize.Large},
+            { "S", RoomSize.Small },
+            { "M", RoomSize.Middle },
+            { "L", RoomSize.Large },
         };
 
         public bool HasPolycom(string description)

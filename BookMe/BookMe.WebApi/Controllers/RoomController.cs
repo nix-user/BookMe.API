@@ -10,7 +10,7 @@ namespace BookMe.WebApi.Controllers
 {
     public class RoomController : ApiController
     {
-        public static List<Room> Rooms = new List<Room>()
+        public static readonly List<Room> Rooms = new List<Room>()
         {
               new Room()
             {
@@ -18,7 +18,7 @@ namespace BookMe.WebApi.Controllers
                 IsHasPolykom = false,
                 Number = "304D",
                 Id = 6,
-                Bookings = new List<ReservationModel>()
+                Reservations = new List<ReservationModel>()
             },
             new Room()
             {
@@ -26,7 +26,7 @@ namespace BookMe.WebApi.Controllers
                 IsHasPolykom = false,
                 Number = "505E",
                 Id = 5,
-                Bookings = new List<ReservationModel>()
+                Reservations = new List<ReservationModel>()
             },
             new Room()
             {
@@ -34,7 +34,7 @@ namespace BookMe.WebApi.Controllers
                 IsHasPolykom = false,
                 Number = "403D",
                 Id = 1,
-                Bookings = new List<ReservationModel>()
+                Reservations = new List<ReservationModel>()
             },
             new Room()
             {
@@ -42,7 +42,7 @@ namespace BookMe.WebApi.Controllers
                 IsHasPolykom = false,
                 Number = "202K",
                 Id = 2,
-                Bookings = new List<ReservationModel>()
+                Reservations = new List<ReservationModel>()
             },
             new Room()
             {
@@ -50,7 +50,7 @@ namespace BookMe.WebApi.Controllers
                 IsHasPolykom = false,
                 Number = "323P",
                 Id = 3,
-                Bookings = new List<ReservationModel>()
+                Reservations = new List<ReservationModel>()
             },
             new Room()
             {
@@ -58,7 +58,7 @@ namespace BookMe.WebApi.Controllers
                 IsHasPolykom = true,
                 Number = "678T",
                 Id = 4,
-                Bookings = new List<ReservationModel>()
+                Reservations = new List<ReservationModel>()
             }
         };
 
@@ -79,7 +79,6 @@ namespace BookMe.WebApi.Controllers
         public void Put(int id, [FromBody]string value)
         {
         }
-
         
         public void Delete(int id)
         {
