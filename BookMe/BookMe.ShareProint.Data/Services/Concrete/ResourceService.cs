@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using BookMe.BusinessLogic.Interfaces.SharePoint;
 using BookMe.Core.Models;
 using BookMe.ShareProint.Data.Converters.Abstract;
@@ -9,10 +10,10 @@ namespace BookMe.ShareProint.Data.Services.Concrete
 {
     public class ResourceService : ISharePointResourceService
     {
-        private IConverter<ListItem, Resource> resourceConverter;
+        private IConverter<IDictionary<string, object>, Resource> resourceConverter;
         private IResourceParser resourceParser;
 
-        public ResourceService(IConverter<ListItem, Resource> resourceConverter, IResourceParser resourceParser)
+        public ResourceService(IConverter<IDictionary<string, object>, Resource> resourceConverter, IResourceParser resourceParser)
         {
             this.resourceConverter = resourceConverter;
             this.resourceParser = resourceParser;
@@ -20,8 +21,8 @@ namespace BookMe.ShareProint.Data.Services.Concrete
 
         public IEnumerable<Resource> GetAll()
         {
-            var resourceCollection = this.resourceParser.GetAll();
-            return this.resourceConverter.Convert(resourceCollection);
+            var resourceDictionariesCollection = this.resourceParser.GetAll().Select(x => x.FieldValues);
+            return this.resourceConverter.Convert(resourceDictionariesCollection);
         }
     }
 }
