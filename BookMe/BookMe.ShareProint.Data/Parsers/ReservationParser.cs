@@ -16,9 +16,13 @@ namespace BookMe.ShareProint.Data.Parsers
         private const string ReservationEndFieldName = "EndDate";
         private const string RecurrentFieldName = "fRecurrence";
 
-        public ListItemCollection GetPossibleIntersecting(DateTime intervalStart, DateTime intervalEnd)
+        public ReservationParser(ClientContext context) : base(context)
         {
-            var reservationsList = this.context.Web.Lists.GetByTitle(ListNames.Reservations);
+        }
+
+        public ListItemCollection GetPossibleReservationsInInterval(DateTime intervalStart, DateTime intervalEnd)
+        {
+            var reservationsList = this.Context.Web.Lists.GetByTitle(ListNames.Reservations);
 
             Expression<Func<ListItem, bool>> recurrentBookingCondition =
                 reservation => (bool)reservation[RecurrentFieldName] && (DateTime)reservation[ReservationEndFieldName] > DateTime.Now;

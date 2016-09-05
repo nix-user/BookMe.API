@@ -5,6 +5,6 @@ namespace BookMe.ShareProint.Data.Converters.Abstract
 {
     public interface IReservationParser
     {
-        ListItemCollection GetPossibleIntersecting(DateTime intervalStart, DateTime intervalEnd);
+        ListItemCollection GetPossibleReservationsInInterval(DateTime intervalStart, DateTime intervalEnd);
     }
 }

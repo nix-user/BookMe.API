@@ -21,7 +21,7 @@ namespace BookMe.ShareProint.Data.Services
 
         public IEnumerable<Reservation> GetPossibleIntersectingReservations(DateTime intervalStart, DateTime intervalEnd)
         {
-            var reservationsList = this.reservationParser.GetPossibleIntersecting(intervalStart, intervalEnd);
+            var reservationsList = this.reservationParser.GetPossibleReservationsInInterval(intervalStart, intervalEnd);
             return this.reservationConverter.Convert(reservationsList);
         }
     }

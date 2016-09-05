@@ -1,11 +1,23 @@
-﻿using CamlexNET.Interfaces;
+﻿using System.Linq;
+using CamlexNET.Interfaces;
 using Microsoft.SharePoint.Client;
 
 namespace BookMe.ShareProint.Data.Parsers
 {
     public abstract class BaseParser
     {
-        protected ClientContext context = new ClientContext(Constants.BaseAddress);
+        protected BaseParser(ClientContext clientContext)
+        {
+            this.Context = clientContext;
+        }
+
+        public void CheckConnection()
+        {
+            this.Context.Load(this.Context.Web.Lists);
+            this.Context.ExecuteQuery();
+        }
+
+        protected ClientContext Context { get; set; }
 
         protected CamlQuery CreateCamlQuery(string queryConditions)
         {
@@ -17,8 +29,8 @@ namespace BookMe.ShareProint.Data.Parsers
 
         protected ListItemCollection LoadCollectionFromServer(ListItemCollection collection)
         {
-            context.Load(collection);
-            context.ExecuteQuery();
+            this.Context.Load(collection);
+            this.Context.ExecuteQuery();
             return collection;
         }
     }

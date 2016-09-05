@@ -1,7 +1,6 @@
 ﻿using System;
-using BookMe.Core.Models;
-using System.Collections;
 using System.Collections.Generic;
+using BookMe.Core.Models;
 
 namespace BookMe.BusinessLogic.Interfaces.SharePoint
 {

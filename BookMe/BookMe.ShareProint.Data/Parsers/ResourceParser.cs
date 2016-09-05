@@ -9,11 +9,15 @@ using Microsoft.SharePoint.Client;
 
 namespace BookMe.ShareProint.Data.Parsers
 {
-    class ResourceParser : BaseParser, IResourceParser
+    public class ResourceParser : BaseParser, IResourceParser
     {
+        public ResourceParser(ClientContext context) : base(context)
+        {
+        }
+
         public ListItemCollection GetAll()
         {
-            var resourcesList = this.context.Web.Lists.GetByTitle(ListNames.Resources);
+            var resourcesList = this.Context.Web.Lists.GetByTitle(ListNames.Resources);
 
             ListItemCollection items = resourcesList.GetItems(this.CreateCamlQuery(string.Empty));
 
