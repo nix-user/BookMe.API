@@ -41,7 +41,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\DayOfTheWeek.cs" />
+    <Compile Include="Enums\DayOfTheWeekIndex.cs" />
+    <Compile Include="Enums\Month.cs" />
     <Compile Include="Models\BaseEntity.cs" />
+    <Compile Include="Models\Recurrence\IntervalPattern.cs" />
+    <Compile Include="Models\Recurrence\MonthlyPattern.cs" />
+    <Compile Include="Models\Recurrence\MonthlyRegenerationPattern.cs" />
+    <Compile Include="Models\Recurrence\RecurrenceData.cs" />
+    <Compile Include="Models\Recurrence\RelativeMonthlyPattern.cs" />
+    <Compile Include="Models\Recurrence\RelativeYearlyPattern.cs" />
+    <Compile Include="Models\Recurrence\WeeklyPattern.cs" />
+    <Compile Include="Models\Recurrence\WeeklyRegenerationPattern.cs" />
+    <Compile Include="Models\Recurrence\YearlyPattern.cs" />
+    <Compile Include="Models\Recurrence\YearlyRegenerationPattern.cs" />
     <Compile Include="Models\Reservation.cs" />
     <Compile Include="Models\Resource.cs" />
     <Compile Include="Enums\RoomSize.cs" />
