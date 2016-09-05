@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using BookMe.Core.Models;
+using BookMe.Core.Enums;
 using BookMe.ShareProint.Data.Converters.Abstract;
 
 namespace BookMe.ShareProint.Data.Converters.Concrete
@@ -24,12 +24,12 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
 
         public bool HasPolycom(string description)
         {
-            return this.CheckIfResourceHasPropery(description, PolycomToken);
+            return this.CheckIfResourceHasProperty(description, PolycomToken);
         }
 
         public bool HasTv(string description)
         {
-            return this.CheckIfResourceHasPropery(description, TvToken);
+            return this.CheckIfResourceHasProperty(description, TvToken);
         }
 
         public RoomSize? ParseRoomSize(string description)
@@ -51,7 +51,7 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
             }
         }
 
-        private bool CheckIfResourceHasPropery(string description, string properyToken)
+        private bool CheckIfResourceHasProperty(string description, string properyToken)
         {
             return description != null && description.Contains(properyToken);
         }
