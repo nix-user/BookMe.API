@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BookMe.ShareProint.Data;
 using BookMe.ShareProint.Data.Parsers;
+using BookMe.ShareProint.Data.Parsers.Concrete;
 using Microsoft.SharePoint.Client;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;

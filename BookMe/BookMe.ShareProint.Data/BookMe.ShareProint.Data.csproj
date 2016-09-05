@@ -49,14 +49,16 @@
   <ItemGroup>
     <Compile Include="Constants.cs" />
     <Compile Include="Converters\Abstract\IConverter.cs" />
-    <Compile Include="Converters\Abstract\IReservationService.cs" />
-    <Compile Include="Converters\Abstract\IResourceParser.cs" />
-    <Compile Include="Parsers\BaseParser.cs" />
-    <Compile Include="Parsers\ReservationParser.cs" />
-    <Compile Include="Parsers\ResourceParser.cs" />
+    <Compile Include="Parsers\Abstract\IReservationParser.cs" />
+    <Compile Include="Parsers\Abstract\IResourceParser.cs" />
+    <Compile Include="Parsers\Abstract\BaseParser.cs" />
+    <Compile Include="Parsers\Concrete\ReservationParser.cs" />
+    <Compile Include="Parsers\Concrete\ResourceParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\ReservationService.cs" />
-    <Compile Include="Services\ResourceService.cs" />
+    <Compile Include="Services\Abstract\IReservationService.cs" />
+    <Compile Include="Services\Abstract\IResourceService.cs" />
+    <Compile Include="Services\Concrete\ReservationService.cs" />
+    <Compile Include="Services\Concrete\ResourceService.cs" />
     <Compile Include="ListNames.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

@@ -1,8 +1,6 @@
-﻿using System.Linq;
-using CamlexNET.Interfaces;
-using Microsoft.SharePoint.Client;
+﻿using Microsoft.SharePoint.Client;
 
-namespace BookMe.ShareProint.Data.Parsers
+namespace BookMe.ShareProint.Data.Parsers.Abstract
 {
     public abstract class BaseParser
     {

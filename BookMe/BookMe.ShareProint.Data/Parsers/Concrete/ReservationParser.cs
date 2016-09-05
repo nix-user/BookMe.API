@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using BookMe.ShareProint.Data.Converters.Abstract;
+using BookMe.ShareProint.Data.Parsers.Abstract;
 using CamlexNET;
 using Microsoft.SharePoint.Client;
 
-namespace BookMe.ShareProint.Data.Parsers
+namespace BookMe.ShareProint.Data.Parsers.Concrete
 {
     public class ReservationParser : BaseParser, IReservationParser
     {

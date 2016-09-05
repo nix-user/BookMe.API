@@ -1,6 +1,6 @@
 ﻿using Microsoft.SharePoint.Client;
 
-namespace BookMe.ShareProint.Data.Converters.Abstract
+namespace BookMe.ShareProint.Data.Parsers.Abstract
 {
     public interface IResourceParser
     {
