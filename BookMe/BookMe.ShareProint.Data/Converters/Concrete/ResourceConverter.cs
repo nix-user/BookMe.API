@@ -10,7 +10,7 @@ using Microsoft.SharePoint.Client;
 
 namespace BookMe.ShareProint.Data.Converters.Concrete
 {
-    class ResourceConverter : IConverter<ListItem, Resource>
+    public class ResourceConverter : IConverter<IDictionary<string, object>, Resource>
     {
         private const string IdKey = "ID";
         private const string TitleKey = "Title";
@@ -23,19 +23,19 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
             this.descriptionParser = descriptionParser;
         }
 
-        public Resource Convert(ListItem value)
+        public Resource Convert(IDictionary<string, object> value)
         {
             if (value == null)
             {
                 throw new ArgumentNullException(nameof(value));
             }
 
-            var decription = value.FieldValues[DescriptionKey]?.ToString();
+            var decription = value[DescriptionKey]?.ToString();
 
             var resource = new Resource()
             {
-                Id = int.Parse(value.FieldValues[IdKey].ToString()),
-                Title = value.FieldValues[TitleKey].ToString(),
+                Id = int.Parse(value[IdKey].ToString()),
+                Title = value[TitleKey].ToString(),
                 Description = decription,
                 HasPolycom = this.descriptionParser.HasPolycom(decription),
                 HasTv = this.descriptionParser.HasTv(decription),
@@ -45,7 +45,7 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
             return resource;
         }
 
-        public IEnumerable<Resource> Convert(IEnumerable<ListItem> values)
+        public IEnumerable<Resource> Convert(IEnumerable<IDictionary<string, object>> values)
         {
             if (values == null)
             {
