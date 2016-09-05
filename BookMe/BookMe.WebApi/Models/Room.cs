@@ -6,7 +6,7 @@ namespace BookMe.WebApi.Models
     {
         public Room()
         {
-            this.Bookings = new List<ReservationModel>();
+            this.Reservations = new List<ReservationModel>();
         }
 
         public int Id { get; set; }
@@ -17,6 +17,6 @@ namespace BookMe.WebApi.Models
 
         public bool IsHasPolykom { get; set; }
 
-        public List<ReservationModel> Bookings { get; set; }
+        public List<ReservationModel> Reservations { get; set; }
     }
 }
