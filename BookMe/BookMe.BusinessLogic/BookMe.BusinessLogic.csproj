@@ -45,7 +45,12 @@
     <Compile Include="Interfaces\SharePoint\ISharePointResourceService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\BookMe.Core\BookMe.Core.csproj">
+      <Project>{762A809B-7236-4FC3-8E3C-F0CBA88D6FE4}</Project>
+      <Name>BookMe.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\Build\StyleCop\StyleCop.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
