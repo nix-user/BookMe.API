@@ -12,6 +12,7 @@ namespace BookMe.ShareProint.Data.Parsers.Concrete
         private const string ReservationStartFieldName = "EventDate";
         private const string ReservationEndFieldName = "EndDate";
         private const string RecurrentFieldName = "fRecurrence";
+        private const string AuthorFieldName = "Author";
 
         public ReservationParser(ClientContext context) : base(context)
         {
@@ -30,6 +31,16 @@ namespace BookMe.ShareProint.Data.Parsers.Concrete
             var queryConditions = Camlex.Query().WhereAny(new List<Expression<Func<ListItem, bool>>>() { recurrentBookingCondition, regularBookingCondition });
             ListItemCollection items = reservationsList.GetItems(this.CreateCamlQuery(queryConditions.ToString()));
 
+            return this.LoadCollectionFromServer(items);
+        }
+
+        public ListItemCollection GetUserActiveReservations(string userName)
+        {
+            var reservationsList = this.Context.Web.Lists.GetByTitle(ListNames.Reservations);
+            var queryConditions =
+                Camlex.Query()
+                    .Where(reservation => (string)reservation[AuthorFieldName] == userName && (DateTime)reservation[ReservationEndFieldName] > DateTime.Now);
+            ListItemCollection items = reservationsList.GetItems(this.CreateCamlQuery(queryConditions.ToString()));
             return this.LoadCollectionFromServer(items);
         }
     }

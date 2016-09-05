@@ -24,5 +24,11 @@ namespace BookMe.ShareProint.Data.Services.Concrete
             var reservationsList = this.reservationParser.GetPossibleReservationsInInterval(intervalStart, intervalEnd);
             return this.reservationConverter.Convert(reservationsList);
         }
+
+        public IEnumerable<Reservation> GetUserActiveResevations(string userName)
+        {
+            var userActiveReservations = this.reservationParser.GetUserActiveResevations(userName);
+            return this.reservationConverter.Convert(userActiveReservations);
+        }
     }
 }
