@@ -25,9 +25,9 @@ namespace BookMe.ShareProint.Data.Services.Concrete
             return this.reservationConverter.Convert(reservationsList);
         }
 
-        public IEnumerable<Reservation> GetUserActiveResevations(string userName)
+        public IEnumerable<Reservation> GetUserActiveReservations(string userName)
         {
-            var userActiveReservations = this.reservationParser.GetUserActiveResevations(userName);
+            var userActiveReservations = this.reservationParser.GetUserActiveReservations(userName);
             return this.reservationConverter.Convert(userActiveReservations);
         }
     }
