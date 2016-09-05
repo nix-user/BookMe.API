@@ -9,6 +9,6 @@ namespace BookMe.ShareProint.Data.Parsers.Abstract
     {
         ListItemCollection GetPossibleReservationsInInterval(DateTime intervalStart, DateTime intervalEnd);
 
-        ListItemCollection GetUserActiveResevations(string userName);
+        ListItemCollection GetUserActiveReservations(string userName);
     }
 }

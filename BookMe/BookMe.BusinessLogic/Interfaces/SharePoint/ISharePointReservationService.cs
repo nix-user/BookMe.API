@@ -8,6 +8,6 @@ namespace BookMe.BusinessLogic.Interfaces.SharePoint
     {
         IEnumerable<Reservation> GetPossibleReservationsInInterval(DateTime intervalStart, DateTime intervalEnd);
 
-        IEnumerable<Reservation> GetUserActiveResevations(string userName);
+        IEnumerable<Reservation> GetUserActiveReservations(string userName);
     }
 }
