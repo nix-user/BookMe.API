@@ -10,7 +10,7 @@ namespace BookMe.WebApi.Controllers
 {
     public class RoomController : ApiController
     {
-        public static List<Room> Rooms = new List<Room>()
+        public static readonly List<Room> Rooms = new List<Room>()
         {
               new Room()
             {
@@ -79,7 +79,6 @@ namespace BookMe.WebApi.Controllers
         public void Put(int id, [FromBody]string value)
         {
         }
-
         
         public void Delete(int id)
         {
