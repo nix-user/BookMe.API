@@ -61,5 +61,10 @@ namespace BookMe.ShareProint.Data.Services.Concrete
                 return new OperationResult<IEnumerable<ReservationDTO>>() { IsSuccessful = false };
             }
         }
+
+        public OperationResult AddReservation(ReservationDTO reservationDTO)
+        {
+            return new OperationResult() { IsSuccessful = true };
+        }
     }
 }

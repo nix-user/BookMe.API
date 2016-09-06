@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using BookMe.Core.Models;
 using BookMe.ShareProint.Data.Parsers.Abstract;
 using CamlexNET;
 using Microsoft.SharePoint.Client;
@@ -65,6 +66,10 @@ namespace BookMe.ShareProint.Data.Parsers.Concrete
             {
                 throw new ParserException(RetrivalErrorMessage);
             }
+        }
+
+        public void AddReservation(Reservation reservation)
+        {
         }
     }
 }
