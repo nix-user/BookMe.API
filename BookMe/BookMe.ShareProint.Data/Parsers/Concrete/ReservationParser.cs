@@ -20,28 +20,51 @@ namespace BookMe.ShareProint.Data.Parsers.Concrete
 
         public ListItemCollection GetPossibleReservationsInInterval(DateTime intervalStart, DateTime intervalEnd)
         {
-            var reservationsList = this.Context.Web.Lists.GetByTitle(ListNames.Reservations);
+            try
+            {
+                var reservationsList = this.Context.Web.Lists.GetByTitle(ListNames.Reservations);
 
-            Expression<Func<ListItem, bool>> recurrentBookingCondition =
-                reservation => (bool)reservation[RecurrentFieldName] && (DateTime)reservation[ReservationEndFieldName] > DateTime.Now;
+                Expression<Func<ListItem, bool>> recurrentBookingCondition =
+                    reservation =>
+                        (bool)reservation[RecurrentFieldName] &&
+                        (DateTime)reservation[ReservationEndFieldName] > DateTime.Now;
 
-            Expression<Func<ListItem, bool>> regularBookingCondition = reservation => !(bool)reservation[RecurrentFieldName]
-            && (DateTime)reservation[ReservationStartFieldName] < intervalEnd && (DateTime)reservation[ReservationEndFieldName] > intervalStart;
+                Expression<Func<ListItem, bool>> regularBookingCondition =
+                    reservation => !(bool)reservation[RecurrentFieldName]
+                                   && (DateTime)reservation[ReservationStartFieldName] < intervalEnd &&
+                                   (DateTime)reservation[ReservationEndFieldName] > intervalStart;
 
-            var queryConditions = Camlex.Query().WhereAny(new List<Expression<Func<ListItem, bool>>>() { recurrentBookingCondition, regularBookingCondition });
-            ListItemCollection items = reservationsList.GetItems(this.CreateCamlQuery(queryConditions.ToString()));
-
-            return this.LoadCollectionFromServer(items);
+                var queryConditions =
+                    Camlex.Query()
+                        .WhereAny(new List<Expression<Func<ListItem, bool>>>()
+                        {
+                            recurrentBookingCondition,
+                            regularBookingCondition
+                        });
+                ListItemCollection items = reservationsList.GetItems(this.CreateCamlQuery(queryConditions.ToString()));
+                return this.LoadCollectionFromServer(items);
+            }
+            catch
+            {
+                throw new ParserException(RetrivalErrorMessage);
+            }
         }
 
         public ListItemCollection GetUserActiveReservations(string userName)
         {
-            var reservationsList = this.Context.Web.Lists.GetByTitle(ListNames.Reservations);
-            var queryConditions =
-                Camlex.Query()
-                    .Where(reservation => (string)reservation[AuthorFieldName] == userName && (DateTime)reservation[ReservationEndFieldName] > DateTime.Now);
-            ListItemCollection items = reservationsList.GetItems(this.CreateCamlQuery(queryConditions.ToString()));
-            return this.LoadCollectionFromServer(items);
+            try
+            {
+                var reservationsList = this.Context.Web.Lists.GetByTitle(ListNames.Reservations);
+                var queryConditions =
+                    Camlex.Query()
+                        .Where(reservation => (string)reservation[AuthorFieldName] == userName && (DateTime)reservation[ReservationEndFieldName] > DateTime.Now);
+                ListItemCollection items = reservationsList.GetItems(this.CreateCamlQuery(queryConditions.ToString()));
+                return this.LoadCollectionFromServer(items);
+            }
+            catch
+            {
+                throw new ParserException(RetrivalErrorMessage);
+            }
         }
     }
 }

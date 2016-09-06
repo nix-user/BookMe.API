@@ -23,14 +23,25 @@ namespace BookMe.WebApi.Controllers
 
         public IEnumerable<Room> Get()
         {
-            IEnumerable<ResourceDTO> allResources = this.resourcesService.GetAll();
-            return allResources.Select(Mapper.Map<ResourceDTO, Room>);
+            var operationResult = this.resourcesService.GetAll();
+            if (operationResult.IsSuccessful)
+            {
+                return operationResult.Result.Select(Mapper.Map<ResourceDTO, Room>);
+            }
+
+            return null;
         }
 
         public Room Get(int id)
         {
-            var neededResource = this.resourcesService.GetAll().FirstOrDefault(resource => resource.Id == id);
-            return Mapper.Map<ResourceDTO, Room>(neededResource);
+            var operationResult = this.resourcesService.GetAll();
+            if (operationResult.IsSuccessful)
+            {
+                var neededResource = operationResult.Result.FirstOrDefault(resource => resource.Id == id);
+                return Mapper.Map<ResourceDTO, Room>(neededResource);
+            }
+
+            return null;
         }
 
         public void Post([FromBody]string value)
