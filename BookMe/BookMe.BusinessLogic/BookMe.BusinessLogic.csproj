@@ -51,6 +51,7 @@
     <Compile Include="DTO\RoomSize.cs" />
     <Compile Include="Interfaces\SharePoint\ISharePointReservationService.cs" />
     <Compile Include="Interfaces\SharePoint\ISharePointResourceService.cs" />
+    <Compile Include="MapperProfiles\ReservationProfile.cs" />
     <Compile Include="MapperProfiles\ResourceProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
