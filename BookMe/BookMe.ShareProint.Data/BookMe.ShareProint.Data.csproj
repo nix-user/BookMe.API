@@ -53,6 +53,7 @@
     <Compile Include="Converters\Abstract\IConverter.cs" />
     <Compile Include="Converters\Abstract\IDescriptionParser.cs" />
     <Compile Include="Converters\Concrete\DescriptionParser.cs" />
+    <Compile Include="Converters\Concrete\RecurrenceDataConverter.cs" />
     <Compile Include="Converters\Concrete\ResourceConverter.cs" />
     <Compile Include="Parsers\Abstract\IReservationParser.cs" />
     <Compile Include="Parsers\Abstract\IResourceParser.cs" />
