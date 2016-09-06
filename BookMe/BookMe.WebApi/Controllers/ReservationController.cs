@@ -26,7 +26,6 @@ namespace BookMe.WebApi.Controllers
         public void Post([FromBody]ReservationModel value)
         {
             reservations.Add(value);
-            RoomController.Rooms.FirstOrDefault(x => x.Id == value.Room.Id).Reservations.Add(value);
         }
 
         public void Put(int id, [FromBody]string value)
@@ -37,7 +36,6 @@ namespace BookMe.WebApi.Controllers
         {
             ReservationModel removeReservation = reservations.FirstOrDefault(x => x.Id == id);
             reservations.Remove(removeReservation);
-            RoomController.Rooms.FirstOrDefault(x => x.Id == removeReservation.Room.Id).Reservations.Remove(removeReservation);
         }
     }
 }

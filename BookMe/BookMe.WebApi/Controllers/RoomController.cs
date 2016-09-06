@@ -1,77 +1,39 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using BookMe.BusinessLogic.Interfaces.SharePoint;
+using BookMe.Core.Enums;
+using BookMe.Core.Models;
+using BookMe.WebApi.Mappers;
 using BookMe.WebApi.Models;
 
 namespace BookMe.WebApi.Controllers
 {
     public class RoomController : ApiController
     {
-        public static readonly List<Room> Rooms = new List<Room>()
+        private ISharePointResourceService resourcesService;
+
+        public RoomController(ISharePointResourceService resourcesService)
         {
-              new Room()
-            {
-                IsBig = false,
-                IsHasPolykom = false,
-                Number = "304D",
-                Id = 6,
-                Reservations = new List<ReservationModel>()
-            },
-            new Room()
-            {
-                IsBig = false,
-                IsHasPolykom = false,
-                Number = "505E",
-                Id = 5,
-                Reservations = new List<ReservationModel>()
-            },
-            new Room()
-            {
-                IsBig = false,
-                IsHasPolykom = false,
-                Number = "403D",
-                Id = 1,
-                Reservations = new List<ReservationModel>()
-            },
-            new Room()
-            {
-                IsBig = true,
-                IsHasPolykom = false,
-                Number = "202K",
-                Id = 2,
-                Reservations = new List<ReservationModel>()
-            },
-            new Room()
-            {
-                IsBig = true,
-                IsHasPolykom = false,
-                Number = "323P",
-                Id = 3,
-                Reservations = new List<ReservationModel>()
-            },
-            new Room()
-            {
-                IsBig = false,
-                IsHasPolykom = true,
-                Number = "678T",
-                Id = 4,
-                Reservations = new List<ReservationModel>()
-            }
-        };
+            this.resourcesService = resourcesService;
+        }
 
         public IEnumerable<Room> Get()
         {
-            return Rooms.Where(x => true);
+            IEnumerable<Resource> allResources = this.resourcesService.GetAll();
+            return allResources.Select(ResourceMapper.MapResourceToRoom);
         }
 
         public Room Get(int id)
         {
-            return Rooms.FirstOrDefault(x => x.Id == id);
+            var neededResource = this.resourcesService.GetAll().FirstOrDefault(resource => resource.Id == id);
+            return ResourceMapper.MapResourceToRoom(neededResource);
         }
-        
+
         public void Post([FromBody]string value)
         {
         }
@@ -79,7 +41,7 @@ namespace BookMe.WebApi.Controllers
         public void Put(int id, [FromBody]string value)
         {
         }
-        
+
         public void Delete(int id)
         {
         }
