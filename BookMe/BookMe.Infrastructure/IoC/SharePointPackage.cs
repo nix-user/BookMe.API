@@ -50,6 +50,7 @@ namespace BookMe.Infrastructure.IoC
         {
             var webApiRequestLifestyle = new WebApiRequestLifestyle();
             this.container.Register<IConverter<IDictionary<string, object>, Resource>, ResourceConverter>(webApiRequestLifestyle);
+            this.container.Register<IConverter<IDictionary<string, object>, Reservation>, ReservationConverter>(webApiRequestLifestyle);
         }
 
         private void RegisterSPContext()
