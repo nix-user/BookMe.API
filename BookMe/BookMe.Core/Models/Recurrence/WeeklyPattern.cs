@@ -9,16 +9,7 @@ namespace BookMe.Core.Models.Recurrence
 {
     public sealed class WeeklyPattern : IntervalPattern
     {
-        public WeeklyPattern(DateTime startDate, int interval, IEnumerable<DayOfTheWeek> daysOfTheWeek)
-        {
-            this.StartDate = startDate;
-            this.Interval = interval;
-            this.DaysOfTheWeek = daysOfTheWeek;
-        }
-
-        public IEnumerable<DayOfTheWeek> DaysOfTheWeek { get; }
-
-        public DayOfWeek FirstDayOfWeek { get; set; }
+        public IEnumerable<DayOfTheWeek> DaysOfTheWeek { get; set; }
 
         public override Interval GetBusyInterval(DateTime date)
         {
