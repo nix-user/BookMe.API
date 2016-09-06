@@ -8,12 +8,6 @@ namespace BookMe.Core.Models.Recurrence
 {
     public sealed class DailyPattern : IntervalPattern
     {
-        public DailyPattern(DateTime startDate, int interval)
-        {
-            this.StartDate = startDate;
-            this.Interval = interval;
-        }
-
         public override Interval GetBusyInterval(DateTime date)
         {
             throw new NotImplementedException();
