@@ -1,4 +1,5 @@
-﻿using BookMe.ShareProint.Data.Parsers.Abstract;
+﻿using System;
+using BookMe.ShareProint.Data.Parsers.Abstract;
 using Microsoft.SharePoint.Client;
 
 namespace BookMe.ShareProint.Data.Parsers.Concrete
@@ -11,11 +12,18 @@ namespace BookMe.ShareProint.Data.Parsers.Concrete
 
         public ListItemCollection GetAll()
         {
-            var resourcesList = this.Context.Web.Lists.GetByTitle(ListNames.Resources);
+            try
+            {
+                var resourcesList = this.Context.Web.Lists.GetByTitle(ListNames.Resources);
 
-            ListItemCollection items = resourcesList.GetItems(this.CreateCamlQuery(string.Empty));
+                ListItemCollection items = resourcesList.GetItems(this.CreateCamlQuery(string.Empty));
 
-            return this.LoadCollectionFromServer(items);
+                return this.LoadCollectionFromServer(items);
+            }
+            catch
+            {
+                throw new ParserException(RetrivalErrorMessage);
+            }
         }
     }
 }

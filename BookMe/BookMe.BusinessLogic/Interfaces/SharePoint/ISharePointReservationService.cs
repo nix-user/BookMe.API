@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using BookMe.Core.Models;
+using BookMe.BusinessLogic.DTO;
+using BookMe.BusinessLogic.OperationResult;
 
 namespace BookMe.BusinessLogic.Interfaces.SharePoint
 {
     public interface ISharePointReservationService
     {
-        IEnumerable<Reservation> GetPossibleReservationsInInterval(DateTime intervalStart, DateTime intervalEnd);
+        OperationResult<IEnumerable<ReservationDTO>> GetPossibleReservationsInInterval(DateTime intervalStart, DateTime intervalEnd);
 
-        IEnumerable<Reservation> GetUserActiveReservations(string userName);
+        OperationResult<IEnumerable<ReservationDTO>> GetUserActiveReservations(string userName);
     }
 }

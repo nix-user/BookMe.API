@@ -1,8 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
+using BookMe.BusinessLogic.DTO;
 using BookMe.BusinessLogic.Interfaces.SharePoint;
+using BookMe.BusinessLogic.OperationResult;
 using BookMe.Core.Models;
 using BookMe.ShareProint.Data.Converters.Abstract;
+using BookMe.ShareProint.Data.Parsers;
 using BookMe.ShareProint.Data.Parsers.Abstract;
 using Microsoft.SharePoint.Client;
 
@@ -19,10 +23,26 @@ namespace BookMe.ShareProint.Data.Services.Concrete
             this.resourceParser = resourceParser;
         }
 
-        public IEnumerable<Resource> GetAll()
+        public OperationResult<IEnumerable<ResourceDTO>> GetAll()
         {
-            var resourceDictionariesCollection = this.resourceParser.GetAll().ToList().Select(x => x.FieldValues);
-            return this.resourceConverter.Convert(resourceDictionariesCollection);
+            try
+            {
+                var resourceDictionariesCollection = this.resourceParser.GetAll().ToList().Select(x => x.FieldValues);
+                return new OperationResult<IEnumerable<ResourceDTO>>()
+                {
+                    IsSuccessful = true,
+                    Result =
+                        this.resourceConverter.Convert(resourceDictionariesCollection)
+                            .Select(Mapper.Map<Resource, ResourceDTO>)
+                };
+            }
+            catch (ParserException)
+            {
+                return new OperationResult<IEnumerable<ResourceDTO>>()
+                {
+                    IsSuccessful = false
+                };
+            }
         }
     }
 }

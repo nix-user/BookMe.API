@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper, Version=5.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.5.1.1\lib\net45\AutoMapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -41,8 +45,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DTO\BaseDTO.cs" />
+    <Compile Include="DTO\ReservationDTO.cs" />
+    <Compile Include="DTO\ResourceDTO.cs" />
+    <Compile Include="DTO\RoomSize.cs" />
     <Compile Include="Interfaces\SharePoint\ISharePointReservationService.cs" />
     <Compile Include="Interfaces\SharePoint\ISharePointResourceService.cs" />
+    <Compile Include="MapperProfiles\ReservationProfile.cs" />
+    <Compile Include="MapperProfiles\ResourceProfile.cs" />
+    <Compile Include="OperationResult\OperationResult.cs" />
+    <Compile Include="OperationResult\OperationResultGeneric.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -51,6 +63,10 @@
       <Name>BookMe.Core</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\Build\StyleCop\StyleCop.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

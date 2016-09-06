@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
+using BookMe.BusinessLogic.DTO;
 using BookMe.BusinessLogic.Interfaces.SharePoint;
+using BookMe.BusinessLogic.OperationResult;
 using BookMe.Core.Models;
 using BookMe.ShareProint.Data.Converters.Abstract;
+using BookMe.ShareProint.Data.Parsers;
 using BookMe.ShareProint.Data.Parsers.Abstract;
 using Microsoft.SharePoint.Client;
 
@@ -20,20 +24,42 @@ namespace BookMe.ShareProint.Data.Services.Concrete
             this.reservationParser = reservationParser;
         }
 
-        public IEnumerable<Reservation> GetPossibleReservationsInInterval(DateTime intervalStart, DateTime intervalEnd)
+        public OperationResult<IEnumerable<ReservationDTO>> GetPossibleReservationsInInterval(DateTime intervalStart, DateTime intervalEnd)
         {
-            var reservationsList = this.reservationParser
-                .GetPossibleReservationsInInterval(intervalStart, intervalEnd)
-                .Select(x => x.FieldValues);
-            return this.reservationConverter.Convert(reservationsList);
+            try
+            {
+                var reservationsList = this.reservationParser
+                    .GetPossibleReservationsInInterval(intervalStart, intervalEnd).ToList()
+                    .Select(x => x.FieldValues);
+                return new OperationResult<IEnumerable<ReservationDTO>>()
+                {
+                    IsSuccessful = true,
+                    Result = this.reservationConverter.Convert(reservationsList).Select(Mapper.Map<Reservation, ReservationDTO>)
+                };
+            }
+            catch (ParserException)
+            {
+                return new OperationResult<IEnumerable<ReservationDTO>>() { IsSuccessful = false };
+            }
         }
 
-        public IEnumerable<Reservation> GetUserActiveReservations(string userName)
+        public OperationResult<IEnumerable<ReservationDTO>> GetUserActiveReservations(string userName)
         {
-            var userActiveReservations = this.reservationParser
-                .GetUserActiveReservations(userName).ToList()
-                .Select(x => x.FieldValues);
-            return this.reservationConverter.Convert(userActiveReservations);
+            try
+            {
+                var userActiveReservations = this.reservationParser
+                    .GetUserActiveReservations(userName).ToList()
+                    .Select(x => x.FieldValues);
+                return new OperationResult<IEnumerable<ReservationDTO>>()
+                {
+                    IsSuccessful = true,
+                    Result = this.reservationConverter.Convert(userActiveReservations).Select(Mapper.Map<Reservation, ReservationDTO>)
+                };
+            }
+            catch (ParserException)
+            {
+                return new OperationResult<IEnumerable<ReservationDTO>>() { IsSuccessful = false };
+            }
         }
     }
 }

@@ -6,9 +6,8 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using AutoMapper;
+using BookMe.BusinessLogic.DTO;
 using BookMe.BusinessLogic.Interfaces.SharePoint;
-using BookMe.Core.Enums;
-using BookMe.Core.Models;
 using BookMe.WebApi.Models;
 
 namespace BookMe.WebApi.Controllers
@@ -24,14 +23,25 @@ namespace BookMe.WebApi.Controllers
 
         public IEnumerable<Room> Get()
         {
-            IEnumerable<Resource> allResources = this.resourcesService.GetAll();
-            return allResources.Select(Mapper.Map<Resource, Room>);
+            var operationResult = this.resourcesService.GetAll();
+            if (operationResult.IsSuccessful)
+            {
+                return operationResult.Result.Select(Mapper.Map<ResourceDTO, Room>);
+            }
+
+            return null;
         }
 
         public Room Get(int id)
         {
-            var neededResource = this.resourcesService.GetAll().FirstOrDefault(resource => resource.Id == id);
-            return Mapper.Map<Resource, Room>(neededResource);
+            var operationResult = this.resourcesService.GetAll();
+            if (operationResult.IsSuccessful)
+            {
+                var neededResource = operationResult.Result.FirstOrDefault(resource => resource.Id == id);
+                return Mapper.Map<ResourceDTO, Room>(neededResource);
+            }
+
+            return null;
         }
 
         public void Post([FromBody]string value)
