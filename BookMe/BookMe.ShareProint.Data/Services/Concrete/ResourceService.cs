@@ -21,7 +21,7 @@ namespace BookMe.ShareProint.Data.Services.Concrete
 
         public IEnumerable<Resource> GetAll()
         {
-            var resourceDictionariesCollection = this.resourceParser.GetAll().Select(x => x.FieldValues);
+            var resourceDictionariesCollection = this.resourceParser.GetAll().ToList().Select(x => x.FieldValues);
             return this.resourceConverter.Convert(resourceDictionariesCollection);
         }
     }
