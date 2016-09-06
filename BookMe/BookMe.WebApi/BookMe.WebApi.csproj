@@ -45,6 +45,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper, Version=5.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.5.1.1\lib\net45\AutoMapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
       <Private>True</Private>
@@ -173,6 +177,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="MapperProfiles\ResourceProfile.cs" />
     <Compile Include="Models\ReservationModel.cs" />
     <Compile Include="Models\Room.cs" />
     <Compile Include="Models\User.cs" />
@@ -206,6 +211,10 @@
     <ProjectReference Include="..\BookMe.BusinessLogic\BookMe.BusinessLogic.csproj">
       <Project>{ce50cf28-5957-4835-8ff2-e74670598af9}</Project>
       <Name>BookMe.BusinessLogic</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BookMe.Core\BookMe.Core.csproj">
+      <Project>{762A809B-7236-4FC3-8E3C-F0CBA88D6FE4}</Project>
+      <Name>BookMe.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\BookMe.Infrastructure\BookMe.Infrastructure.csproj">
       <Project>{50ce64c1-4956-49d8-980a-69574a1c5197}</Project>
