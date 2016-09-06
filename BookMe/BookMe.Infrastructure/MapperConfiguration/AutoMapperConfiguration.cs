@@ -11,8 +11,11 @@ namespace BookMe.Infrastructure.MapperConfiguration
     {
         public static void Configure()
         {
+            string webApiProjectName = "BookMe.WebApi";
+            string bllProjectName = "BookMe.BusinessLogic";
+
             Mapper.Initialize(cfg =>
-            cfg.AddProfiles("BookMe.WebApi", "BookMe.BusinessLogic"));
+            cfg.AddProfiles(webApiProjectName, bllProjectName));
         }
     }
 }
