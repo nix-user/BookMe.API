@@ -1,11 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using BookMe.Core.Models;
+﻿using System.Collections.Generic;
+using BookMe.BusinessLogic.DTO;
 
 namespace BookMe.BusinessLogic.Interfaces.SharePoint
 {
     public interface ISharePointResourceService
     {
-        IEnumerable<Resource> GetAll();
+        IEnumerable<ResourceDTO> GetAll();
     }
 }

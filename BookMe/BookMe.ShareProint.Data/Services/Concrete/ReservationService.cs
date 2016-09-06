@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
+using BookMe.BusinessLogic.DTO;
 using BookMe.BusinessLogic.Interfaces.SharePoint;
 using BookMe.Core.Models;
 using BookMe.ShareProint.Data.Converters.Abstract;
@@ -20,20 +22,20 @@ namespace BookMe.ShareProint.Data.Services.Concrete
             this.reservationParser = reservationParser;
         }
 
-        public IEnumerable<Reservation> GetPossibleReservationsInInterval(DateTime intervalStart, DateTime intervalEnd)
+        public IEnumerable<ReservationDTO> GetPossibleReservationsInInterval(DateTime intervalStart, DateTime intervalEnd)
         {
             var reservationsList = this.reservationParser
-                .GetPossibleReservationsInInterval(intervalStart, intervalEnd)
+                .GetPossibleReservationsInInterval(intervalStart, intervalEnd).ToList()
                 .Select(x => x.FieldValues);
-            return this.reservationConverter.Convert(reservationsList);
+            return this.reservationConverter.Convert(reservationsList).Select(Mapper.Map<Reservation, ReservationDTO>);
         }
 
-        public IEnumerable<Reservation> GetUserActiveReservations(string userName)
+        public IEnumerable<ReservationDTO> GetUserActiveReservations(string userName)
         {
             var userActiveReservations = this.reservationParser
                 .GetUserActiveReservations(userName).ToList()
                 .Select(x => x.FieldValues);
-            return this.reservationConverter.Convert(userActiveReservations);
+            return this.reservationConverter.Convert(userActiveReservations).Select(Mapper.Map<Reservation, ReservationDTO>);
         }
     }
 }
