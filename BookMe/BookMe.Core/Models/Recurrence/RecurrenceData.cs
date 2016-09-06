@@ -13,5 +13,7 @@ namespace BookMe.Core.Models.Recurrence
         public int? NumberOfOccurrences { get; set; }
 
         public DateTime StartDate { get; set; }
+
+        public abstract Interval GetBusyInterval(DateTime date);
     }
 }

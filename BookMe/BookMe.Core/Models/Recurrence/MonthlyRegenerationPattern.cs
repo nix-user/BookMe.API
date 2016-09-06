@@ -13,5 +13,10 @@ namespace BookMe.Core.Models.Recurrence
             this.StartDate = startDate;
             this.Interval = interval;
         }
+
+        public override Interval GetBusyInterval(DateTime date)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -19,5 +19,10 @@ namespace BookMe.Core.Models.Recurrence
         public IEnumerable<DayOfTheWeek> DaysOfTheWeek { get; }
 
         public DayOfWeek FirstDayOfWeek { get; set; }
+
+        public override Interval GetBusyInterval(DateTime date)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

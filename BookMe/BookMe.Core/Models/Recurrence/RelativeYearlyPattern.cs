@@ -22,5 +22,10 @@ namespace BookMe.Core.Models.Recurrence
         public DayOfTheWeekIndex DayOfTheWeekIndex { get; set; }
 
         public Month Month { get; set; }
+
+        public override Interval GetBusyInterval(DateTime date)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
