@@ -105,6 +105,7 @@ namespace BookMe.UnitTests.SharePoint.Converters
             }
         }
 
+        [TestMethod]
         public void Convert_MonthlyPatternXML_MonthlyPattern()
         {
             // arrange
@@ -146,6 +147,7 @@ namespace BookMe.UnitTests.SharePoint.Converters
             Assert.AreEqual(expectedRecurrenceData.NumberOfOccurrences, weeklyResult.NumberOfOccurrences);
         }
 
+        [TestMethod]
         public void Convert_MonthlyByDayPatternXML_MonthlyByDayPattern()
         {
             // arrange
@@ -195,13 +197,14 @@ namespace BookMe.UnitTests.SharePoint.Converters
             }
         }
 
+        [TestMethod]
         public void Convert_YearlyPatternXML_MonthlyByDayPattern()
         {
             // arrange
             const string xml = @"<recurrence>
                                    <rule>
                                      <firstDayOfWeek>su</firstDayOfWeek>
-                                     <repeat><monthlyByDay weekend_day='TRUE' weekdayOfMonth='last' monthFrequency='2' /></repeat>
+                                     <repeat><yearly yearFrequency='1' month='11' day='9' /></repeat>
                                      <repeatInstances>5</repeatInstances>
                                    </rule>
                                  </recurrence>";
@@ -214,14 +217,14 @@ namespace BookMe.UnitTests.SharePoint.Converters
                 EventDate = expectedStartDate
             };
 
-            var expectedRecurrenceData = new RelativeMonthlyPattern()
+            var expectedRecurrenceData = new YearlyPattern()
             {
                 StartDate = expectedStartDate,
                 Interval = 2,
                 EndDate = null,
                 NumberOfOccurrences = 5,
-                DayOfTheWeekIndex = DayOfTheWeekIndex.Last,
-                DaysOfTheWeek = new List<DayOfTheWeek>() { DayOfTheWeek.WeekendDay }
+                Month = Month.August,
+                DayOfMonth = 9
             };
 
             var converter = new RecurrenceDataConverter();
@@ -230,12 +233,60 @@ namespace BookMe.UnitTests.SharePoint.Converters
             var result = converter.Convert(reservation);
 
             // assert
-            var weeklyResult = result as RelativeMonthlyPattern;
+            var weeklyResult = result as YearlyPattern;
 
             Assert.AreEqual(expectedRecurrenceData.StartDate, weeklyResult.StartDate);
             Assert.AreEqual(expectedRecurrenceData.Interval, weeklyResult.Interval);
             Assert.AreEqual(expectedRecurrenceData.EndDate, weeklyResult.EndDate);
             Assert.AreEqual(expectedRecurrenceData.NumberOfOccurrences, weeklyResult.NumberOfOccurrences);
+            Assert.AreEqual(expectedRecurrenceData.Month, weeklyResult.Month);
+            Assert.AreEqual(expectedRecurrenceData.DayOfMonth, weeklyResult.DayOfMonth);
+        }
+
+        [TestMethod]
+        public void Convert_YearlyByDayPatternXML_YearlyByDay()
+        {
+            // arrange
+            const string xml = @"<recurrence>
+                                   <rule>
+                                     <firstDayOfWeek>su</firstDayOfWeek>
+                                     <repeat><yearlyByDay yearFrequency='2' mo='TRUE' fr='TRUE' weekDayOfMonth='second' month='4' /></repeat>
+                                     <repeatInstances>5</repeatInstances>
+                                   </rule>
+                                 </recurrence>";
+
+            var expectedStartDate = DateTime.Now;
+
+            var reservation = new Reservation()
+            {
+                Description = xml,
+                EventDate = expectedStartDate
+            };
+
+            var expectedRecurrenceData = new RelativeYearlyPattern()
+            {
+                StartDate = expectedStartDate,
+                Interval = 2,
+                EndDate = null,
+                NumberOfOccurrences = 5,
+                Month = Month.April,
+                DaysOfTheWeek = new List<DayOfTheWeek>() { DayOfTheWeek.Monday, DayOfTheWeek.Friday },
+                DayOfTheWeekIndex = DayOfTheWeekIndex.Second
+            };
+
+            var converter = new RecurrenceDataConverter();
+
+            // act
+            var result = converter.Convert(reservation);
+
+            // assert
+            var weeklyResult = result as RelativeYearlyPattern;
+
+            Assert.AreEqual(expectedRecurrenceData.StartDate, weeklyResult.StartDate);
+            Assert.AreEqual(expectedRecurrenceData.Interval, weeklyResult.Interval);
+            Assert.AreEqual(expectedRecurrenceData.EndDate, weeklyResult.EndDate);
+            Assert.AreEqual(expectedRecurrenceData.NumberOfOccurrences, weeklyResult.NumberOfOccurrences);
+            Assert.AreEqual(expectedRecurrenceData.Month, weeklyResult.Month);
             Assert.AreEqual(expectedRecurrenceData.DayOfTheWeekIndex, weeklyResult.DayOfTheWeekIndex);
 
             for (var i = 0; i < expectedRecurrenceData.DaysOfTheWeek.Count(); i++)
