@@ -5,10 +5,10 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using AutoMapper;
 using BookMe.BusinessLogic.Interfaces.SharePoint;
 using BookMe.Core.Enums;
 using BookMe.Core.Models;
-using BookMe.WebApi.Mappers;
 using BookMe.WebApi.Models;
 
 namespace BookMe.WebApi.Controllers
@@ -25,13 +25,13 @@ namespace BookMe.WebApi.Controllers
         public IEnumerable<Room> Get()
         {
             IEnumerable<Resource> allResources = this.resourcesService.GetAll();
-            return allResources.Select(ResourceMapper.MapResourceToRoom);
+            return allResources.Select(Mapper.Map<Resource, Room>);
         }
 
         public Room Get(int id)
         {
             var neededResource = this.resourcesService.GetAll().FirstOrDefault(resource => resource.Id == id);
-            return ResourceMapper.MapResourceToRoom(neededResource);
+            return Mapper.Map<Resource, Room>(neededResource);
         }
 
         public void Post([FromBody]string value)

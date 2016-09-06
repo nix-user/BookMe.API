@@ -8,6 +8,7 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using BookMe.Infrastructure;
 using BookMe.Infrastructure.IoC;
+using BookMe.Infrastructure.MapperConfiguration;
 
 namespace BookMe.WebApi
 {
@@ -19,6 +20,7 @@ namespace BookMe.WebApi
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             IoCConfig.RegisterControllers(GlobalConfiguration.Configuration);
+            AutoMapperConfiguration.Configure();
         }
     }
 }
