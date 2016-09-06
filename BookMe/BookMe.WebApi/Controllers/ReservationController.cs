@@ -4,6 +4,9 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using AutoMapper;
+using BookMe.BusinessLogic.DTO;
+using BookMe.BusinessLogic.Interfaces.SharePoint;
 using BookMe.WebApi.Models;
 
 namespace BookMe.WebApi.Controllers
@@ -11,6 +14,12 @@ namespace BookMe.WebApi.Controllers
     public class ReservationController : ApiController
     {
         private static List<ReservationModel> reservations = new List<ReservationModel>();
+        private ISharePointReservationService reservationService;
+
+        public ReservationController(ISharePointReservationService reservationService)
+        {
+            this.reservationService = reservationService;
+        }
 
         public IEnumerable<ReservationModel> Get()
         {
@@ -25,7 +34,7 @@ namespace BookMe.WebApi.Controllers
         [HttpPost]
         public void Post([FromBody]ReservationModel value)
         {
-            reservations.Add(value);
+            this.reservationService.AddReservation(Mapper.Map<ReservationModel, ReservationDTO>(value));
         }
 
         public void Put(int id, [FromBody]string value)

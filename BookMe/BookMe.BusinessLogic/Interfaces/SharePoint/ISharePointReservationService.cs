@@ -10,5 +10,7 @@ namespace BookMe.BusinessLogic.Interfaces.SharePoint
         OperationResult<IEnumerable<ReservationDTO>> GetPossibleReservationsInInterval(DateTime intervalStart, DateTime intervalEnd);
 
         OperationResult<IEnumerable<ReservationDTO>> GetUserActiveReservations(string userName);
+
+        OperationResult.OperationResult AddReservation(ReservationDTO reservationDTO);
     }
 }
