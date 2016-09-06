@@ -9,15 +9,7 @@ namespace BookMe.Core.Models.Recurrence
 {
     public sealed class RelativeMonthlyPattern : IntervalPattern
     {
-        public RelativeMonthlyPattern(DateTime startDate, int interval, DayOfTheWeek dayOfTheWeek, DayOfTheWeekIndex dayOfTheWeekIndex)
-        {
-            this.StartDate = startDate;
-            this.Interval = interval;
-            this.DayOfTheWeek = dayOfTheWeek;
-            this.DayOfTheWeekIndex = dayOfTheWeekIndex;
-        }
-
-        public DayOfTheWeek DayOfTheWeek { get; set; }
+        public IEnumerable<DayOfTheWeek> DaysOfTheWeek { get; set; }
 
         public DayOfTheWeekIndex DayOfTheWeekIndex { get; set; }
 
