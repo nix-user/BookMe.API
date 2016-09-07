@@ -177,8 +177,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="MapperProfiles\ReservationToReservationDTOProfile.cs" />
-    <Compile Include="MapperProfiles\ResourceDTOToRoomProfile.cs" />
+    <Compile Include="MapperProfiles\ReservationDTOProfile.cs" />
+    <Compile Include="MapperProfiles\ResourceDTOProfile.cs" />
     <Compile Include="Models\ReservationModel.cs" />
     <Compile Include="Models\Room.cs" />
     <Compile Include="Models\User.cs" />

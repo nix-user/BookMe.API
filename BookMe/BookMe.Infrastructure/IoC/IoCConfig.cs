@@ -12,7 +12,7 @@ namespace BookMe.Infrastructure.IoC
             container.Options.DefaultScopedLifestyle = new WebApiRequestLifestyle();
             container.RegisterWebApiControllers(configuration);
             container.RegisterPackages();
-            //container.Verify(); this code should be uncommented when converters registration is ready
+            container.Verify();
 
             configuration.DependencyResolver = new SimpleInjectorWebApiDependencyResolver(container);
         }
