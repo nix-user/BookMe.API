@@ -44,5 +44,14 @@ namespace BookMe.ShareProint.Data.Services.Concrete
                 };
             }
         }
+
+        public OperationResult<IEnumerable<ResourceDTO>> GetAvailbleResources(ResourceFilterParameters resourceFilterParameters)
+        {
+            return new OperationResult<IEnumerable<ResourceDTO>>()
+            {
+                IsSuccessful = true,
+                Result = new List<ResourceDTO>()
+            };
+        }
     }
 }
