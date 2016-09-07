@@ -42,5 +42,30 @@ namespace BookMe.IntegrationTests.SharePoint
                 Assert.AreEqual(userName, reservation.OwnerName);
             }
         }
+
+        [TestMethod]
+        public void GetPossibleReservationsInInterval_ShouldReturnAllPossiblyIntersectingReservations()
+        {
+            //arrange
+            DateTime startDateTime = DateTime.Now;
+            DateTime endDateTime = DateTime.Now.AddHours(1);
+
+            //act
+            var operationResult = this.reservationService.GetPossibleReservationsInInterval(startDateTime, endDateTime);
+
+            //assert
+            Assert.AreEqual(true, operationResult.IsSuccessful);
+            foreach (var possibleReservation in operationResult.Result)
+            {
+                if (possibleReservation.IsRecurrence)
+                {
+                    Assert.IsTrue(possibleReservation.EndDate > DateTime.Now);
+                }
+                else
+                {
+                    Assert.IsTrue(possibleReservation.EventDate < endDateTime && possibleReservation.EndDate > startDateTime);
+                }
+            }
+        }
     }
 }
