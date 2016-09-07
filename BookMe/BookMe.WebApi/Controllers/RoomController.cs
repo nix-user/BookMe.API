@@ -56,7 +56,7 @@ namespace BookMe.WebApi.Controllers
         {
         }
 
-        [Route("api/room")]
+        [Route("api/room/available")]
         [HttpPost]
         public IEnumerable<Room> GetAvailableRooms([FromBody]RoomFilterParameters filterParameters)
         {
