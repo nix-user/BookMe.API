@@ -22,10 +22,16 @@ namespace BookMe.IntegrationTests.SharePoint
         public void Init()
         {
             AutoMapperConfiguration.Configure();
-            var converter = new ReservationConverter();
+
+            DescriptionParser descriptionParser = new DescriptionParser();
+            ResourceConverter resourceConverter = new ResourceConverter(descriptionParser);
             ClientContext context = new ClientContext(Constants.BaseAddress);
+            ResourceParser resourceParser = new ResourceParser(context);
+            var resourceService = new ResourceService(resourceConverter, resourceParser);
+
+            var converter = new ReservationConverter();
             var reservationParser = new ReservationParser(context);
-            this.reservationService = new ReservationService(converter, reservationParser);
+            this.reservationService = new ReservationService(converter, reservationParser, resourceService);
         }
 
         [TestMethod]

@@ -18,6 +18,8 @@ namespace BookMe.WebApi.Models
 
         public TimeSpan Duration { get; set; }
 
+        public Room Room { get; set; }
+
         public bool Equals(ReservationModel other)
         {
             return this.Id == other.Id;

@@ -22,7 +22,8 @@ namespace BookMe.WebApi.MapperProfiles
                 .ForMember(nameof(ReservationModel.Author), opt => opt.MapFrom(reservation => reservation.OwnerName))
                 .ForMember(nameof(ReservationModel.From), opt => opt.MapFrom(reservation => reservation.EventDate))
                 .ForMember(nameof(ReservationModel.To), opt => opt.MapFrom(reservation => reservation.EndDate))
-                .ForMember(nameof(ReservationModel.IsRecursive), opt => opt.MapFrom(reservation => reservation.IsRecurrence));
+                .ForMember(nameof(ReservationModel.IsRecursive), opt => opt.MapFrom(reservation => reservation.IsRecurrence))
+                .ForMember(nameof(ReservationModel.Room), opt => opt.MapFrom(reservation => reservation.Resource));
         }
     }
 }
