@@ -12,7 +12,7 @@ using BookMe.ShareProint.Data.Converters.Abstract;
 
 namespace BookMe.ShareProint.Data.Converters.Concrete
 {
-    public class RecurrenceDataConverter : IConverter<Reservation, RecurrenceData>
+    public class RecurrenceDataConverter : IConverter<IDictionary<string, object>, RecurrenceData>
     {
         private static readonly IDictionary<string, DayOfTheWeek> DayOfTheWeekByAbbreviation = new Dictionary<string, DayOfTheWeek>()
         {
@@ -37,8 +37,8 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
             { "last", DayOfTheWeekIndex.Last },
         };
 
-        private static readonly IDictionary<string, Func<Reservation, XElement, RecurrenceData>>
-            InstatiationMethodByRecurenceDataName = new Dictionary<string, Func<Reservation, XElement, RecurrenceData>>()
+        private static readonly IDictionary<string, Func<DateTime, XElement, RecurrenceData>>
+            InstatiationMethodByRecurenceDataName = new Dictionary<string, Func<DateTime, XElement, RecurrenceData>>()
             {
                 { "daily", InstanceDailyPattern },
                 { "weekly", InstanceWeeklyPattern },
@@ -48,12 +48,31 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
                 { "yearlyByDay", InstanceRelativeYearlyPattern },
             };
 
-        public RecurrenceData Convert(Reservation value)
+        public RecurrenceData Convert(IDictionary<string, object> value)
         {
             const string RecurrenceKey = "recurrence";
             const string RuleKey = "rule";
+            const string RecurrenceDataKey = "RecurrenceData";
+            const string EventDateKey = "EventDate";
 
-            var xdoc = XDocument.Parse(value.Description);
+            var recurrenceDataXml = value[RecurrenceDataKey];
+            var eventDate = (DateTime)value[EventDateKey];
+
+            if (recurrenceDataXml == null)
+            {
+                return null;
+            }
+
+            XDocument xdoc = null;
+
+            try
+            {
+                xdoc = XDocument.Parse(recurrenceDataXml.ToString());
+            }
+            catch (Exception)
+            {
+                return null;
+            }
 
             var recurrenceElement = xdoc.Element(RecurrenceKey);
             var ruleElement = recurrenceElement.Element(RuleKey);
@@ -61,17 +80,17 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
             var repeatElement = GetRepeatElement(ruleElement);
             var recurrenceDataTypeName = repeatElement.Name.ToString();
 
-            return InstatiationMethodByRecurenceDataName[recurrenceDataTypeName](value, ruleElement);
+            return InstatiationMethodByRecurenceDataName[recurrenceDataTypeName](eventDate, ruleElement);
         }
 
-        public IEnumerable<RecurrenceData> Convert(IEnumerable<Reservation> values)
+        public IEnumerable<RecurrenceData> Convert(IEnumerable<IDictionary<string, object>> values)
         {
-            throw new NotImplementedException();
+            return values.Select(this.Convert);
         }
 
         #region RecurrenceData instantiation methods
 
-        private static RecurrenceData InstanceDailyPattern(Reservation reservation, XElement ruleElement)
+        private static RecurrenceData InstanceDailyPattern(DateTime eventDate, XElement ruleElement)
         {
             const string FrequencyKey = "dayFrequency";
 
@@ -80,14 +99,15 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
             {
                 EndDate = GetEndDate(ruleElement),
                 Interval = GetFrequency(repeatElement, FrequencyKey),
-                StartDate = reservation.EventDate,
-                NumberOfOccurrences = GetRepeatInstances(ruleElement)
+                StartDate = eventDate,
+                NumberOfOccurrences = GetRepeatInstances(ruleElement),
+                DaysOfTheWeek = GetDaysOfTheWeek(repeatElement)
             };
 
             return recurrenceData;
         }
 
-        private static RecurrenceData InstanceWeeklyPattern(Reservation reservation, XElement ruleElement)
+        private static RecurrenceData InstanceWeeklyPattern(DateTime eventDate, XElement ruleElement)
         {
             const string FrequencyKey = "weekFrequency";
 
@@ -98,13 +118,13 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
                 EndDate = GetEndDate(ruleElement),
                 DaysOfTheWeek = GetDaysOfTheWeek(repeatElement),
                 NumberOfOccurrences = GetRepeatInstances(ruleElement),
-                StartDate = reservation.EventDate
+                StartDate = eventDate
             };
 
             return recurrenceData;
         }
 
-        private static RecurrenceData InstanceMonthlyPattern(Reservation reservation, XElement ruleElement)
+        private static RecurrenceData InstanceMonthlyPattern(DateTime eventDate, XElement ruleElement)
         {
             const string FrequencyKey = "monthFrequency";
 
@@ -114,14 +134,14 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
                 Interval = GetFrequency(repeatElement, FrequencyKey),
                 EndDate = GetEndDate(ruleElement),
                 NumberOfOccurrences = GetRepeatInstances(ruleElement),
-                StartDate = reservation.EventDate,
+                StartDate = eventDate,
                 DayOfMonth = GetDayOfMonth(repeatElement)
             };
 
             return recurrenceData;
         }
 
-        private static RecurrenceData InstanceRelativeMonthlyPattern(Reservation reservation, XElement ruleElement)
+        private static RecurrenceData InstanceRelativeMonthlyPattern(DateTime eventDate, XElement ruleElement)
         {
             const string FrequencyKey = "monthFrequency";
 
@@ -131,7 +151,7 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
                 Interval = GetFrequency(repeatElement, FrequencyKey),
                 EndDate = GetEndDate(ruleElement),
                 NumberOfOccurrences = GetRepeatInstances(ruleElement),
-                StartDate = reservation.EventDate,
+                StartDate = eventDate,
                 DaysOfTheWeek = GetDaysOfTheWeek(repeatElement),
                 DayOfTheWeekIndex = GetDaysOfTheWeekIndex(repeatElement)
             };
@@ -139,7 +159,7 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
             return recurrenceData;
         }
 
-        private static RecurrenceData InstanceYearlyPattern(Reservation reservation, XElement ruleElement)
+        private static RecurrenceData InstanceYearlyPattern(DateTime eventDate, XElement ruleElement)
         {
             const string FrequencyKey = "yearFrequency";
 
@@ -149,7 +169,7 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
                 Interval = GetFrequency(repeatElement, FrequencyKey),
                 EndDate = GetEndDate(ruleElement),
                 NumberOfOccurrences = GetRepeatInstances(ruleElement),
-                StartDate = reservation.EventDate,
+                StartDate = eventDate,
                 DayOfMonth = GetDayOfMonth(repeatElement),
                 Month = GetMonth(repeatElement)
             };
@@ -157,7 +177,7 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
             return recurrenceData;
         }
 
-        private static RecurrenceData InstanceRelativeYearlyPattern(Reservation reservation, XElement ruleElement)
+        private static RecurrenceData InstanceRelativeYearlyPattern(DateTime eventDate, XElement ruleElement)
         {
             const string FrequencyKey = "yearFrequency";
 
@@ -167,7 +187,7 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
                 Interval = GetFrequency(repeatElement, FrequencyKey),
                 EndDate = GetEndDate(ruleElement),
                 NumberOfOccurrences = GetRepeatInstances(ruleElement),
-                StartDate = reservation.EventDate,
+                StartDate = eventDate,
                 Month = GetMonth(repeatElement),
                 DayOfTheWeekIndex = GetDaysOfTheWeekIndex(repeatElement),
                 DaysOfTheWeek = GetDaysOfTheWeek(repeatElement)
@@ -241,9 +261,17 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
                 .FirstOrDefault();
         }
 
-        private static int GetFrequency(XElement repeatElement, string frequencyKey)
+        private static int? GetFrequency(XElement repeatElement, string frequencyKey)
         {
-            return int.Parse(repeatElement.Attribute(frequencyKey).Value);
+            var frequencyAttribute = repeatElement.Attribute(frequencyKey);
+            if (frequencyAttribute == null)
+            {
+                return null;
+            }
+            else
+            {
+                return int.Parse(frequencyAttribute.Value);
+            }
         }
 
         private static int GetDayOfMonth(XElement repeatElement)

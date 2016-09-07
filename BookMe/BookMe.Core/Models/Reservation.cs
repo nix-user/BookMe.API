@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BookMe.Core.Models.Recurrence;
 
 namespace BookMe.Core.Models
 {
@@ -18,10 +19,16 @@ namespace BookMe.Core.Models
 
         public bool IsRecurrence { get; set; }
 
-        public long? ResourceId { get; set; }
+        public int? ResourceId { get; set; }
 
         public TimeSpan Duration { get; set; }
 
         public string OwnerName { get; set; }
-    }
+
+        public RecurrenceData RecurrenceData { get; set; }
+
+        public int? ParentId { get; set; }
+
+        public int EventType { get; set; }
+}
 }

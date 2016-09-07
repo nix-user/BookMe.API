@@ -8,6 +8,7 @@ using BookMe.Core.Enums;
 using BookMe.Core.Models;
 using BookMe.Core.Models.Recurrence;
 using BookMe.ShareProint.Data.Converters.Concrete;
+using Microsoft.SharePoint.Client;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BookMe.UnitTests.SharePoint.Converters
@@ -15,6 +16,9 @@ namespace BookMe.UnitTests.SharePoint.Converters
     [TestClass]
     public class RecurrenceDataConverterTests
     {
+        private const string RecurrenceDataKey = "RecurrenceData";
+        private const string EventDateKey = "EventDate";
+
         [TestMethod]
         public void Convert_DailyPatternXML_DailyPattern()
         {
@@ -29,10 +33,10 @@ namespace BookMe.UnitTests.SharePoint.Converters
 
             var expectedStartDate = DateTime.Now;
 
-            var reservation = new Reservation()
+            var fildValuesDictionary = new Dictionary<string, object>()
             {
-                Description = xml,
-                EventDate = expectedStartDate
+                { RecurrenceDataKey, xml },
+                { EventDateKey, expectedStartDate },
             };
 
             var expectedRecurrenceData = new DailyPattern()
@@ -46,7 +50,7 @@ namespace BookMe.UnitTests.SharePoint.Converters
             var converter = new RecurrenceDataConverter();
 
             // act
-            var result = converter.Convert(reservation);
+            var result = converter.Convert(fildValuesDictionary);
 
             // assert
             var dailyResult = result as DailyPattern;
@@ -71,10 +75,10 @@ namespace BookMe.UnitTests.SharePoint.Converters
 
             var expectedStartDate = DateTime.Now;
 
-            var reservation = new Reservation()
+            var fildValuesDictionary = new Dictionary<string, object>()
             {
-                Description = xml,
-                EventDate = expectedStartDate
+                { RecurrenceDataKey, xml },
+                { EventDateKey, expectedStartDate },
             };
 
             var expectedRecurrenceData = new WeeklyPattern()
@@ -89,7 +93,7 @@ namespace BookMe.UnitTests.SharePoint.Converters
             var converter = new RecurrenceDataConverter();
 
             // act
-            var result = converter.Convert(reservation);
+            var result = converter.Convert(fildValuesDictionary);
 
             // assert
             var weeklyResult = result as WeeklyPattern;
@@ -119,10 +123,10 @@ namespace BookMe.UnitTests.SharePoint.Converters
 
             var expectedStartDate = DateTime.Now;
 
-            var reservation = new Reservation()
+            var fildValuesDictionary = new Dictionary<string, object>()
             {
-                Description = xml,
-                EventDate = expectedStartDate
+                { RecurrenceDataKey, xml },
+                { EventDateKey, expectedStartDate },
             };
 
             var expectedRecurrenceData = new MonthlyPattern()
@@ -136,7 +140,7 @@ namespace BookMe.UnitTests.SharePoint.Converters
             var converter = new RecurrenceDataConverter();
 
             // act
-            var result = converter.Convert(reservation);
+            var result = converter.Convert(fildValuesDictionary);
 
             // assert
             var monthlyResult = result as MonthlyPattern;
@@ -161,10 +165,10 @@ namespace BookMe.UnitTests.SharePoint.Converters
 
             var expectedStartDate = DateTime.Now;
 
-            var reservation = new Reservation()
+            var fildValuesDictionary = new Dictionary<string, object>()
             {
-                Description = xml,
-                EventDate = expectedStartDate
+                { RecurrenceDataKey, xml },
+                { EventDateKey, expectedStartDate },
             };
 
             var expectedRecurrenceData = new RelativeMonthlyPattern()
@@ -180,7 +184,7 @@ namespace BookMe.UnitTests.SharePoint.Converters
             var converter = new RecurrenceDataConverter();
 
             // act
-            var result = converter.Convert(reservation);
+            var result = converter.Convert(fildValuesDictionary);
 
             // assert
             var monthlyResult = result as RelativeMonthlyPattern;
@@ -211,10 +215,10 @@ namespace BookMe.UnitTests.SharePoint.Converters
 
             var expectedStartDate = DateTime.Now;
 
-            var reservation = new Reservation()
+            var fildValuesDictionary = new Dictionary<string, object>()
             {
-                Description = xml,
-                EventDate = expectedStartDate
+                { RecurrenceDataKey, xml },
+                { EventDateKey, expectedStartDate },
             };
 
             var expectedRecurrenceData = new YearlyPattern()
@@ -230,7 +234,7 @@ namespace BookMe.UnitTests.SharePoint.Converters
             var converter = new RecurrenceDataConverter();
 
             // act
-            var result = converter.Convert(reservation);
+            var result = converter.Convert(fildValuesDictionary);
 
             // assert
             var yearlyResult = result as YearlyPattern;
@@ -257,10 +261,10 @@ namespace BookMe.UnitTests.SharePoint.Converters
 
             var expectedStartDate = DateTime.Now;
 
-            var reservation = new Reservation()
+            var fildValuesDictionary = new Dictionary<string, object>()
             {
-                Description = xml,
-                EventDate = expectedStartDate
+                { RecurrenceDataKey, xml },
+                { EventDateKey, expectedStartDate },
             };
 
             var expectedRecurrenceData = new RelativeYearlyPattern()
@@ -277,7 +281,7 @@ namespace BookMe.UnitTests.SharePoint.Converters
             var converter = new RecurrenceDataConverter();
 
             // act
-            var result = converter.Convert(reservation);
+            var result = converter.Convert(fildValuesDictionary);
 
             // assert
             var yearlyResult = result as RelativeYearlyPattern;
