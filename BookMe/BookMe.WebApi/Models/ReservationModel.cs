@@ -4,6 +4,8 @@ namespace BookMe.WebApi.Models
 {
     public class ReservationModel : IEquatable<ReservationModel>
     {
+        public string Title { get; set; }
+
         public int Id { get; set; }
 
         public DateTime From { get; set; }
