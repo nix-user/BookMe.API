@@ -7,7 +7,7 @@ using BookMe.Core.Enums;
 
 namespace BookMe.Core.Models.Recurrence
 {
-    public sealed class YearlyPattern : IntervalPattern
+    public sealed class YearlyPattern : RecurrenceData
     {
         public int DayOfMonth { get; set; }
 

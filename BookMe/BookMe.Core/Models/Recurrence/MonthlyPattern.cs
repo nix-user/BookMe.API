@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BookMe.Core.Models.Recurrence
 {
-    public sealed class MonthlyPattern : IntervalPattern
+    public sealed class MonthlyPattern : RecurrenceData
     {
         public int DayOfMonth { get; set; }
 

@@ -47,7 +47,6 @@
     <Compile Include="Models\BaseEntity.cs" />
     <Compile Include="Models\Recurrence\DailyPattern.cs" />
     <Compile Include="Models\Recurrence\Interval.cs" />
-    <Compile Include="Models\Recurrence\IntervalPattern.cs" />
     <Compile Include="Models\Recurrence\MonthlyPattern.cs" />
     <Compile Include="Models\Recurrence\RecurrenceData.cs" />
     <Compile Include="Models\Recurrence\RelativeMonthlyPattern.cs" />

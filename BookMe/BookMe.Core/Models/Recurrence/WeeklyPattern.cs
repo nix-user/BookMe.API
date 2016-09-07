@@ -7,7 +7,7 @@ using BookMe.Core.Enums;
 
 namespace BookMe.Core.Models.Recurrence
 {
-    public sealed class WeeklyPattern : IntervalPattern
+    public sealed class WeeklyPattern : RecurrenceData
     {
         public IEnumerable<DayOfTheWeek> DaysOfTheWeek { get; set; }
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BookMe.Core.Models.Recurrence
 {
-    public sealed class DailyPattern : IntervalPattern
+    public sealed class DailyPattern : RecurrenceData
     {
         public override Interval GetBusyInterval(DateTime date)
         {
