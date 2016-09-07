@@ -68,6 +68,18 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
                         StartDate = value.EventDate
                     };
                     break;
+                case "monthly":
+                    frequency = int.Parse(repeatElement.Attribute("monthFrequency").Value);
+                    var dayOfMonth = int.Parse(repeatElement.Attribute("day").Value);
+                    recurenceData = new MonthlyPattern()
+                    {
+                        Interval = frequency,
+                        EndDate = endDate,
+                        NumberOfOccurrences = numberOfOccurrences,
+                        StartDate = value.EventDate,
+                        DayOfMonth = dayOfMonth
+                    };
+                    break;
             }
 
             return recurenceData;
