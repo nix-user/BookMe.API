@@ -4,9 +4,9 @@ using BookMe.WebApi.Models;
 
 namespace BookMe.WebApi.MapperProfiles
 {
-    public class ResourceDTOToRoomProfile : Profile
+    public class ResourceDTOProfile : Profile
     {
-        public ResourceDTOToRoomProfile()
+        public ResourceDTOProfile()
         {
             this.CreateMap<ResourceDTO, Room>()
             .ForMember(nameof(Room.IsBig), opt => opt.MapFrom(resource => resource.RoomSize == RoomSize.Large))
