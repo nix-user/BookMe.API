@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BookMe.BusinessLogic.Interfaces.SharePoint;
 using BookMe.Core.Models;
+using BookMe.Core.Models.Recurrence;
 using BookMe.ShareProint.Data;
 using BookMe.ShareProint.Data.Converters.Abstract;
 using BookMe.ShareProint.Data.Converters.Concrete;
@@ -51,6 +52,7 @@ namespace BookMe.Infrastructure.IoC
             var webApiRequestLifestyle = new WebApiRequestLifestyle();
             this.container.Register<IConverter<IDictionary<string, object>, Resource>, ResourceConverter>(webApiRequestLifestyle);
             this.container.Register<IConverter<IDictionary<string, object>, Reservation>, ReservationConverter>(webApiRequestLifestyle);
+            this.container.Register<IConverter<IDictionary<string, object>, RecurrenceData>, RecurrenceDataConverter>(webApiRequestLifestyle);
         }
 
         private void RegisterSPContext()
