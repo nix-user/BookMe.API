@@ -139,12 +139,12 @@ namespace BookMe.UnitTests.SharePoint.Converters
             var result = converter.Convert(reservation);
 
             // assert
-            var weeklyResult = result as MonthlyPattern;
+            var monthlyResult = result as MonthlyPattern;
 
-            Assert.AreEqual(expectedRecurrenceData.StartDate, weeklyResult.StartDate);
-            Assert.AreEqual(expectedRecurrenceData.Interval, weeklyResult.Interval);
-            Assert.AreEqual(expectedRecurrenceData.EndDate, weeklyResult.EndDate);
-            Assert.AreEqual(expectedRecurrenceData.NumberOfOccurrences, weeklyResult.NumberOfOccurrences);
+            Assert.AreEqual(expectedRecurrenceData.StartDate, monthlyResult.StartDate);
+            Assert.AreEqual(expectedRecurrenceData.Interval, monthlyResult.Interval);
+            Assert.AreEqual(expectedRecurrenceData.EndDate, monthlyResult.EndDate);
+            Assert.AreEqual(expectedRecurrenceData.NumberOfOccurrences, monthlyResult.NumberOfOccurrences);
         }
 
         [TestMethod]
@@ -183,17 +183,17 @@ namespace BookMe.UnitTests.SharePoint.Converters
             var result = converter.Convert(reservation);
 
             // assert
-            var weeklyResult = result as RelativeMonthlyPattern;
+            var monthlyResult = result as RelativeMonthlyPattern;
 
-            Assert.AreEqual(expectedRecurrenceData.StartDate, weeklyResult.StartDate);
-            Assert.AreEqual(expectedRecurrenceData.Interval, weeklyResult.Interval);
-            Assert.AreEqual(expectedRecurrenceData.EndDate, weeklyResult.EndDate);
-            Assert.AreEqual(expectedRecurrenceData.NumberOfOccurrences, weeklyResult.NumberOfOccurrences);
-            Assert.AreEqual(expectedRecurrenceData.DayOfTheWeekIndex, weeklyResult.DayOfTheWeekIndex);
+            Assert.AreEqual(expectedRecurrenceData.StartDate, monthlyResult.StartDate);
+            Assert.AreEqual(expectedRecurrenceData.Interval, monthlyResult.Interval);
+            Assert.AreEqual(expectedRecurrenceData.EndDate, monthlyResult.EndDate);
+            Assert.AreEqual(expectedRecurrenceData.NumberOfOccurrences, monthlyResult.NumberOfOccurrences);
+            Assert.AreEqual(expectedRecurrenceData.DayOfTheWeekIndex, monthlyResult.DayOfTheWeekIndex);
 
             for (var i = 0; i < expectedRecurrenceData.DaysOfTheWeek.Count(); i++)
             {
-                Assert.AreEqual(expectedRecurrenceData.DaysOfTheWeek.ToList()[i], weeklyResult.DaysOfTheWeek.ToList()[i]);
+                Assert.AreEqual(expectedRecurrenceData.DaysOfTheWeek.ToList()[i], monthlyResult.DaysOfTheWeek.ToList()[i]);
             }
         }
 
@@ -204,7 +204,7 @@ namespace BookMe.UnitTests.SharePoint.Converters
             const string xml = @"<recurrence>
                                    <rule>
                                      <firstDayOfWeek>su</firstDayOfWeek>
-                                     <repeat><yearly yearFrequency='1' month='11' day='9' /></repeat>
+                                     <repeat><yearly yearFrequency='2' month='11' day='9' /></repeat>
                                      <repeatInstances>5</repeatInstances>
                                    </rule>
                                  </recurrence>";
@@ -223,7 +223,7 @@ namespace BookMe.UnitTests.SharePoint.Converters
                 Interval = 2,
                 EndDate = null,
                 NumberOfOccurrences = 5,
-                Month = Month.August,
+                Month = Month.November,
                 DayOfMonth = 9
             };
 
@@ -233,14 +233,14 @@ namespace BookMe.UnitTests.SharePoint.Converters
             var result = converter.Convert(reservation);
 
             // assert
-            var weeklyResult = result as YearlyPattern;
+            var yearlyResult = result as YearlyPattern;
 
-            Assert.AreEqual(expectedRecurrenceData.StartDate, weeklyResult.StartDate);
-            Assert.AreEqual(expectedRecurrenceData.Interval, weeklyResult.Interval);
-            Assert.AreEqual(expectedRecurrenceData.EndDate, weeklyResult.EndDate);
-            Assert.AreEqual(expectedRecurrenceData.NumberOfOccurrences, weeklyResult.NumberOfOccurrences);
-            Assert.AreEqual(expectedRecurrenceData.Month, weeklyResult.Month);
-            Assert.AreEqual(expectedRecurrenceData.DayOfMonth, weeklyResult.DayOfMonth);
+            Assert.AreEqual(expectedRecurrenceData.StartDate, yearlyResult.StartDate);
+            Assert.AreEqual(expectedRecurrenceData.Interval, yearlyResult.Interval);
+            Assert.AreEqual(expectedRecurrenceData.EndDate, yearlyResult.EndDate);
+            Assert.AreEqual(expectedRecurrenceData.NumberOfOccurrences, yearlyResult.NumberOfOccurrences);
+            Assert.AreEqual(expectedRecurrenceData.Month, yearlyResult.Month);
+            Assert.AreEqual(expectedRecurrenceData.DayOfMonth, yearlyResult.DayOfMonth);
         }
 
         [TestMethod]
@@ -250,7 +250,7 @@ namespace BookMe.UnitTests.SharePoint.Converters
             const string xml = @"<recurrence>
                                    <rule>
                                      <firstDayOfWeek>su</firstDayOfWeek>
-                                     <repeat><yearlyByDay yearFrequency='2' mo='TRUE' fr='TRUE' weekDayOfMonth='second' month='4' /></repeat>
+                                     <repeat><yearlyByDay yearFrequency='2' mo='TRUE' fr='TRUE' weekdayOfMonth='second' month='4' /></repeat>
                                      <repeatInstances>5</repeatInstances>
                                    </rule>
                                  </recurrence>";
@@ -280,18 +280,18 @@ namespace BookMe.UnitTests.SharePoint.Converters
             var result = converter.Convert(reservation);
 
             // assert
-            var weeklyResult = result as RelativeYearlyPattern;
+            var yearlyResult = result as RelativeYearlyPattern;
 
-            Assert.AreEqual(expectedRecurrenceData.StartDate, weeklyResult.StartDate);
-            Assert.AreEqual(expectedRecurrenceData.Interval, weeklyResult.Interval);
-            Assert.AreEqual(expectedRecurrenceData.EndDate, weeklyResult.EndDate);
-            Assert.AreEqual(expectedRecurrenceData.NumberOfOccurrences, weeklyResult.NumberOfOccurrences);
-            Assert.AreEqual(expectedRecurrenceData.Month, weeklyResult.Month);
-            Assert.AreEqual(expectedRecurrenceData.DayOfTheWeekIndex, weeklyResult.DayOfTheWeekIndex);
+            Assert.AreEqual(expectedRecurrenceData.StartDate, yearlyResult.StartDate);
+            Assert.AreEqual(expectedRecurrenceData.Interval, yearlyResult.Interval);
+            Assert.AreEqual(expectedRecurrenceData.EndDate, yearlyResult.EndDate);
+            Assert.AreEqual(expectedRecurrenceData.NumberOfOccurrences, yearlyResult.NumberOfOccurrences);
+            Assert.AreEqual(expectedRecurrenceData.Month, yearlyResult.Month);
+            Assert.AreEqual(expectedRecurrenceData.DayOfTheWeekIndex, yearlyResult.DayOfTheWeekIndex);
 
             for (var i = 0; i < expectedRecurrenceData.DaysOfTheWeek.Count(); i++)
             {
-                Assert.AreEqual(expectedRecurrenceData.DaysOfTheWeek.ToList()[i], weeklyResult.DaysOfTheWeek.ToList()[i]);
+                Assert.AreEqual(expectedRecurrenceData.DaysOfTheWeek.ToList()[i], yearlyResult.DaysOfTheWeek.ToList()[i]);
             }
         }
     }

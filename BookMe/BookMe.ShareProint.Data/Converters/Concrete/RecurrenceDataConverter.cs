@@ -14,7 +14,7 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
 {
     public class RecurrenceDataConverter : IConverter<Reservation, RecurrenceData>
     {
-        private IDictionary<string, DayOfTheWeek> dayOfTheWeekByAbbreviation = new Dictionary<string, DayOfTheWeek>()
+        private readonly IDictionary<string, DayOfTheWeek> dayOfTheWeekByAbbreviation = new Dictionary<string, DayOfTheWeek>()
         {
             { "mo", DayOfTheWeek.Monday },
             { "tu", DayOfTheWeek.Tuesday },
@@ -26,6 +26,15 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
             { "day", DayOfTheWeek.Day },
             { "weekday", DayOfTheWeek.Weekday },
             { "weekend_day", DayOfTheWeek.WeekendDay },
+        };
+
+        private readonly IDictionary<string, DayOfTheWeekIndex> dayOfTheWeekIndexByAbbreviation = new Dictionary<string, DayOfTheWeekIndex>()
+        {
+            { "first", DayOfTheWeekIndex.First },
+            { "second", DayOfTheWeekIndex.Second },
+            { "third", DayOfTheWeekIndex.Third },
+            { "fourth", DayOfTheWeekIndex.Fourth },
+            { "last", DayOfTheWeekIndex.Last },
         };
 
         public RecurrenceData Convert(Reservation value)
@@ -80,6 +89,43 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
                         DayOfMonth = dayOfMonth
                     };
                     break;
+                case "monthlyByDay":
+                    frequency = int.Parse(repeatElement.Attribute("monthFrequency").Value);
+                    recurenceData = new RelativeMonthlyPattern()
+                    {
+                        Interval = frequency,
+                        EndDate = endDate,
+                        NumberOfOccurrences = numberOfOccurrences,
+                        StartDate = value.EventDate,
+                        DaysOfTheWeek = this.GetDaysOfTheWeek(repeatElement),
+                        DayOfTheWeekIndex = this.GetDaysOfTheWeekIndex(repeatElement)
+                    };
+                    break;
+                case "yearly":
+                    frequency = int.Parse(repeatElement.Attribute("yearFrequency").Value);
+                    recurenceData = new YearlyPattern()
+                    {
+                        Interval = frequency,
+                        EndDate = endDate,
+                        NumberOfOccurrences = numberOfOccurrences,
+                        StartDate = value.EventDate,
+                        DayOfMonth = int.Parse(repeatElement.Attribute("day").Value),
+                        Month = (Month)int.Parse(repeatElement.Attribute("month").Value)
+                    };
+                    break;
+                case "yearlyByDay":
+                    frequency = int.Parse(repeatElement.Attribute("yearFrequency").Value);
+                    recurenceData = new RelativeYearlyPattern()
+                    {
+                        Interval = frequency,
+                        EndDate = endDate,
+                        NumberOfOccurrences = numberOfOccurrences,
+                        StartDate = value.EventDate,
+                        Month = (Month)int.Parse(repeatElement.Attribute("month").Value),
+                        DayOfTheWeekIndex = this.GetDaysOfTheWeekIndex(repeatElement),
+                        DaysOfTheWeek = this.GetDaysOfTheWeek(repeatElement)
+                    };
+                    break;
             }
 
             return recurenceData;
@@ -131,6 +177,12 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
             }
 
             return daysOfTheWeek;
+        }
+
+        private DayOfTheWeekIndex GetDaysOfTheWeekIndex(XElement element)
+        {
+            var weekdayOfMonthAtribute = element.Attribute("weekdayOfMonth");
+            return this.dayOfTheWeekIndexByAbbreviation[weekdayOfMonthAtribute.Value];
         }
     }
 }
