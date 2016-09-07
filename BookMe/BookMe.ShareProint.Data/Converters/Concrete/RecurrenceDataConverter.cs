@@ -14,7 +14,7 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
 {
     public class RecurrenceDataConverter : IConverter<Reservation, RecurrenceData>
     {
-        private readonly IDictionary<string, DayOfTheWeek> dayOfTheWeekByAbbreviation = new Dictionary<string, DayOfTheWeek>()
+        private static readonly IDictionary<string, DayOfTheWeek> DayOfTheWeekByAbbreviation = new Dictionary<string, DayOfTheWeek>()
         {
             { "mo", DayOfTheWeek.Monday },
             { "tu", DayOfTheWeek.Tuesday },
@@ -28,7 +28,7 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
             { "weekend_day", DayOfTheWeek.WeekendDay },
         };
 
-        private readonly IDictionary<string, DayOfTheWeekIndex> dayOfTheWeekIndexByAbbreviation = new Dictionary<string, DayOfTheWeekIndex>()
+        private static readonly IDictionary<string, DayOfTheWeekIndex> DayOfTheWeekIndexByAbbreviation = new Dictionary<string, DayOfTheWeekIndex>()
         {
             { "first", DayOfTheWeekIndex.First },
             { "second", DayOfTheWeekIndex.Second },
@@ -37,98 +37,31 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
             { "last", DayOfTheWeekIndex.Last },
         };
 
+        private static readonly IDictionary<string, Func<Reservation, XElement, RecurrenceData>>
+            InstatiationMethodByRecurenceDataName = new Dictionary<string, Func<Reservation, XElement, RecurrenceData>>()
+            {
+                { "daily", InstanceDailyPattern },
+                { "weekly", InstanceWeeklyPattern },
+                { "monthly", InstanceMonthlyPattern },
+                { "monthlyByDay", InstanceRelativeMonthlyPattern },
+                { "yearly", InstanceYearlyPattern },
+                { "yearlyByDay", InstanceRelativeYearlyPattern },
+            };
+
         public RecurrenceData Convert(Reservation value)
         {
-            RecurrenceData recurenceData = null;
+            const string RecurrenceKey = "recurrence";
+            const string RuleKey = "rule";
 
             var xdoc = XDocument.Parse(value.Description);
 
-            var recurrenceElement = xdoc.Element("recurrence");
-            var ruleElement = recurrenceElement.Element("rule");
+            var recurrenceElement = xdoc.Element(RecurrenceKey);
+            var ruleElement = recurrenceElement.Element(RuleKey);
 
-            var endDate = this.GetEndDate(ruleElement);
-            var numberOfOccurrences = this.GetRepeatInstances(ruleElement);
-
-            var repeatElement = ruleElement.Element("repeat").Elements().FirstOrDefault();
+            var repeatElement = GetRepeatElement(ruleElement);
             var recurrenceDataTypeName = repeatElement.Name.ToString();
 
-            int frequency;
-
-            switch (recurrenceDataTypeName)
-            {
-                case "daily":
-                    frequency = int.Parse(repeatElement.Attribute("dayFrequency").Value);
-                    recurenceData = new DailyPattern()
-                    {
-                        EndDate = endDate,
-                        Interval = frequency,
-                        StartDate = value.EventDate,
-                        NumberOfOccurrences = numberOfOccurrences
-                    };
-                    break;
-                case "weekly":
-                    frequency = int.Parse(repeatElement.Attribute("weekFrequency").Value);
-                    recurenceData = new WeeklyPattern()
-                    {
-                        Interval = frequency,
-                        EndDate = endDate,
-                        DaysOfTheWeek = this.GetDaysOfTheWeek(repeatElement),
-                        NumberOfOccurrences = numberOfOccurrences,
-                        StartDate = value.EventDate
-                    };
-                    break;
-                case "monthly":
-                    frequency = int.Parse(repeatElement.Attribute("monthFrequency").Value);
-                    var dayOfMonth = int.Parse(repeatElement.Attribute("day").Value);
-                    recurenceData = new MonthlyPattern()
-                    {
-                        Interval = frequency,
-                        EndDate = endDate,
-                        NumberOfOccurrences = numberOfOccurrences,
-                        StartDate = value.EventDate,
-                        DayOfMonth = dayOfMonth
-                    };
-                    break;
-                case "monthlyByDay":
-                    frequency = int.Parse(repeatElement.Attribute("monthFrequency").Value);
-                    recurenceData = new RelativeMonthlyPattern()
-                    {
-                        Interval = frequency,
-                        EndDate = endDate,
-                        NumberOfOccurrences = numberOfOccurrences,
-                        StartDate = value.EventDate,
-                        DaysOfTheWeek = this.GetDaysOfTheWeek(repeatElement),
-                        DayOfTheWeekIndex = this.GetDaysOfTheWeekIndex(repeatElement)
-                    };
-                    break;
-                case "yearly":
-                    frequency = int.Parse(repeatElement.Attribute("yearFrequency").Value);
-                    recurenceData = new YearlyPattern()
-                    {
-                        Interval = frequency,
-                        EndDate = endDate,
-                        NumberOfOccurrences = numberOfOccurrences,
-                        StartDate = value.EventDate,
-                        DayOfMonth = int.Parse(repeatElement.Attribute("day").Value),
-                        Month = (Month)int.Parse(repeatElement.Attribute("month").Value)
-                    };
-                    break;
-                case "yearlyByDay":
-                    frequency = int.Parse(repeatElement.Attribute("yearFrequency").Value);
-                    recurenceData = new RelativeYearlyPattern()
-                    {
-                        Interval = frequency,
-                        EndDate = endDate,
-                        NumberOfOccurrences = numberOfOccurrences,
-                        StartDate = value.EventDate,
-                        Month = (Month)int.Parse(repeatElement.Attribute("month").Value),
-                        DayOfTheWeekIndex = this.GetDaysOfTheWeekIndex(repeatElement),
-                        DaysOfTheWeek = this.GetDaysOfTheWeek(repeatElement)
-                    };
-                    break;
-            }
-
-            return recurenceData;
+            return InstatiationMethodByRecurenceDataName[recurrenceDataTypeName](value, ruleElement);
         }
 
         public IEnumerable<RecurrenceData> Convert(IEnumerable<Reservation> values)
@@ -136,7 +69,118 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
             throw new NotImplementedException();
         }
 
-        private DateTime? GetEndDate(XElement element)
+        #region RecurrenceData instantiation methods
+
+        private static RecurrenceData InstanceDailyPattern(Reservation reservation, XElement ruleElement)
+        {
+            const string FrequencyKey = "dayFrequency";
+
+            var repeatElement = GetRepeatElement(ruleElement);
+            var recurrenceData = new DailyPattern()
+            {
+                EndDate = GetEndDate(ruleElement),
+                Interval = GetFrequency(repeatElement, FrequencyKey),
+                StartDate = reservation.EventDate,
+                NumberOfOccurrences = GetRepeatInstances(ruleElement)
+            };
+
+            return recurrenceData;
+        }
+
+        private static RecurrenceData InstanceWeeklyPattern(Reservation reservation, XElement ruleElement)
+        {
+            const string FrequencyKey = "weekFrequency";
+
+            var repeatElement = GetRepeatElement(ruleElement);
+            var recurrenceData = new WeeklyPattern()
+            {
+                Interval = GetFrequency(repeatElement, FrequencyKey),
+                EndDate = GetEndDate(ruleElement),
+                DaysOfTheWeek = GetDaysOfTheWeek(repeatElement),
+                NumberOfOccurrences = GetRepeatInstances(ruleElement),
+                StartDate = reservation.EventDate
+            };
+
+            return recurrenceData;
+        }
+
+        private static RecurrenceData InstanceMonthlyPattern(Reservation reservation, XElement ruleElement)
+        {
+            const string FrequencyKey = "monthFrequency";
+
+            var repeatElement = GetRepeatElement(ruleElement);
+            var recurrenceData = new MonthlyPattern()
+            {
+                Interval = GetFrequency(repeatElement, FrequencyKey),
+                EndDate = GetEndDate(ruleElement),
+                NumberOfOccurrences = GetRepeatInstances(ruleElement),
+                StartDate = reservation.EventDate,
+                DayOfMonth = GetDayOfMonth(repeatElement)
+            };
+
+            return recurrenceData;
+        }
+
+        private static RecurrenceData InstanceRelativeMonthlyPattern(Reservation reservation, XElement ruleElement)
+        {
+            const string FrequencyKey = "monthFrequency";
+
+            var repeatElement = GetRepeatElement(ruleElement);
+            var recurrenceData = new RelativeMonthlyPattern()
+            {
+                Interval = GetFrequency(repeatElement, FrequencyKey),
+                EndDate = GetEndDate(ruleElement),
+                NumberOfOccurrences = GetRepeatInstances(ruleElement),
+                StartDate = reservation.EventDate,
+                DaysOfTheWeek = GetDaysOfTheWeek(repeatElement),
+                DayOfTheWeekIndex = GetDaysOfTheWeekIndex(repeatElement)
+            };
+
+            return recurrenceData;
+        }
+
+        private static RecurrenceData InstanceYearlyPattern(Reservation reservation, XElement ruleElement)
+        {
+            const string FrequencyKey = "yearFrequency";
+
+            var repeatElement = GetRepeatElement(ruleElement);
+            var recurrenceData = new YearlyPattern()
+            {
+                Interval = GetFrequency(repeatElement, FrequencyKey),
+                EndDate = GetEndDate(ruleElement),
+                NumberOfOccurrences = GetRepeatInstances(ruleElement),
+                StartDate = reservation.EventDate,
+                DayOfMonth = GetDayOfMonth(repeatElement),
+                Month = GetMonth(repeatElement)
+            };
+
+            return recurrenceData;
+        }
+
+        private static RecurrenceData InstanceRelativeYearlyPattern(Reservation reservation, XElement ruleElement)
+        {
+            const string FrequencyKey = "yearFrequency";
+
+            var repeatElement = GetRepeatElement(ruleElement);
+            var recurrenceData = new RelativeYearlyPattern()
+            {
+                Interval = GetFrequency(repeatElement, FrequencyKey),
+                EndDate = GetEndDate(ruleElement),
+                NumberOfOccurrences = GetRepeatInstances(ruleElement),
+                StartDate = reservation.EventDate,
+                Month = GetMonth(repeatElement),
+                DayOfTheWeekIndex = GetDaysOfTheWeekIndex(repeatElement),
+                DaysOfTheWeek = GetDaysOfTheWeek(repeatElement)
+            };
+
+            return recurrenceData;
+        }
+
+        #endregion
+
+        #region XML parsing helpers
+
+        private static DateTime? GetEndDate(XElement element)
         {
             const string EndDateXmlKey = "windowEnd";
 
@@ -150,7 +194,7 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
             return endDate?.ToUniversalTime();
         }
 
-        private int? GetRepeatInstances(XElement element)
+        private static int? GetRepeatInstances(XElement element)
         {
             const string RepeatInstancesXmlKey = "repeatInstances";
 
@@ -164,10 +208,10 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
             return repeatInstances;
         }
 
-        private IEnumerable<DayOfTheWeek> GetDaysOfTheWeek(XElement element)
+        private static IEnumerable<DayOfTheWeek> GetDaysOfTheWeek(XElement element)
         {
             var daysOfTheWeek = new List<DayOfTheWeek>();
-            foreach (var item in this.dayOfTheWeekByAbbreviation)
+            foreach (var item in DayOfTheWeekByAbbreviation)
             {
                 var dayOfTheWeekAttribute = element.Attribute(item.Key);
                 if (dayOfTheWeekAttribute != null)
@@ -179,10 +223,43 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
             return daysOfTheWeek;
         }
 
-        private DayOfTheWeekIndex GetDaysOfTheWeekIndex(XElement element)
+        private static DayOfTheWeekIndex GetDaysOfTheWeekIndex(XElement element)
         {
-            var weekdayOfMonthAtribute = element.Attribute("weekdayOfMonth");
-            return this.dayOfTheWeekIndexByAbbreviation[weekdayOfMonthAtribute.Value];
+            const string WeekDayOfMonthKey = "weekdayOfMonth";
+
+            var weekdayOfMonthAtribute = element.Attribute(WeekDayOfMonthKey);
+            return DayOfTheWeekIndexByAbbreviation[weekdayOfMonthAtribute.Value];
         }
+
+        private static XElement GetRepeatElement(XElement ruleElement)
+        {
+            const string RepeatKey = "repeat";
+
+            return ruleElement
+                .Element(RepeatKey)
+                .Elements()
+                .FirstOrDefault();
+        }
+
+        private static int GetFrequency(XElement repeatElement, string frequencyKey)
+        {
+            return int.Parse(repeatElement.Attribute(frequencyKey).Value);
+        }
+
+        private static int GetDayOfMonth(XElement repeatElement)
+        {
+            const string DayOfMonthKey = "day";
+
+            return int.Parse(repeatElement.Attribute(DayOfMonthKey).Value);
+        }
+
+        private static Month GetMonth(XElement repeatElement)
+        {
+            const string MonthKey = "month";
+
+            return (Month)int.Parse(repeatElement.Attribute(MonthKey).Value);
+        }
+
+        #endregion
     }
 }

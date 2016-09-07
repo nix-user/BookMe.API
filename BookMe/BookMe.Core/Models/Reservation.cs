@@ -8,8 +8,6 @@ namespace BookMe.Core.Models
 {
     public class Reservation : BaseEntity
     {
-        public long Id { get; set; }
-
         public string Title { get; set; }
 
         public string Description { get; set; }
