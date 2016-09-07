@@ -55,5 +55,18 @@ namespace BookMe.WebApi.Controllers
         public void Delete(int id)
         {
         }
+
+        [Route("api/room")]
+        [HttpPost]
+        public IEnumerable<Room> GetAvailableRooms([FromBody]RoomFilterParameters filterParameters)
+        {
+            var operationResult = this.resourcesService.GetAvailbleResources(Mapper.Map<RoomFilterParameters, ResourceFilterParameters>(filterParameters));
+            if (operationResult.IsSuccessful)
+            {
+                return operationResult.Result.Select(Mapper.Map<ResourceDTO, Room>);
+            }
+
+            return null;
+        }
     }
 }
