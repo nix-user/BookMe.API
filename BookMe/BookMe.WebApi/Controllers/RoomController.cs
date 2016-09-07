@@ -8,6 +8,7 @@ using System.Web.Http;
 using AutoMapper;
 using BookMe.BusinessLogic.DTO;
 using BookMe.BusinessLogic.Interfaces.SharePoint;
+using BookMe.WebApi.MapperProfiles;
 using BookMe.WebApi.Models;
 
 namespace BookMe.WebApi.Controllers
