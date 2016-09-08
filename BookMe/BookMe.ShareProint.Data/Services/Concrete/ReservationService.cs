@@ -26,11 +26,13 @@ namespace BookMe.ShareProint.Data.Services.Concrete
         public OperationResult<IEnumerable<ReservationDTO>> GetPossibleReservationsInInterval(DateTime intervalStart, DateTime intervalEnd)
         {
             bool isReservationRetrievalSuccessful;
-            var reservations = this.GetPossibleReservationsInInterval(intervalStart, intervalEnd, out isReservationRetrievalSuccessful);
+            var reservations = this.GetPossibleReservationsInInterval(intervalStart, intervalEnd, out isReservationRetrievalSuccessful).ToList();
+            bool isDeepMappingSuccessful;
+            var mappedReservations = this.DeeplyMapReservationsToReservationDTOs(reservations, out isDeepMappingSuccessful);
             return new OperationResult<IEnumerable<ReservationDTO>>()
             {
-                IsSuccessful = isReservationRetrievalSuccessful,
-                Result = reservations?.Select(Mapper.Map<Reservation, ReservationDTO>)
+                IsSuccessful = isReservationRetrievalSuccessful && isDeepMappingSuccessful,
+                Result = mappedReservations
             };
         }
 
@@ -42,7 +44,7 @@ namespace BookMe.ShareProint.Data.Services.Concrete
             var mappedReservations = this.DeeplyMapReservationsToReservationDTOs(reservations, out isReservationsMappingSuccessful);
             return new OperationResult<IEnumerable<ReservationDTO>>()
             {
-                IsSuccessful = isReservationRetrievalSuccessful,
+                IsSuccessful = isReservationRetrievalSuccessful && isReservationsMappingSuccessful,
                 Result = mappedReservations
             };
         }

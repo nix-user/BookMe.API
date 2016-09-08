@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BookMe.BusinessLogic.DTO;
 using BookMe.Core.Enums;
+using BookMe.Infrastructure.MapperConfiguration;
 using BookMe.ShareProint.Data;
 using BookMe.ShareProint.Data.Converters.Concrete;
 using BookMe.ShareProint.Data.Parsers.Concrete;
@@ -18,10 +19,13 @@ namespace BookMe.IntegrationTests.SharePoint
     public class ResourceServiceTests
     {
         private ResourceService resourceService;
+        private ReservationService reservationService;
 
         [TestInitialize]
         public void Init()
         {
+            AutoMapperConfiguration.Configure();
+
             DescriptionParser descriptionParser = new DescriptionParser();
             ResourceConverter resourceConverter = new ResourceConverter(descriptionParser);
             ClientContext context = new ClientContext(Constants.BaseAddress);
@@ -29,6 +33,7 @@ namespace BookMe.IntegrationTests.SharePoint
             ReservationConverter reservationConverter = new ReservationConverter();
             ReservationParser reservationParser = new ReservationParser(context);
             this.resourceService = new ResourceService(resourceConverter, reservationConverter, resourceParser, reservationParser);
+            this.reservationService = new ReservationService(resourceConverter, reservationConverter, resourceParser, reservationParser);
         }
 
         [TestMethod]
@@ -82,6 +87,28 @@ namespace BookMe.IntegrationTests.SharePoint
             foreach (var resource in operationResult.Result)
             {
                 Assert.IsTrue(resource.RoomSize == RoomSizeDTO.Large);
+            }
+        }
+
+        [TestMethod]
+        public void GetAvailableResources_ShouldReturnOnlyAvailableResourcesInInterval()
+        {
+            //arrange 
+            var filterParameters = new ResourceFilterParameters()
+            {
+                From = DateTime.Now,
+                To = DateTime.Now.AddHours(1)
+            };
+
+            //act
+            var operationResult = this.resourceService.GetAvailbleResources(filterParameters);
+
+            //assert
+            var allIntersectingReservations = reservationService.GetPossibleReservationsInInterval(filterParameters.From, filterParameters.To).Result.ToList();
+            Assert.IsTrue(operationResult.IsSuccessful);
+            foreach (var resource in operationResult.Result)
+            {
+                Assert.IsFalse(allIntersectingReservations.Any(reservation => reservation.Resource != null && reservation.Resource.Id == resource.Id));
             }
         }
     }

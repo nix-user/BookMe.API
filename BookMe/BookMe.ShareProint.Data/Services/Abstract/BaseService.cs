@@ -83,6 +83,12 @@ namespace BookMe.ShareProint.Data.Services.Abstract
         // cannot user automapper Map because i need to get operation status
         protected IEnumerable<ReservationDTO> DeeplyMapReservationsToReservationDTOs(IList<Reservation> sharePointReservations,  out bool isSucсessful)
         {
+            if (sharePointReservations == null)
+            {
+                isSucсessful = false;
+                return null;
+            }
+
             bool isResourceRetrievalSuccessful;
             var allResources = this.GetAllResources(out isResourceRetrievalSuccessful).ToList();
             if (!isResourceRetrievalSuccessful)
