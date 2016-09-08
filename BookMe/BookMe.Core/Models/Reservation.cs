@@ -30,5 +30,10 @@ namespace BookMe.Core.Models
         public int? ParentId { get; set; }
 
         public int EventType { get; set; }
-}
+
+        public Interval GetBusyInterval(DateTime date)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

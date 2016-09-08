@@ -16,6 +16,6 @@ namespace BookMe.Core.Models.Recurrence
 
         public int? Interval { get; set; }
 
-        public abstract Interval GetBusyInterval(DateTime date);
+        public abstract bool IsBusyInDate(DateTime date);
     }
 }

@@ -10,7 +10,7 @@ namespace BookMe.Core.Models.Recurrence
     {
         public int DayOfMonth { get; set; }
 
-        public override Interval GetBusyInterval(DateTime date)
+        public override bool IsBusyInDate(DateTime date)
         {
             throw new NotImplementedException();
         }
