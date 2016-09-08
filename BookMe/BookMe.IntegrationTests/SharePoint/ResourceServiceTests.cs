@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BookMe.BusinessLogic.DTO;
 using BookMe.ShareProint.Data;
 using BookMe.ShareProint.Data.Converters.Concrete;
 using BookMe.ShareProint.Data.Parsers.Concrete;
@@ -32,8 +33,28 @@ namespace BookMe.IntegrationTests.SharePoint
         [TestMethod]
         public void GetAll_ShouldSuccessfullyReturnAllResources()
         {
+            //act
             var operationResult = this.resourceService.GetAll();
-            Assert.AreEqual(true, operationResult.IsSuccessful);
+
+            //assert
+            Assert.IsTrue(operationResult.IsSuccessful);
+        }
+
+        [TestMethod]
+        public void GetAvailableResources_ShouldReturnAllAvailableResources()
+        {
+            //arrange
+            var filterParameters = new ResourceFilterParameters()
+            {
+                From = DateTime.Now,
+                To = DateTime.Now.AddHours(1)
+            };
+
+            //act
+            var operationResult = this.resourceService.GetAvailbleResources(filterParameters);
+
+            //assert
+            Assert.IsTrue(operationResult.IsSuccessful);
         }
     }
 }
