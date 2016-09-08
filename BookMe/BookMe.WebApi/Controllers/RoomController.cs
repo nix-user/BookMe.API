@@ -68,5 +68,19 @@ namespace BookMe.WebApi.Controllers
 
             return null;
         }
+
+        [Route("api/room/currentReservations/{roomId}")]
+        public IEnumerable<ReservationModel> GetRoomCurrentReservations(int roomId)
+        {
+            TimeSpan defaultInterval = TimeSpan.FromHours(1);
+
+            var operationResult = this.resourcesService.GetRoomReservations(DateTime.Now, DateTime.Now + defaultInterval, roomId);
+            if (operationResult.IsSuccessful)
+            {
+                return operationResult.Result.Select(Mapper.Map<ReservationDTO, ReservationModel>);
+            }
+
+            return null;
+        }
     }
 }

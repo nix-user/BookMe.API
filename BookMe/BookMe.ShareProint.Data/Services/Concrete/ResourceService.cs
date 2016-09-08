@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using BookMe.BusinessLogic.DTO;
@@ -51,6 +52,15 @@ namespace BookMe.ShareProint.Data.Services.Concrete
             {
                 IsSuccessful = true,
                 Result = new List<ResourceDTO>()
+            };
+        }
+
+        public OperationResult<IEnumerable<ReservationDTO>> GetRoomReservations(DateTime intervalStart, DateTime intervalEnd, int roomId)
+        {
+            return new OperationResult<IEnumerable<ReservationDTO>>()
+            {
+                IsSuccessful = true,
+                Result = new List<ReservationDTO>()
             };
         }
     }
