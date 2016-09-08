@@ -76,9 +76,8 @@ namespace BookMe.ShareProint.Data.Services.Concrete
                 return false;
             }
 
-            if (filterParameters.RoomSize.HasValue &&
-                resource.RoomSize.HasValue &&
-                Mapper.Map<RoomSizeDTO, RoomSize>(filterParameters.RoomSize.Value) != resource.RoomSize.Value)
+            if (filterParameters.RoomSize.HasValue && 
+                (!resource.RoomSize.HasValue || Mapper.Map<RoomSizeDTO, RoomSize>(filterParameters.RoomSize.Value) != resource.RoomSize.Value))
             {
                 return false;
             }

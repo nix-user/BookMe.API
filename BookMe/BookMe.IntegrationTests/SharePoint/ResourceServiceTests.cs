@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BookMe.BusinessLogic.DTO;
+using BookMe.Core.Enums;
 using BookMe.ShareProint.Data;
 using BookMe.ShareProint.Data.Converters.Concrete;
 using BookMe.ShareProint.Data.Parsers.Concrete;
@@ -41,13 +42,14 @@ namespace BookMe.IntegrationTests.SharePoint
         }
 
         [TestMethod]
-        public void GetAvailableResources_ShouldReturnAllAvailableResources()
+        public void GetAvailableResourcesWithPolycom_ShouldReturnAllAvailableResourcesWithPolycom()
         {
             //arrange
             var filterParameters = new ResourceFilterParameters()
             {
                 From = DateTime.Now,
-                To = DateTime.Now.AddHours(1)
+                To = DateTime.Now.AddHours(1),
+                HasPolycom = true
             };
 
             //act
@@ -55,6 +57,32 @@ namespace BookMe.IntegrationTests.SharePoint
 
             //assert
             Assert.IsTrue(operationResult.IsSuccessful);
+            foreach (var resource in operationResult.Result)
+            {
+                Assert.IsTrue(resource.HasPolycom);
+            }
+        }
+
+        [TestMethod]
+        public void GetAvailableResourcesWithLargeRoomSize_ShouldReturnAllAvailableResourcesWithLargeRoomSize()
+        {
+            //arrange
+            var filterParameters = new ResourceFilterParameters()
+            {
+                From = DateTime.Now,
+                To = DateTime.Now.AddHours(1),
+                RoomSize = RoomSizeDTO.Large
+            };
+
+            //act
+            var operationResult = this.resourceService.GetAvailbleResources(filterParameters);
+
+            //assert
+            Assert.IsTrue(operationResult.IsSuccessful);
+            foreach (var resource in operationResult.Result)
+            {
+                Assert.IsTrue(resource.RoomSize == RoomSizeDTO.Large);
+            }
         }
     }
 }
