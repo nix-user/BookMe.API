@@ -59,7 +59,7 @@ namespace BookMe.ShareProint.Data.Parsers.Concrete
                 var reservationsList = this.Context.Web.Lists.GetByTitle(ListNames.Reservations);
 
                 Expression<Func<ListItem, bool>> reservationsRetrievalCondition =
-                        this.GetRecurrentBookingCondition(roomId)
+                        this.GetRecurrentBookingCondition(intervalEnd, roomId)
                         .OrElse(this.GetRegularReservationCondition(intervalStart, intervalEnd, roomId));
 
                 var queryConditions = Camlex.Query().Where(reservationsRetrievalCondition);
@@ -72,9 +72,11 @@ namespace BookMe.ShareProint.Data.Parsers.Concrete
             }
         }
 
-        private Expression<Func<ListItem, bool>> GetRecurrentBookingCondition(int? roomId)
+        private Expression<Func<ListItem, bool>> GetRecurrentBookingCondition(DateTime intervalEnd, int? roomId)
         {
-            Expression<Func<ListItem, bool>> recurrentCondition = reservation => (bool)reservation[RecurrentFieldName] && (DateTime)reservation[ReservationEndFieldName] > DateTime.Now;
+            Expression<Func<ListItem, bool>> recurrentCondition = reservation => (bool)reservation[RecurrentFieldName]
+            && (DateTime)reservation[ReservationStartFieldName] < intervalEnd
+            && (DateTime)reservation[ReservationEndFieldName] > DateTime.Now;
             if (roomId != null)
             {
                 recurrentCondition = recurrentCondition.AndAlso(reservation => reservation[Facilities] == (DataTypes.LookupId)roomId.Value.ToString());

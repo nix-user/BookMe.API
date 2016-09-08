@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting;
 using System.Text;
 using System.Threading.Tasks;
 using BookMe.BusinessLogic.DTO;
@@ -111,5 +112,44 @@ namespace BookMe.IntegrationTests.SharePoint
                 Assert.IsFalse(allIntersectingReservations.Any(reservation => reservation.Resource != null && reservation.Resource.Id == resource.Id));
             }
         }
+
+        [TestMethod]
+        public void GetRoomReservations_ShouldReturnOnlyRequestedRoomReservations()
+        {
+            //arrange
+            var roomId = this.resourceService.GetAll().Result.Last().Id;
+            DateTime intervalStart = DateTime.Now;
+            DateTime intervalEnd = DateTime.Now.AddHours(1);
+
+            //act
+            var operationResult = this.resourceService.GetRoomReservations(intervalStart, intervalEnd, roomId);
+
+            //assert
+            Assert.IsTrue(operationResult.IsSuccessful);
+            foreach (var reservation in operationResult.Result)
+            {
+                Assert.IsTrue(reservation.Resource.Id == roomId);
+            }
+        }
+
+        [TestMethod]
+        public void GetRoomReservations_ShouldReturnOnlyReservationsInInterval()
+        {
+            //arrange 
+            var roomId = this.resourceService.GetAll().Result.Last().Id;
+            DateTime intervalStart = DateTime.Now;
+            DateTime intervalEnd = DateTime.Now.AddHours(1);
+
+            //act
+            var operationResult = this.resourceService.GetRoomReservations(intervalStart, intervalEnd, roomId);
+
+            //assert
+            Assert.IsTrue(operationResult.IsSuccessful);
+            foreach (var reservation in operationResult.Result)
+            {
+                Assert.IsTrue(reservation.EventDate < intervalEnd && reservation.EndDate > intervalStart);
+            }
+        }
+
     }
 }
