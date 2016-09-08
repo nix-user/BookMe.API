@@ -29,5 +29,58 @@ namespace BookMe.Core.Models.Recurrence
         public int? Interval { get; set; }
 
         public abstract bool IsBusyInDate(DateTime date);
+
+        protected bool IsDateInDaysOfTheWeek(DateTime date, IEnumerable<DayOfTheWeek> daysOfTheWeek)
+        {
+            foreach (var item in daysOfTheWeek)
+            {
+                if (this.DaysOThefWeekByDayOfWeek[date.DayOfWeek].Contains(item))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        protected IEnumerable<DateTime> EachDay(DateTime from, DateTime to)
+        {
+            for (var day = from.Date; day.Date <= to.Date; day = day.AddDays(1))
+            {
+                yield return day;
+            }
+        }
+
+        protected int CalculateWeeksCount(DateTime from, DateTime to)
+        {
+            const DayOfWeek FirstDayOfWeek = DayOfWeek.Monday;
+            const DayOfWeek LastDayOfWeek = DayOfWeek.Sunday;
+            const int DaysInWeek = 7;
+
+            DateTime firstDayOfWeekBeforeStartDate;
+            var daysBetweenStartDateAndPreviousFirstDayOfWeek = (int)from.DayOfWeek - (int)FirstDayOfWeek;
+            if (daysBetweenStartDateAndPreviousFirstDayOfWeek >= 0)
+            {
+                firstDayOfWeekBeforeStartDate = from.AddDays(-daysBetweenStartDateAndPreviousFirstDayOfWeek);
+            }
+            else
+            {
+                firstDayOfWeekBeforeStartDate = from.AddDays(-(daysBetweenStartDateAndPreviousFirstDayOfWeek + DaysInWeek));
+            }
+
+            DateTime lastDayOfWeekAfterEndDate;
+            var daysBetweenEndDateAndFollowingLastDayOfWeek = (int)LastDayOfWeek - (int)to.DayOfWeek;
+            if (daysBetweenEndDateAndFollowingLastDayOfWeek >= 0)
+            {
+                lastDayOfWeekAfterEndDate = to.AddDays(daysBetweenEndDateAndFollowingLastDayOfWeek);
+            }
+            else
+            {
+                lastDayOfWeekAfterEndDate = to.AddDays(daysBetweenEndDateAndFollowingLastDayOfWeek + DaysInWeek);
+            }
+
+            var calendarWeeks = 1 + (int)((lastDayOfWeekAfterEndDate - firstDayOfWeekBeforeStartDate).TotalDays / DaysInWeek);
+            return calendarWeeks;
+        }
     }
 }

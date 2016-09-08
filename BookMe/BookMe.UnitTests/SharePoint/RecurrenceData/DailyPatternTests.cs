@@ -66,8 +66,6 @@ namespace BookMe.UnitTests.SharePoint.RecurrenceData
                 EndDate = new DateTime(2016, 9, 15),
             };
 
-            SystemTime.Now = () => today;
-
             // act
             var result = pattern.IsBusyInDate(today);
 
@@ -87,8 +85,6 @@ namespace BookMe.UnitTests.SharePoint.RecurrenceData
                 StartDate = new DateTime(2016, 9, 8),
                 EndDate = new DateTime(2016, 9, 15),
             };
-
-            SystemTime.Now = () => today;
 
             // act
             var result = pattern.IsBusyInDate(today);
@@ -110,8 +106,6 @@ namespace BookMe.UnitTests.SharePoint.RecurrenceData
                 StartDate = new DateTime(2016, 9, 8)
             };
 
-            SystemTime.Now = () => today;
-
             // act
             var result = pattern.IsBusyInDate(today);
 
@@ -131,8 +125,6 @@ namespace BookMe.UnitTests.SharePoint.RecurrenceData
                 NumberOfOccurrences = 3,
                 StartDate = new DateTime(2016, 9, 8)
             };
-
-            SystemTime.Now = () => today;
 
             // act
             var result = pattern.IsBusyInDate(today);
@@ -154,8 +146,6 @@ namespace BookMe.UnitTests.SharePoint.RecurrenceData
                 EndDate = new DateTime(2016, 9, 15)
             };
 
-            SystemTime.Now = () => today;
-
             // act
             var result = pattern.IsBusyInDate(today);
 
@@ -175,8 +165,6 @@ namespace BookMe.UnitTests.SharePoint.RecurrenceData
                 StartDate = new DateTime(2016, 9, 8),
                 EndDate = new DateTime(2016, 9, 13)
             };
-
-            SystemTime.Now = () => today;
 
             // act
             var result = pattern.IsBusyInDate(today);

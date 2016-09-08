@@ -17,7 +17,7 @@ namespace BookMe.Core.Models.Recurrence
             {
                 if (this.NumberOfOccurrences != null)
                 {
-                    var countOfInstances = this.EachDay(this.StartDate, SystemTime.Now())
+                    var countOfInstances = this.EachDay(this.StartDate, date)
                         .Count(item => this.IsDateInDaysOfTheWeek(item, this.DaysOfTheWeek));
 
                     return countOfInstances <= this.NumberOfOccurrences;
@@ -36,28 +36,7 @@ namespace BookMe.Core.Models.Recurrence
                 }
             }
 
-            return this.EndDate == null || this.EndDate > SystemTime.Now();
-        }
-
-        private bool IsDateInDaysOfTheWeek(DateTime date, IEnumerable<DayOfTheWeek> daysOfTheWeek)
-        {
-            foreach (var item in daysOfTheWeek)
-            {
-                if (this.DaysOThefWeekByDayOfWeek[date.DayOfWeek].Contains(item))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        private IEnumerable<DateTime> EachDay(DateTime from, DateTime thru)
-        {
-            for (var day = from.Date; day.Date <= thru.Date; day = day.AddDays(1))
-            {
-                yield return day;
-            }
+            return this.EndDate == null || this.EndDate > date;
         }
     }
 }

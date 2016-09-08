@@ -66,6 +66,7 @@
     <Compile Include="SharePoint\Parsers\ResourceParserTests.cs" />
     <Compile Include="SharePoint\Converters\ResourceConverterTests.cs" />
     <Compile Include="SharePoint\RecurrenceData\DailyPatternTests.cs" />
+    <Compile Include="SharePoint\RecurrenceData\WeeklyPatternTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BookMe.BusinessLogic\BookMe.BusinessLogic.csproj">
