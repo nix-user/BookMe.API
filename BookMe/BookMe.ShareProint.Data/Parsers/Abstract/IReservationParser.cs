@@ -7,7 +7,7 @@ namespace BookMe.ShareProint.Data.Parsers.Abstract
 {
     public interface IReservationParser
     {
-        ListItemCollection GetPossibleReservationsInInterval(DateTime intervalStart, DateTime intervalEnd);
+        ListItemCollection GetPossibleReservationsInInterval(DateTime intervalStart, DateTime intervalEnd, int? roomId = null);
 
         ListItemCollection GetUserActiveReservations(string userName);
 
