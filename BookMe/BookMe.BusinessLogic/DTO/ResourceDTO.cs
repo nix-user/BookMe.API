@@ -16,6 +16,6 @@ namespace BookMe.BusinessLogic.DTO
 
         public bool HasPolycom { get; set; }
 
-        public RoomSize? RoomSize { get; set; }
+        public RoomSizeDTO? RoomSize { get; set; }
     }
 }

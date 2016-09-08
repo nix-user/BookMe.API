@@ -9,76 +9,49 @@ using BookMe.Core.Models;
 using BookMe.ShareProint.Data.Converters.Abstract;
 using BookMe.ShareProint.Data.Parsers;
 using BookMe.ShareProint.Data.Parsers.Abstract;
+using BookMe.ShareProint.Data.Services.Abstract;
 using Microsoft.SharePoint.Client;
 
 namespace BookMe.ShareProint.Data.Services.Concrete
 {
-    public class ReservationService : ISharePointReservationService
+    public class ReservationService : BaseService, ISharePointReservationService
     {
-        private IConverter<IDictionary<string, object>, Reservation> reservationConverter;
-        private IReservationParser reservationParser;
-        private ISharePointResourceService resourceService;
-
-        public ReservationService(IConverter<IDictionary<string, object>, Reservation> reservationConverter, IReservationParser reservationParser, ISharePointResourceService resourceService)
+        public ReservationService(IConverter<IDictionary<string, object>, Resource> resourceConverter,
+            IConverter<IDictionary<string, object>, Reservation> reservationConverter,
+            IResourceParser resourceParser,
+            IReservationParser reservationParser) : base(resourceConverter, reservationConverter, resourceParser, reservationParser)
         {
-            this.reservationConverter = reservationConverter;
-            this.reservationParser = reservationParser;
-            this.resourceService = resourceService;
         }
 
         public OperationResult<IEnumerable<ReservationDTO>> GetPossibleReservationsInInterval(DateTime intervalStart, DateTime intervalEnd)
         {
-            try
+            bool isReservationRetrievalSuccessful;
+            var reservations = this.GetPossibleReservationsInInterval(intervalStart, intervalEnd, out isReservationRetrievalSuccessful).ToList();
+            bool isDeepMappingSuccessful;
+            var mappedReservations = this.DeeplyMapReservationsToReservationDTOs(reservations, out isDeepMappingSuccessful);
+            return new OperationResult<IEnumerable<ReservationDTO>>()
             {
-                var reservationsList = this.reservationParser
-                    .GetPossibleReservationsInInterval(intervalStart, intervalEnd).ToList()
-                    .Select(x => x.FieldValues);
-                return new OperationResult<IEnumerable<ReservationDTO>>()
-                {
-                    IsSuccessful = true,
-                    Result = this.reservationConverter.Convert(reservationsList).Select(Mapper.Map<Reservation, ReservationDTO>)
-                };
-            }
-            catch (ParserException)
-            {
-                return new OperationResult<IEnumerable<ReservationDTO>>() { IsSuccessful = false };
-            }
+                IsSuccessful = isReservationRetrievalSuccessful && isDeepMappingSuccessful,
+                Result = mappedReservations
+            };
         }
 
         public OperationResult<IEnumerable<ReservationDTO>> GetUserActiveReservations(string userName)
         {
-            try
+            bool isReservationRetrievalSuccessful;
+            var reservations = this.GetUserActiveReservations(userName, out isReservationRetrievalSuccessful).ToList();
+            bool isReservationsMappingSuccessful;
+            var mappedReservations = this.DeeplyMapReservationsToReservationDTOs(reservations, out isReservationsMappingSuccessful);
+            return new OperationResult<IEnumerable<ReservationDTO>>()
             {
-                var userActiveReservations = this.reservationParser
-                    .GetUserActiveReservations(userName).ToList()
-                    .Select(x => x.FieldValues);
-                var reservations = this.reservationConverter.Convert(userActiveReservations).ToList();
-                var convertedReservations = reservations.Select(Mapper.Map<Reservation, ReservationDTO>).ToList();
-                this.FillRoomInReservationDTO(reservations, convertedReservations);
-                return new OperationResult<IEnumerable<ReservationDTO>>()
-                {
-                    IsSuccessful = true,
-                    Result = convertedReservations
-                };
-            }
-            catch (ParserException)
-            {
-                return new OperationResult<IEnumerable<ReservationDTO>>() { IsSuccessful = false };
-            }
+                IsSuccessful = isReservationRetrievalSuccessful && isReservationsMappingSuccessful,
+                Result = mappedReservations
+            };
         }
 
         public OperationResult AddReservation(ReservationDTO reservationDTO)
         {
             return new OperationResult() { IsSuccessful = true };
-        }
-
-        private void FillRoomInReservationDTO(IEnumerable<Reservation> sharePointReservations, IEnumerable<ReservationDTO> convertedReservations)
-        {
-            var allResources = this.resourceService.GetAll().Result;
-            for (int i = 0; i < convertedReservations.Count(); i++)
-            {
-                convertedReservations.ElementAt(i).Resource = allResources.FirstOrDefault(resource => resource.Id == sharePointReservations.ElementAt(i).ResourceId);
-            }
         }
     }
 }

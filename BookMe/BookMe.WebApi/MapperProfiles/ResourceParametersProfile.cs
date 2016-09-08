@@ -14,7 +14,7 @@ namespace BookMe.WebApi.MapperProfiles
         {
             this.CreateMap<RoomFilterParameters, ResourceFilterParameters>()
                 .ForMember(nameof(ResourceFilterParameters.RoomSize),
-                    opt => opt.MapFrom(parameters => parameters.IsLarge ? RoomSize.Large : (RoomSize?)null));
+                    opt => opt.MapFrom(parameters => parameters.IsLarge ? RoomSizeDTO.Large : (RoomSizeDTO?)null));
         }
     }
 }
