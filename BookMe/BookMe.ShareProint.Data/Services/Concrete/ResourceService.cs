@@ -45,27 +45,22 @@ namespace BookMe.ShareProint.Data.Services.Concrete
 
         public OperationResult<IEnumerable<ResourceDTO>> GetAvailbleResources(ResourceFilterParameters resourceFilterParameters)
         {
-            IEnumerable<Dictionary<string, object>> reservationsList;
-            IEnumerable<Dictionary<string, object>> allResources;
-            try
-            {
-                reservationsList = this.reservationParser
-                    .GetPossibleReservationsInInterval(resourceFilterParameters.From, resourceFilterParameters.To).ToList()
-                    .Select(x => x.FieldValues);
-
-                allResources = this.resourceParser.GetAll().ToList().Select(x => x.FieldValues);
-            }
-            catch (ParserException)
+            bool isAllResourceRetrievalSuccessful;
+            var allResources = this.GetAllResources(out isAllResourceRetrievalSuccessful);
+            if (!isAllResourceRetrievalSuccessful)
             {
                 return new OperationResult<IEnumerable<ResourceDTO>>() { IsSuccessful = false };
             }
 
-            var convertedReservationsList = this.reservationConverter.Convert(reservationsList).ToList();
+            bool isPossibleReservationRetrievalSuccessful;
+            var possibleReservationInInterval = this.GetPossibleReservationsInInterval(resourceFilterParameters.From, resourceFilterParameters.To, out isPossibleReservationRetrievalSuccessful);
+            if (!isPossibleReservationRetrievalSuccessful)
+            {
+                return new OperationResult<IEnumerable<ResourceDTO>>() { IsSuccessful = false };
+            }
 
-            var convertedResourcesList = this.resourceConverter.Convert(allResources).ToList();
-
-            var availableResources = convertedResourcesList.Where(resource => this.DoesResourceMatchFilterParameters(resource, resourceFilterParameters) &&
-                                !this.IsResourceAlreadyInUse(convertedReservationsList, resource));
+            var availableResources = allResources.Where(resource => this.DoesResourceMatchFilterParameters(resource, resourceFilterParameters)
+                                                && !this.IsResourceAlreadyInUse(possibleReservationInInterval, resource));
 
             return new OperationResult<IEnumerable<ResourceDTO>>()
             {
@@ -91,7 +86,7 @@ namespace BookMe.ShareProint.Data.Services.Concrete
             return true;
         }
 
-        private bool IsResourceAlreadyInUse(List<Reservation> reservationsInSameInterval, Resource resource)
+        private bool IsResourceAlreadyInUse(IEnumerable<Reservation> reservationsInSameInterval, Resource resource)
         {
             return reservationsInSameInterval.Any(reservation => reservation.ResourceId == resource.Id);
         }
