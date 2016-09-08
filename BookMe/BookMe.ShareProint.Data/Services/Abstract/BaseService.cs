@@ -64,24 +64,14 @@ namespace BookMe.ShareProint.Data.Services.Abstract
             }
         }
 
-        protected IEnumerable<ReservationDTO> GetUserActiveReservations(string userName, out bool isSuccessful)
+        protected IEnumerable<Reservation> GetUserActiveReservations(string userName, out bool isSuccessful)
         {
             try
             {
-                var userActiveReservations = this.reservationParser.GetUserActiveReservations(userName).ToList().Select(x => x.FieldValues);
+                var userActiveReservations = this.reservationParser.GetUserActiveReservations(userName).ToList().Select(x => x.FieldValues); 
                 var reservations = this.reservationConverter.Convert(userActiveReservations).ToList();
-                var convertedReservations = reservations.Select(Mapper.Map<Reservation, ReservationDTO>).ToList();
-
-                bool isFillReservationsSuccessful;
-                this.FillRoomInReservationDTO(reservations, convertedReservations, out isFillReservationsSuccessful);
-                if (isFillReservationsSuccessful)
-                {
-                    isSuccessful = true;
-                    return convertedReservations;
-                }
-
-                isSuccessful = false;
-                return null;
+                isSuccessful = true;
+                return reservations;
             }
             catch (ParserException)
             {
@@ -90,17 +80,19 @@ namespace BookMe.ShareProint.Data.Services.Abstract
             }
         }
 
-        private void FillRoomInReservationDTO(IList<Reservation> sharePointReservations, IList<ReservationDTO> convertedReservations, out bool isSucessful)
+        // cannot user automapper Map because i need to get operation status
+        protected IEnumerable<ReservationDTO> DeeplyMapReservationsToReservationDTOs(IList<Reservation> sharePointReservations,  out bool isSucсessful)
         {
             bool isResourceRetrievalSuccessful;
             var allResources = this.GetAllResources(out isResourceRetrievalSuccessful).ToList();
             if (!isResourceRetrievalSuccessful)
             {
-                isSucessful = false;
-                return;
+                isSucсessful = false;
+                return null;
             }
 
-            isSucessful = true;
+            isSucсessful = true;
+            var convertedReservations = sharePointReservations.Select(Mapper.Map<Reservation, ReservationDTO>).ToList();
             for (int i = 0; i < convertedReservations.Count(); i++)
             {
                 var reservationResource = allResources.FirstOrDefault(resource => resource.Id == sharePointReservations[i].ResourceId);
@@ -109,6 +101,8 @@ namespace BookMe.ShareProint.Data.Services.Abstract
                     convertedReservations[i].Resource = Mapper.Map<Resource, ResourceDTO>(reservationResource);
                 }
             }
+
+            return convertedReservations;
         }
     }
 }

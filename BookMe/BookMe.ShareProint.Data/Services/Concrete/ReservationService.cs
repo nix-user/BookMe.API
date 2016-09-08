@@ -37,11 +37,13 @@ namespace BookMe.ShareProint.Data.Services.Concrete
         public OperationResult<IEnumerable<ReservationDTO>> GetUserActiveReservations(string userName)
         {
             bool isReservationRetrievalSuccessful;
-            var reservations = this.GetUserActiveReservations(userName, out isReservationRetrievalSuccessful);
+            var reservations = this.GetUserActiveReservations(userName, out isReservationRetrievalSuccessful).ToList();
+            bool isReservationsMappingSuccessful;
+            var mappedReservations = this.DeeplyMapReservationsToReservationDTOs(reservations, out isReservationsMappingSuccessful);
             return new OperationResult<IEnumerable<ReservationDTO>>()
             {
                 IsSuccessful = isReservationRetrievalSuccessful,
-                Result = reservations
+                Result = mappedReservations
             };
         }
 
