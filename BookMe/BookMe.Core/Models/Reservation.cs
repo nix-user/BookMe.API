@@ -33,7 +33,14 @@ namespace BookMe.Core.Models
 
         public Interval GetBusyInterval(DateTime date)
         {
-            throw new NotImplementedException();
+            if (date > this.EndDate || this.RecurrenceData == null)
+            {
+                return null;
+            }
+
+            var isBusy = this.RecurrenceData.IsBusyInDate(date);
+
+            return null;
         }
     }
 }
