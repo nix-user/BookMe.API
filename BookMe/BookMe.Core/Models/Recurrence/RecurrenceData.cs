@@ -9,38 +9,15 @@ namespace BookMe.Core.Models.Recurrence
 {
     public abstract class RecurrenceData
     {
-        protected IDictionary<DayOfTheWeek, IEnumerable<DayOfWeek>> DaysOfWeekByDayOfTheWeek { get; set; } = new Dictionary<DayOfTheWeek, IEnumerable<DayOfWeek>>()
+        protected IDictionary<DayOfWeek, IEnumerable<DayOfTheWeek>> DaysOThefWeekByDayOfWeek { get; set; } = new Dictionary<DayOfWeek, IEnumerable<DayOfTheWeek>>()
         {
-            { DayOfTheWeek.Sunday, new List<DayOfWeek>() { DayOfWeek.Sunday } },
-            { DayOfTheWeek.Monday, new List<DayOfWeek>() { DayOfWeek.Monday } },
-            { DayOfTheWeek.Tuesday, new List<DayOfWeek>() { DayOfWeek.Tuesday } },
-            { DayOfTheWeek.Wednesday, new List<DayOfWeek>() { DayOfWeek.Wednesday } },
-            { DayOfTheWeek.Thursday, new List<DayOfWeek>() { DayOfWeek.Thursday } },
-            { DayOfTheWeek.Friday, new List<DayOfWeek>() { DayOfWeek.Friday } },
-            { DayOfTheWeek.Saturday, new List<DayOfWeek>() { DayOfWeek.Saturday } },
-            {
-                DayOfTheWeek.Day, new List<DayOfWeek>()
-                {
-                    DayOfWeek.Sunday,
-                    DayOfWeek.Monday,
-                    DayOfWeek.Tuesday,
-                    DayOfWeek.Wednesday,
-                    DayOfWeek.Thursday,
-                    DayOfWeek.Friday,
-                    DayOfWeek.Saturday
-                }
-            },
-            {
-                DayOfTheWeek.Weekday, new List<DayOfWeek>()
-                {
-                    DayOfWeek.Monday,
-                    DayOfWeek.Tuesday,
-                    DayOfWeek.Wednesday,
-                    DayOfWeek.Thursday,
-                    DayOfWeek.Friday,
-                }
-            },
-            { DayOfTheWeek.Sunday, new List<DayOfWeek>() { DayOfWeek.Saturday, DayOfWeek.Sunday } },
+            { DayOfWeek.Sunday, new List<DayOfTheWeek>() { DayOfTheWeek.Sunday, DayOfTheWeek.Day, DayOfTheWeek.WeekendDay } },
+            { DayOfWeek.Monday, new List<DayOfTheWeek>() { DayOfTheWeek.Monday, DayOfTheWeek.Day, DayOfTheWeek.Weekday } },
+            { DayOfWeek.Tuesday, new List<DayOfTheWeek>() { DayOfTheWeek.Tuesday, DayOfTheWeek.Day, DayOfTheWeek.Weekday } },
+            { DayOfWeek.Wednesday, new List<DayOfTheWeek>() { DayOfTheWeek.Wednesday, DayOfTheWeek.Day, DayOfTheWeek.Weekday } },
+            { DayOfWeek.Thursday, new List<DayOfTheWeek>() { DayOfTheWeek.Thursday, DayOfTheWeek.Day, DayOfTheWeek.Weekday } },
+            { DayOfWeek.Friday, new List<DayOfTheWeek>() { DayOfTheWeek.Friday, DayOfTheWeek.Day, DayOfTheWeek.Weekday } },
+            { DayOfWeek.Saturday, new List<DayOfTheWeek>() { DayOfTheWeek.Saturday, DayOfTheWeek.Day, DayOfTheWeek.WeekendDay } },
         };
 
         public DateTime? EndDate { get; set; }
