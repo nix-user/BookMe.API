@@ -24,7 +24,7 @@ namespace BookMe.ShareProint.Data.Services.Concrete
         public ResourceService(IConverter<IDictionary<string, object>, Resource> resourceConverter,
             IConverter<IDictionary<string, object>, Reservation> reservationConverter,
             IResourceParser resourceParser,
-            IReservationParser reservationParser) : base(resourceParser, resourceConverter)
+            IReservationParser reservationParser) : base(resourceConverter, reservationConverter, resourceParser, reservationParser)
         {
             this.resourceConverter = resourceConverter;
             this.reservationConverter = reservationConverter;
@@ -35,11 +35,11 @@ namespace BookMe.ShareProint.Data.Services.Concrete
         public OperationResult<IEnumerable<ResourceDTO>> GetAll()
         {
             bool areResourcesSuccessfullyRetrieved;
-            var result = this.GetAllResources(out areResourcesSuccessfullyRetrieved);
+            var resources = this.GetAllResources(out areResourcesSuccessfullyRetrieved);
             return new OperationResult<IEnumerable<ResourceDTO>>()
             {
                 IsSuccessful = areResourcesSuccessfullyRetrieved,
-                Result = result?.Select(Mapper.Map<Resource, ResourceDTO>)
+                Result = resources?.Select(Mapper.Map<Resource, ResourceDTO>)
             };
         }
 

@@ -29,8 +29,7 @@ namespace BookMe.IntegrationTests.SharePoint
             ClientContext context = new ClientContext(Constants.BaseAddress);
             ResourceParser resourceParser = new ResourceParser(context);
             ReservationParser reservationParser = new ReservationParser(context);
-            var resourceService = new ResourceService(resourceConverter, reservationConverter, resourceParser, reservationParser);
-            this.reservationService = new ReservationService(reservationConverter, reservationParser, resourceService);
+            this.reservationService = new ReservationService(resourceConverter, reservationConverter, resourceParser, reservationParser);
         }
 
         [TestMethod]

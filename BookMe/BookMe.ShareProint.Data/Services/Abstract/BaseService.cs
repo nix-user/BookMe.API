@@ -16,12 +16,20 @@ namespace BookMe.ShareProint.Data.Services.Abstract
     public abstract class BaseService
     {
         private readonly IResourceParser resourceParser;
+        private readonly IReservationParser reservationParser;
         private IConverter<IDictionary<string, object>, Resource> resourcesConverter;
+        private IConverter<IDictionary<string, object>, Reservation> reservationConverter;
 
-        protected BaseService(IResourceParser resourceParser, IConverter<IDictionary<string, object>, Resource> resourcesConverter)
+        protected BaseService(
+            IConverter<IDictionary<string, object>, Resource> resourcesConverter,
+            IConverter<IDictionary<string, object>, Reservation> reservationConverter,
+            IResourceParser resourceParser,
+            IReservationParser reservationParser)
         {
             this.resourceParser = resourceParser;
+            this.reservationParser = reservationParser;
             this.resourcesConverter = resourcesConverter;
+            this.reservationConverter = reservationConverter;
         }
 
         protected IEnumerable<Resource> GetAllResources(out bool isSuccessful)
@@ -31,6 +39,23 @@ namespace BookMe.ShareProint.Data.Services.Abstract
                 var resourceDictionariesCollection = this.resourceParser.GetAll().ToList().Select(x => x.FieldValues);
                 isSuccessful = true;
                 return this.resourcesConverter.Convert(resourceDictionariesCollection);
+            }
+            catch (ParserException)
+            {
+                isSuccessful = false;
+                return null;
+            }
+        }
+
+        protected IEnumerable<Reservation> GetPossibleReservationsInInterval(DateTime intervalStart, DateTime intervalEnd, out bool isSuccessful)
+        {
+            try
+            {
+                var reservationsList = this.reservationParser
+                    .GetPossibleReservationsInInterval(intervalStart, intervalEnd).ToList()
+                    .Select(x => x.FieldValues);
+                isSuccessful = true;
+                return this.reservationConverter.Convert(reservationsList);
             }
             catch (ParserException)
             {

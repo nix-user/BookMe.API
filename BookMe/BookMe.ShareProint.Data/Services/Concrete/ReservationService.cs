@@ -18,32 +18,25 @@ namespace BookMe.ShareProint.Data.Services.Concrete
     {
         private IConverter<IDictionary<string, object>, Reservation> reservationConverter;
         private IReservationParser reservationParser;
-        private ISharePointResourceService resourceService;
 
-        public ReservationService(IConverter<IDictionary<string, object>, Reservation> reservationConverter, IReservationParser reservationParser, ISharePointResourceService resourceService) : base(null, null)
+        public ReservationService(IConverter<IDictionary<string, object>, Resource> resourceConverter,
+            IConverter<IDictionary<string, object>, Reservation> reservationConverter,
+            IResourceParser resourceParser,
+            IReservationParser reservationParser) : base(resourceConverter, reservationConverter, resourceParser, reservationParser)
         {
             this.reservationConverter = reservationConverter;
             this.reservationParser = reservationParser;
-            this.resourceService = resourceService;
         }
 
         public OperationResult<IEnumerable<ReservationDTO>> GetPossibleReservationsInInterval(DateTime intervalStart, DateTime intervalEnd)
         {
-            try
+            bool isReservationRetrievalSuccessful;
+            var reservations = this.GetPossibleReservationsInInterval(intervalStart, intervalEnd, out isReservationRetrievalSuccessful);
+            return new OperationResult<IEnumerable<ReservationDTO>>()
             {
-                var reservationsList = this.reservationParser
-                    .GetPossibleReservationsInInterval(intervalStart, intervalEnd).ToList()
-                    .Select(x => x.FieldValues);
-                return new OperationResult<IEnumerable<ReservationDTO>>()
-                {
-                    IsSuccessful = true,
-                    Result = this.reservationConverter.Convert(reservationsList).Select(Mapper.Map<Reservation, ReservationDTO>)
-                };
-            }
-            catch (ParserException)
-            {
-                return new OperationResult<IEnumerable<ReservationDTO>>() { IsSuccessful = false };
-            }
+                IsSuccessful = isReservationRetrievalSuccessful,
+                Result = reservations?.Select(Mapper.Map<Reservation, ReservationDTO>)
+            };
         }
 
         public OperationResult<IEnumerable<ReservationDTO>> GetUserActiveReservations(string userName)
@@ -75,11 +68,11 @@ namespace BookMe.ShareProint.Data.Services.Concrete
 
         private void FillRoomInReservationDTO(IEnumerable<Reservation> sharePointReservations, IEnumerable<ReservationDTO> convertedReservations)
         {
-            var allResources = this.resourceService.GetAll().Result;
+            /*var allResources = this.resourceService.GetAll().Result;
             for (int i = 0; i < convertedReservations.Count(); i++)
             {
                 convertedReservations.ElementAt(i).Resource = allResources.FirstOrDefault(resource => resource.Id == sharePointReservations.ElementAt(i).ResourceId);
-            }
+            }*/
         }
     }
 }
