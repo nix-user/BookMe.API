@@ -22,14 +22,14 @@ namespace BookMe.Core.Models.Recurrence
                 }
                 else if (this.NumberOfOccurrences != null)
                 {
-                    var countOfInstances = this.EachDay(this.StartDate, DateTime.Now)
+                    var countOfInstances = this.EachDay(this.StartDate, SystemTime.Now())
                         .Count(item => this.IsDateInDaysOfTheWeek(item, this.DaysOfTheWeek));
 
                     return countOfInstances < this.NumberOfOccurrences;
                 }
                 else
                 {
-                    return this.EndDate == null || this.EndDate > DateTime.Now;
+                    return this.EndDate == null || this.EndDate > SystemTime.Now();
                 }
             }
             else
@@ -45,7 +45,7 @@ namespace BookMe.Core.Models.Recurrence
                 }
                 else
                 {
-                    return this.EndDate == null || this.EndDate > DateTime.Now;
+                    return this.EndDate == null || this.EndDate > SystemTime.Now();
                 }
             }
         }
