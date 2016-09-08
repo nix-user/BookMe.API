@@ -63,5 +63,52 @@ namespace BookMe.ShareProint.Data.Services.Abstract
                 return null;
             }
         }
+
+        protected IEnumerable<ReservationDTO> GetUserActiveReservations(string userName, out bool isSuccessful)
+        {
+            try
+            {
+                var userActiveReservations = this.reservationParser.GetUserActiveReservations(userName).ToList().Select(x => x.FieldValues);
+                var reservations = this.reservationConverter.Convert(userActiveReservations).ToList();
+                var convertedReservations = reservations.Select(Mapper.Map<Reservation, ReservationDTO>).ToList();
+
+                bool isFillReservationsSuccessful;
+                this.FillRoomInReservationDTO(reservations, convertedReservations, out isFillReservationsSuccessful);
+                if (isFillReservationsSuccessful)
+                {
+                    isSuccessful = true;
+                    return convertedReservations;
+                }
+
+                isSuccessful = false;
+                return null;
+            }
+            catch (ParserException)
+            {
+                isSuccessful = false;
+                return null;
+            }
+        }
+
+        private void FillRoomInReservationDTO(IList<Reservation> sharePointReservations, IList<ReservationDTO> convertedReservations, out bool isSucessful)
+        {
+            bool isResourceRetrievalSuccessful;
+            var allResources = this.GetAllResources(out isResourceRetrievalSuccessful).ToList();
+            if (!isResourceRetrievalSuccessful)
+            {
+                isSucessful = false;
+                return;
+            }
+
+            isSucessful = true;
+            for (int i = 0; i < convertedReservations.Count(); i++)
+            {
+                var reservationResource = allResources.FirstOrDefault(resource => resource.Id == sharePointReservations[i].ResourceId);
+                if (reservationResource != null)
+                {
+                    convertedReservations[i].Resource = Mapper.Map<Resource, ResourceDTO>(reservationResource);
+                }
+            }
+        }
     }
 }

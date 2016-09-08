@@ -54,6 +54,7 @@
     <Compile Include="Interfaces\SharePoint\ISharePointResourceService.cs" />
     <Compile Include="MapperProfiles\ReservationProfile.cs" />
     <Compile Include="MapperProfiles\ResourceProfile.cs" />
+    <Compile Include="MapperProfiles\RoomSizeProfile.cs" />
     <Compile Include="OperationResult\OperationResult.cs" />
     <Compile Include="OperationResult\OperationResultGeneric.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
