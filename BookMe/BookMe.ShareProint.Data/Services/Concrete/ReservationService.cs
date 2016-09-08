@@ -9,17 +9,18 @@ using BookMe.Core.Models;
 using BookMe.ShareProint.Data.Converters.Abstract;
 using BookMe.ShareProint.Data.Parsers;
 using BookMe.ShareProint.Data.Parsers.Abstract;
+using BookMe.ShareProint.Data.Services.Abstract;
 using Microsoft.SharePoint.Client;
 
 namespace BookMe.ShareProint.Data.Services.Concrete
 {
-    public class ReservationService : ISharePointReservationService
+    public class ReservationService : BaseService, ISharePointReservationService
     {
         private IConverter<IDictionary<string, object>, Reservation> reservationConverter;
         private IReservationParser reservationParser;
         private ISharePointResourceService resourceService;
 
-        public ReservationService(IConverter<IDictionary<string, object>, Reservation> reservationConverter, IReservationParser reservationParser, ISharePointResourceService resourceService)
+        public ReservationService(IConverter<IDictionary<string, object>, Reservation> reservationConverter, IReservationParser reservationParser, ISharePointResourceService resourceService) : base(null, null)
         {
             this.reservationConverter = reservationConverter;
             this.reservationParser = reservationParser;

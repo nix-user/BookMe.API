@@ -9,11 +9,12 @@ using BookMe.Core.Models;
 using BookMe.ShareProint.Data.Converters.Abstract;
 using BookMe.ShareProint.Data.Parsers;
 using BookMe.ShareProint.Data.Parsers.Abstract;
+using BookMe.ShareProint.Data.Services.Abstract;
 using Microsoft.SharePoint.Client;
 
 namespace BookMe.ShareProint.Data.Services.Concrete
 {
-    public class ResourceService : ISharePointResourceService
+    public class ResourceService : BaseService, ISharePointResourceService
     {
         private IConverter<IDictionary<string, object>, Resource> resourceConverter;
         private IConverter<IDictionary<string, object>, Reservation> reservationConverter;
@@ -23,7 +24,7 @@ namespace BookMe.ShareProint.Data.Services.Concrete
         public ResourceService(IConverter<IDictionary<string, object>, Resource> resourceConverter,
             IConverter<IDictionary<string, object>, Reservation> reservationConverter,
             IResourceParser resourceParser,
-            IReservationParser reservationParser)
+            IReservationParser reservationParser) : base(resourceParser, resourceConverter)
         {
             this.resourceConverter = resourceConverter;
             this.reservationConverter = reservationConverter;
@@ -33,24 +34,13 @@ namespace BookMe.ShareProint.Data.Services.Concrete
 
         public OperationResult<IEnumerable<ResourceDTO>> GetAll()
         {
-            try
+            bool areResourcesSuccessfullyRetrieved;
+            var result = this.GetAllResources(out areResourcesSuccessfullyRetrieved);
+            return new OperationResult<IEnumerable<ResourceDTO>>()
             {
-                var resourceDictionariesCollection = this.resourceParser.GetAll().ToList().Select(x => x.FieldValues);
-                return new OperationResult<IEnumerable<ResourceDTO>>()
-                {
-                    IsSuccessful = true,
-                    Result =
-                        this.resourceConverter.Convert(resourceDictionariesCollection)
-                            .Select(Mapper.Map<Resource, ResourceDTO>)
-                };
-            }
-            catch (ParserException)
-            {
-                return new OperationResult<IEnumerable<ResourceDTO>>()
-                {
-                    IsSuccessful = false
-                };
-            }
+                IsSuccessful = areResourcesSuccessfullyRetrieved,
+                Result = result?.Select(Mapper.Map<Resource, ResourceDTO>)
+            };
         }
 
         public OperationResult<IEnumerable<ResourceDTO>> GetAvailbleResources(ResourceFilterParameters resourceFilterParameters)
