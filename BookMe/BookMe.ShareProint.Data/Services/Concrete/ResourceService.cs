@@ -17,20 +17,11 @@ namespace BookMe.ShareProint.Data.Services.Concrete
 {
     public class ResourceService : BaseService, ISharePointResourceService
     {
-        private IConverter<IDictionary<string, object>, Resource> resourceConverter;
-        private IConverter<IDictionary<string, object>, Reservation> reservationConverter;
-        private IResourceParser resourceParser;
-        private IReservationParser reservationParser;
-
         public ResourceService(IConverter<IDictionary<string, object>, Resource> resourceConverter,
             IConverter<IDictionary<string, object>, Reservation> reservationConverter,
             IResourceParser resourceParser,
             IReservationParser reservationParser) : base(resourceConverter, reservationConverter, resourceParser, reservationParser)
         {
-            this.resourceConverter = resourceConverter;
-            this.reservationConverter = reservationConverter;
-            this.resourceParser = resourceParser;
-            this.reservationParser = reservationParser;
         }
 
         public OperationResult<IEnumerable<ResourceDTO>> GetAll()
@@ -72,10 +63,15 @@ namespace BookMe.ShareProint.Data.Services.Concrete
 
         public OperationResult<IEnumerable<ReservationDTO>> GetRoomReservations(DateTime intervalStart, DateTime intervalEnd, int roomId)
         {
+            bool areReservationsSuccessfullyRetrieved;
+            var reservations = this.GetPossibleRoomReservationsInInterval(intervalStart, intervalEnd, roomId, out areReservationsSuccessfullyRetrieved).ToList();
+            bool isReservationsMappingSuccessful;
+            var mappedReservations = this.DeeplyMapReservationsToReservationDTOs(reservations, out isReservationsMappingSuccessful);
+
             return new OperationResult<IEnumerable<ReservationDTO>>()
             {
-                IsSuccessful = true,
-                Result = new List<ReservationDTO>()
+                IsSuccessful = areReservationsSuccessfullyRetrieved && isReservationsMappingSuccessful,
+                Result = mappedReservations
             };
         }
 

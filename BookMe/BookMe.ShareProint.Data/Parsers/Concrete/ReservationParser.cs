@@ -21,24 +21,14 @@ namespace BookMe.ShareProint.Data.Parsers.Concrete
         {
         }
 
-        public ListItemCollection GetPossibleReservationsInInterval(DateTime intervalStart, DateTime intervalEnd, int? roomId = null)
+        public ListItemCollection GetAllPossibleReservationsInInterval(DateTime intervalStart, DateTime intervalEnd)
         {
-            try
-            {
-                var reservationsList = this.Context.Web.Lists.GetByTitle(ListNames.Reservations);
+            return this.GetPossibleReservationsInInterval(intervalStart, intervalEnd);
+        }
 
-                Expression<Func<ListItem, bool>> reservationsRetrievalCondition =
-                        this.GetRecurrentBookingCondition(roomId)
-                        .OrElse(this.GetRegularReservationCondition(intervalStart, intervalEnd, roomId));
-
-                var queryConditions = Camlex.Query().Where(reservationsRetrievalCondition);
-                ListItemCollection items = reservationsList.GetItems(this.CreateCamlQuery(queryConditions.ToString()));
-                return this.LoadCollectionFromServer(items);
-            }
-            catch
-            {
-                throw new ParserException(RetrivalErrorMessage);
-            }
+        public ListItemCollection GetPossibleRoomReservationsInInterval(DateTime intervalStart, DateTime intervalEnd, int roomId)
+        {
+            return this.GetPossibleReservationsInInterval(intervalStart, intervalEnd, roomId);
         }
 
         public ListItemCollection GetUserActiveReservations(string userName)
@@ -60,6 +50,26 @@ namespace BookMe.ShareProint.Data.Parsers.Concrete
 
         public void AddReservation(Reservation reservation)
         {
+        }
+
+        private ListItemCollection GetPossibleReservationsInInterval(DateTime intervalStart, DateTime intervalEnd, int? roomId = null)
+        {
+            try
+            {
+                var reservationsList = this.Context.Web.Lists.GetByTitle(ListNames.Reservations);
+
+                Expression<Func<ListItem, bool>> reservationsRetrievalCondition =
+                        this.GetRecurrentBookingCondition(roomId)
+                        .OrElse(this.GetRegularReservationCondition(intervalStart, intervalEnd, roomId));
+
+                var queryConditions = Camlex.Query().Where(reservationsRetrievalCondition);
+                ListItemCollection items = reservationsList.GetItems(this.CreateCamlQuery(queryConditions.ToString()));
+                return this.LoadCollectionFromServer(items);
+            }
+            catch
+            {
+                throw new ParserException(RetrivalErrorMessage);
+            }
         }
 
         private Expression<Func<ListItem, bool>> GetRecurrentBookingCondition(int? roomId)

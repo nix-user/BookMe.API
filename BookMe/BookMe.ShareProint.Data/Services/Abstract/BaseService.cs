@@ -52,7 +52,24 @@ namespace BookMe.ShareProint.Data.Services.Abstract
             try
             {
                 var reservationsList = this.reservationParser
-                    .GetPossibleReservationsInInterval(intervalStart, intervalEnd).ToList()
+                    .GetAllPossibleReservationsInInterval(intervalStart, intervalEnd).ToList()
+                    .Select(x => x.FieldValues);
+                isSuccessful = true;
+                return this.reservationConverter.Convert(reservationsList);
+            }
+            catch (ParserException)
+            {
+                isSuccessful = false;
+                return null;
+            }
+        }
+
+        protected IEnumerable<Reservation> GetPossibleRoomReservationsInInterval(DateTime intervalStart, DateTime intervalEnd, int roomId, out bool isSuccessful)
+        {
+            try
+            {
+                var reservationsList = this.reservationParser
+                    .GetPossibleRoomReservationsInInterval(intervalStart, intervalEnd, roomId).ToList()
                     .Select(x => x.FieldValues);
                 isSuccessful = true;
                 return this.reservationConverter.Convert(reservationsList);
@@ -68,7 +85,7 @@ namespace BookMe.ShareProint.Data.Services.Abstract
         {
             try
             {
-                var userActiveReservations = this.reservationParser.GetUserActiveReservations(userName).ToList().Select(x => x.FieldValues); 
+                var userActiveReservations = this.reservationParser.GetUserActiveReservations(userName).ToList().Select(x => x.FieldValues);
                 var reservations = this.reservationConverter.Convert(userActiveReservations).ToList();
                 isSuccessful = true;
                 return reservations;
@@ -81,7 +98,7 @@ namespace BookMe.ShareProint.Data.Services.Abstract
         }
 
         // cannot user automapper Map because i need to get operation status
-        protected IEnumerable<ReservationDTO> DeeplyMapReservationsToReservationDTOs(IList<Reservation> sharePointReservations,  out bool isSucсessful)
+        protected IEnumerable<ReservationDTO> DeeplyMapReservationsToReservationDTOs(IList<Reservation> sharePointReservations, out bool isSucсessful)
         {
             if (sharePointReservations == null)
             {
