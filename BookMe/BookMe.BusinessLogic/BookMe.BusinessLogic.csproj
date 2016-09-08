@@ -11,7 +11,7 @@
     <AssemblyName>BookMe.BusinessLogic</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-	<StyleCopTreatErrorsAsWarnings>false</StyleCopTreatErrorsAsWarnings>
+    <StyleCopTreatErrorsAsWarnings>false</StyleCopTreatErrorsAsWarnings>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -49,7 +49,7 @@
     <Compile Include="DTO\ResourceFilterParameters.cs" />
     <Compile Include="DTO\ReservationDTO.cs" />
     <Compile Include="DTO\ResourceDTO.cs" />
-    <Compile Include="DTO\RoomSize.cs" />
+    <Compile Include="DTO\RoomSizeDTO.cs" />
     <Compile Include="Interfaces\SharePoint\ISharePointReservationService.cs" />
     <Compile Include="Interfaces\SharePoint\ISharePointResourceService.cs" />
     <Compile Include="MapperProfiles\ReservationProfile.cs" />
