@@ -8,7 +8,7 @@ namespace BookMe.BusinessLogic.MapperProfiles
     {
         public ResourceProfile()
         {
-            this.CreateMap<Resource, ResourceDTO>();
+            this.CreateMap<Resource, ResourceDTO>(); 
         }
     }
 }
