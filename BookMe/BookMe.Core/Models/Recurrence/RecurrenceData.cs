@@ -82,5 +82,10 @@ namespace BookMe.Core.Models.Recurrence
             var calendarWeeks = 1 + (int)((lastDayOfWeekAfterEndDate - firstDayOfWeekBeforeStartDate).TotalDays / DaysInWeek);
             return calendarWeeks;
         }
+
+        protected int CalculateMonthCount(DateTime from, DateTime to)
+        {
+            return (to.Month - from.Month) + 12 * (to.Year - from.Year);
+        }
     }
 }

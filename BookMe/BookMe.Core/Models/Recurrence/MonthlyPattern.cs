@@ -35,25 +35,25 @@ namespace BookMe.Core.Models.Recurrence
             return (this.EndDate == null || this.EndDate > date) && isDayOfMonthRight;
         }
 
-        private int CalculateMonthCount(DateTime from, DateTime to)
-        {
-            return (to.Month - from.Month) + 12 * (to.Year - from.Year);
-        }
-
         private int CalculateInstancesCount(DateTime from, DateTime to)
         {
-            var totalMonth = this.CalculateMonthCount(from, to);
-            if (from.Day > this.DayOfMonth)
+            var days = this.EachDay(from, to).ToList();
+            var monthsCount = 0;
+            var countOfInstances = 0;
+            for (var i = 0; i < days.Count; i++)
             {
-                totalMonth--;
+                if (days[i].Day == 1 && i != 0)
+                {
+                    monthsCount++;
+                }
+
+                if (monthsCount % this.Interval == 0)
+                {
+                    countOfInstances += this.DayOfMonth == days[i].Day ? 1 : 0;
+                }
             }
 
-            if (to.Day < this.DayOfMonth)
-            {
-                totalMonth--;
-            }
-
-            return totalMonth;
+            return countOfInstances;
         }
     }
 }

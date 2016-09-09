@@ -58,7 +58,7 @@ namespace BookMe.UnitTests.SharePoint.RecurrenceData
         public void IsBusyInDate_IntervalDayOfMonthAndNumberOfOccurancesCaseWithOverflownInstances_ShouldReturnFalse()
         {
             // arrange 
-            var today = new DateTime(2017, 1, 23);
+            var today = new DateTime(2017, 3, 23);
 
             var pattern = new MonthlyPattern()
             {
