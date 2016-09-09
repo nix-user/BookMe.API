@@ -52,7 +52,7 @@ namespace BookMe.ShareProint.Data.Parsers.Concrete
             try
             {
                 var reservationsList = this.Context.Web.Lists.GetByTitle(ListNames.Reservations);
-                ListItemCollection items = reservationsList.GetItems(this.CreateCamlQuery(conditions.ToString()));
+                ListItemCollection items = reservationsList.GetItems(this.CreateCamlQuery(Camlex.Query().Where(conditions).ToString()));
                 return this.LoadCollectionFromServer(items);
             }
             catch
