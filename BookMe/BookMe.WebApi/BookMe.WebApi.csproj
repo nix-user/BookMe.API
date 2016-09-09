@@ -180,6 +180,8 @@
     <Compile Include="MapperProfiles\ReservationDTOProfile.cs" />
     <Compile Include="MapperProfiles\ResourceDTOProfile.cs" />
     <Compile Include="MapperProfiles\ResourceParametersProfile.cs" />
+    <Compile Include="Models\ResponseModel.cs" />
+    <Compile Include="Models\ResponseModelGeneric.cs" />
     <Compile Include="Models\ReservationModel.cs" />
     <Compile Include="Models\Room.cs" />
     <Compile Include="Models\RoomFilterParameters.cs" />

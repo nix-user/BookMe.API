@@ -38,26 +38,27 @@ namespace BookMe.UnitTests.Controllers
             this.resourceServiceMock.Setup(m => m.GetRoomReservations(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int>())).Returns(roomReservationsResult);
 
             //act
-            var roomReservations = this.roomController.GetRoomCurrentReservations(new RoomReservationsRequestModel());
+            var roomReservationsRetrieval = this.roomController.GetRoomCurrentReservations(new RoomReservationsRequestModel());
 
             //assert
             this.resourceServiceMock.Verify(m => m.GetRoomReservations(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int>()), Times.Once);
-            Assert.AreEqual(roomReservationsResult.Result.Count(), roomReservations.Count());
+            Assert.AreEqual(roomReservationsResult.Result.Count(), roomReservationsRetrieval.Result.Count());
         }
 
         [TestMethod]
-        public void GetRoomCurrentReservations_Should_Return_Null_If_Request_Failed()
+        public void GetRoomCurrentReservations_Should_Return_Fail_Status_If_Request_Failed()
         {
             //arrange
             var roomReservationsResult = new OperationResult<IEnumerable<ReservationDTO>> { IsSuccessful = false };
             this.resourceServiceMock.Setup(m => m.GetRoomReservations(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int>())).Returns(roomReservationsResult);
 
             //act
-            var roomReservations = this.roomController.GetRoomCurrentReservations(new RoomReservationsRequestModel());
+            var roomReservationsRetrieval = this.roomController.GetRoomCurrentReservations(new RoomReservationsRequestModel());
 
             //assert
             this.resourceServiceMock.Verify(m => m.GetRoomReservations(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int>()), Times.Once);
-            Assert.IsNull(roomReservations);
+            Assert.AreEqual(false, roomReservationsRetrieval.IsOperationSuccessful);
+            Assert.IsNull(roomReservationsRetrieval.Result);
         }
     }
 }

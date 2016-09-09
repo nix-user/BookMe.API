@@ -48,15 +48,14 @@ namespace BookMe.WebApi.Controllers
         }
 
         [Route("api/reservation/{userName}")]
-        public IEnumerable<ReservationModel> GetUserReservations(string userName)
+        public ResponseModel<IEnumerable<ReservationModel>> GetUserReservations(string userName)
         {
             var operationResult = this.reservationService.GetUserActiveReservations(userName);
-            if (operationResult.IsSuccessful)
+            return new ResponseModel<IEnumerable<ReservationModel>>()
             {
-                return operationResult.Result.Select(Mapper.Map<ReservationDTO, ReservationModel>);
-            }
-
-            return null;
+                IsOperationSuccessful = operationResult.IsSuccessful,
+                Result = operationResult.Result?.Select(Mapper.Map<ReservationDTO, ReservationModel>)
+            };
         }
     }
 }
