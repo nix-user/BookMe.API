@@ -42,16 +42,16 @@ namespace BookMe.Core.Models.Recurrence
         private int CalculateInstancesCount(DateTime from, DateTime to)
         {
             var days = this.EachDay(from, to).ToList();
-            var monthsCount = 0;
+            var yearsCount = 0;
             var countOfInstances = 0;
             for (var i = 0; i < days.Count; i++)
             {
-                if (days[i].Day == 1 && i != 0)
+                if (days[i].Day == 1 && days[i].Month == 1 && i != 0)
                 {
-                    monthsCount++;
+                    yearsCount++;
                 }
 
-                if (monthsCount % this.Interval == 0)
+                if (yearsCount % this.Interval == 0)
                 {
                     countOfInstances += this.DayOfMonth == days[i].Day && (int)this.Month == days[i].Month ? 1 : 0;
                 }
