@@ -29,20 +29,38 @@ namespace BookMe.UnitTests.Controllers
             {
                 this.reservationsList.Add(new ReservationDTO());
             }
-            var userActiveReservationResult = new OperationResult<IEnumerable<ReservationDTO>> { IsSuccessful = true, Result = reservationsList };
-            this.sharePointReservationServiceMock.Setup(m => m.GetUserActiveReservations(It.IsAny<string>())).Returns(userActiveReservationResult);
+
             this.reservationController = new ReservationController(this.sharePointReservationServiceMock.Object);
         }
 
         [TestMethod]
-        public void GetUserReservations_Should_Return_All_Reservations()
+        public void GetUserReservations_Should_Return_All_Reservations_If_Request_Was_Successful()
         {
+            //arrange
+            var userActiveReservationResult = new OperationResult<IEnumerable<ReservationDTO>> { IsSuccessful = true, Result = reservationsList };
+            this.sharePointReservationServiceMock.Setup(m => m.GetUserActiveReservations(It.IsAny<string>())).Returns(userActiveReservationResult);
+
             //act
             var userReservations = this.reservationController.GetUserReservations(string.Empty);
 
             //assert
             this.sharePointReservationServiceMock.Verify(m => m.GetUserActiveReservations(It.IsAny<string>()), Times.Once);
             Assert.AreEqual(this.reservationsList.Count, userReservations.Count());
+        }
+
+        [TestMethod]
+        public void GetUserReservations_Should_Return_Null_If_Request_Failed()
+        {
+            //arrange
+            var userActiveReservationResult = new OperationResult<IEnumerable<ReservationDTO>> { IsSuccessful = false};
+            this.sharePointReservationServiceMock.Setup(m => m.GetUserActiveReservations(It.IsAny<string>())).Returns(userActiveReservationResult);
+
+            //act
+            var userReservations = this.reservationController.GetUserReservations(string.Empty);
+
+            //assert
+            this.sharePointReservationServiceMock.Verify(m => m.GetUserActiveReservations(It.IsAny<string>()), Times.Once);
+            Assert.IsNull(userReservations);
         }
     }
 }
