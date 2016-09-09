@@ -25,27 +25,23 @@ namespace BookMe.ShareProint.Data.Services.Concrete
 
         public OperationResult<IEnumerable<ReservationDTO>> GetPossibleReservationsInInterval(DateTime intervalStart, DateTime intervalEnd)
         {
-            bool isReservationRetrievalSuccessful;
-            var reservations = this.GetPossibleReservationsInInterval(intervalStart, intervalEnd, out isReservationRetrievalSuccessful).ToList();
-            bool isDeepMappingSuccessful;
-            var mappedReservations = this.DeeplyMapReservationsToReservationDTOs(reservations, out isDeepMappingSuccessful);
+            var reservationsRetrieval = this.GetPossibleReservationsInIntervalFromParser(intervalStart, intervalEnd);
+            var reservationsMapping = this.DeeplyMapReservationsToReservationDTOs(reservationsRetrieval.Result.ToList());
             return new OperationResult<IEnumerable<ReservationDTO>>()
             {
-                IsSuccessful = isReservationRetrievalSuccessful && isDeepMappingSuccessful,
-                Result = mappedReservations
+                IsSuccessful = reservationsRetrieval.IsSuccessful && reservationsMapping.IsSuccessful,
+                Result = reservationsMapping.Result
             };
         }
 
         public OperationResult<IEnumerable<ReservationDTO>> GetUserActiveReservations(string userName)
         {
-            bool isReservationRetrievalSuccessful;
-            var reservations = this.GetUserActiveReservations(userName, out isReservationRetrievalSuccessful).ToList();
-            bool isReservationsMappingSuccessful;
-            var mappedReservations = this.DeeplyMapReservationsToReservationDTOs(reservations, out isReservationsMappingSuccessful);
+            var reservationsRetrieval = this.GetUserActiveReservationsFromParser(userName);
+            var reservationsMapping = this.DeeplyMapReservationsToReservationDTOs(reservationsRetrieval.Result.ToList());
             return new OperationResult<IEnumerable<ReservationDTO>>()
             {
-                IsSuccessful = isReservationRetrievalSuccessful && isReservationsMappingSuccessful,
-                Result = mappedReservations
+                IsSuccessful = reservationsRetrieval.IsSuccessful && reservationsMapping.IsSuccessful,
+                Result = reservationsMapping.Result
             };
         }
 

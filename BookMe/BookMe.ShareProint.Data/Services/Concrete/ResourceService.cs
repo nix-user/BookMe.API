@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using BookMe.BusinessLogic.DTO;
@@ -16,56 +17,56 @@ namespace BookMe.ShareProint.Data.Services.Concrete
 {
     public class ResourceService : BaseService, ISharePointResourceService
     {
-        private IConverter<IDictionary<string, object>, Resource> resourceConverter;
-        private IConverter<IDictionary<string, object>, Reservation> reservationConverter;
-        private IResourceParser resourceParser;
-        private IReservationParser reservationParser;
-
         public ResourceService(IConverter<IDictionary<string, object>, Resource> resourceConverter,
             IConverter<IDictionary<string, object>, Reservation> reservationConverter,
             IResourceParser resourceParser,
             IReservationParser reservationParser) : base(resourceConverter, reservationConverter, resourceParser, reservationParser)
         {
-            this.resourceConverter = resourceConverter;
-            this.reservationConverter = reservationConverter;
-            this.resourceParser = resourceParser;
-            this.reservationParser = reservationParser;
         }
 
         public OperationResult<IEnumerable<ResourceDTO>> GetAll()
         {
-            bool areResourcesSuccessfullyRetrieved;
-            var resources = this.GetAllResources(out areResourcesSuccessfullyRetrieved);
+            var resourcesRetrieval = this.GetAllResources();
             return new OperationResult<IEnumerable<ResourceDTO>>()
             {
-                IsSuccessful = areResourcesSuccessfullyRetrieved,
-                Result = resources?.Select(Mapper.Map<Resource, ResourceDTO>)
+                IsSuccessful = resourcesRetrieval.IsSuccessful,
+                Result = resourcesRetrieval.Result?.Select(Mapper.Map<Resource, ResourceDTO>)
             };
         }
 
         public OperationResult<IEnumerable<ResourceDTO>> GetAvailbleResources(ResourceFilterParameters resourceFilterParameters)
         {
-            bool isAllResourceRetrievalSuccessful;
-            var allResources = this.GetAllResources(out isAllResourceRetrievalSuccessful);
-            if (!isAllResourceRetrievalSuccessful)
+            var resourcesRetrieval = this.GetAllResources();
+            if (!resourcesRetrieval.IsSuccessful)
             {
                 return new OperationResult<IEnumerable<ResourceDTO>>() { IsSuccessful = false };
             }
 
-            bool isPossibleReservationRetrievalSuccessful;
-            var possibleReservationInInterval = this.GetPossibleReservationsInInterval(resourceFilterParameters.From, resourceFilterParameters.To, out isPossibleReservationRetrievalSuccessful);
-            if (!isPossibleReservationRetrievalSuccessful)
+            var possibleReservationInIntervalRetrieval = this.GetPossibleReservationsInIntervalFromParser(resourceFilterParameters.From, resourceFilterParameters.To);
+            if (!possibleReservationInIntervalRetrieval.IsSuccessful)
             {
                 return new OperationResult<IEnumerable<ResourceDTO>>() { IsSuccessful = false };
             }
 
-            var availableResources = allResources.Where(resource => this.DoesResourceMatchFilterParameters(resource, resourceFilterParameters)
-                                                && !this.IsResourceAlreadyInUse(possibleReservationInInterval, resource));
+            var availableResources = resourcesRetrieval.Result.Where(resource => this.DoesResourceMatchFilterParameters(resource, resourceFilterParameters)
+                                                && !this.IsResourceAlreadyInUse(possibleReservationInIntervalRetrieval.Result, resource));
 
             return new OperationResult<IEnumerable<ResourceDTO>>()
             {
                 IsSuccessful = true,
                 Result = availableResources.Select(Mapper.Map<Resource, ResourceDTO>)
+            };
+        }
+
+        public OperationResult<IEnumerable<ReservationDTO>> GetRoomReservations(DateTime intervalStart, DateTime intervalEnd, int roomId)
+        {
+            var reservationsRetrieval = this.GetPossibleRoomReservationsInIntervalFromParser(intervalStart, intervalEnd, roomId);
+            var reservationsMapping = this.DeeplyMapReservationsToReservationDTOs(reservationsRetrieval.Result.ToList());
+
+            return new OperationResult<IEnumerable<ReservationDTO>>()
+            {
+                IsSuccessful = reservationsRetrieval.IsSuccessful && reservationsMapping.IsSuccessful,
+                Result = reservationsMapping.Result
             };
         }
 
@@ -76,7 +77,7 @@ namespace BookMe.ShareProint.Data.Services.Concrete
                 return false;
             }
 
-            if (filterParameters.RoomSize.HasValue && 
+            if (filterParameters.RoomSize.HasValue &&
                 (!resource.RoomSize.HasValue || Mapper.Map<RoomSizeDTO, RoomSize>(filterParameters.RoomSize.Value) != resource.RoomSize.Value))
             {
                 return false;

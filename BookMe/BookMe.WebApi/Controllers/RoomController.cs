@@ -21,27 +21,30 @@ namespace BookMe.WebApi.Controllers
             this.resourcesService = resourcesService;
         }
 
-        public IEnumerable<Room> Get()
+        public ResponseModel<IEnumerable<Room>> Get()
         {
             var operationResult = this.resourcesService.GetAll();
-            if (operationResult.IsSuccessful)
+            return new ResponseModel<IEnumerable<Room>>
             {
-                return operationResult.Result.Select(Mapper.Map<ResourceDTO, Room>);
-            }
-
-            return null;
+                IsOperationSuccessful = operationResult.IsSuccessful,
+                Result = operationResult.Result?.Select(Mapper.Map<ResourceDTO, Room>)
+            };
         }
 
-        public Room Get(int id)
+        public ResponseModel<Room> Get(int id)
         {
             var operationResult = this.resourcesService.GetAll();
             if (operationResult.IsSuccessful)
             {
                 var neededResource = operationResult.Result.FirstOrDefault(resource => resource.Id == id);
-                return Mapper.Map<ResourceDTO, Room>(neededResource);
+                return new ResponseModel<Room>()
+                {
+                    IsOperationSuccessful = true,
+                    Result = Mapper.Map<ResourceDTO, Room>(neededResource)
+                };
             }
 
-            return null;
+            return new ResponseModel<Room>() { IsOperationSuccessful = false };
         }
 
         public void Post([FromBody]string value)
@@ -58,15 +61,26 @@ namespace BookMe.WebApi.Controllers
 
         [Route("api/room/available")]
         [HttpPost]
-        public IEnumerable<Room> GetAvailableRooms([FromBody]RoomFilterParameters filterParameters)
+        public ResponseModel<IEnumerable<Room>> GetAvailableRooms([FromBody]RoomFilterParameters filterParameters)
         {
             var operationResult = this.resourcesService.GetAvailbleResources(Mapper.Map<RoomFilterParameters, ResourceFilterParameters>(filterParameters));
-            if (operationResult.IsSuccessful)
+            return new ResponseModel<IEnumerable<Room>>()
             {
-                return operationResult.Result.Select(Mapper.Map<ResourceDTO, Room>);
-            }
+                IsOperationSuccessful = operationResult.IsSuccessful,
+                Result = operationResult.Result?.Select(Mapper.Map<ResourceDTO, Room>)
+            };
+        }
 
-            return null;
+        [Route("api/room/reservations")]
+        [HttpPost]
+        public ResponseModel<IEnumerable<ReservationModel>> GetRoomCurrentReservations(RoomReservationsRequestModel reservationsModel)
+        {
+            var operationResult = this.resourcesService.GetRoomReservations(reservationsModel.From, reservationsModel.To, reservationsModel.RoomId);
+            return new ResponseModel<IEnumerable<ReservationModel>>()
+            {
+                IsOperationSuccessful = operationResult.IsSuccessful,
+                Result = operationResult.Result?.Select(Mapper.Map<ReservationDTO, ReservationModel>)
+            };
         }
     }
 }
