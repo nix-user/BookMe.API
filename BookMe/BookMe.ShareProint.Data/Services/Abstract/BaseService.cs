@@ -100,7 +100,7 @@ namespace BookMe.ShareProint.Data.Services.Abstract
             }
             catch (ParserException)
             {
-                return null;
+                return new OperationResult<IEnumerable<Reservation>> { IsSuccessful = false };
             }
         }
 
