@@ -32,100 +32,107 @@ namespace BookMe.ShareProint.Data.Services.Abstract
             this.reservationConverter = reservationConverter;
         }
 
-        protected IEnumerable<Resource> GetAllResources(out bool isSuccessful)
+        protected OperationResult<IEnumerable<Resource>> GetAllResources()
         {
             try
             {
                 var resourceDictionariesCollection = this.resourceParser.GetAll().ToList().Select(x => x.FieldValues);
-                isSuccessful = true;
-                return this.resourcesConverter.Convert(resourceDictionariesCollection);
+                return new OperationResult<IEnumerable<Resource>>
+                {
+                    IsSuccessful = true,
+                    Result = this.resourcesConverter.Convert(resourceDictionariesCollection)
+                };
             }
             catch (ParserException)
             {
-                isSuccessful = false;
-                return null;
+                return new OperationResult<IEnumerable<Resource>> { IsSuccessful = false };
             }
         }
 
-        protected IEnumerable<Reservation> GetPossibleReservationsInInterval(DateTime intervalStart, DateTime intervalEnd, out bool isSuccessful)
+        protected OperationResult<IEnumerable<Reservation>> GetPossibleReservationsInIntervalFromParser(DateTime intervalStart, DateTime intervalEnd)
         {
             try
             {
                 var reservationsList = this.reservationParser
                     .GetAllPossibleReservationsInInterval(intervalStart, intervalEnd).ToList()
                     .Select(x => x.FieldValues);
-                isSuccessful = true;
-                return this.reservationConverter.Convert(reservationsList);
+                return new OperationResult<IEnumerable<Reservation>>
+                {
+                    IsSuccessful = true,
+                    Result = this.reservationConverter.Convert(reservationsList)
+                };
             }
             catch (ParserException)
             {
-                isSuccessful = false;
-                return null;
+                return new OperationResult<IEnumerable<Reservation>> { IsSuccessful = false };
             }
         }
 
-        protected IEnumerable<Reservation> GetPossibleRoomReservationsInInterval(DateTime intervalStart, DateTime intervalEnd, int roomId, out bool isSuccessful)
+        protected OperationResult<IEnumerable<Reservation>> GetPossibleRoomReservationsInIntervalFromParser(DateTime intervalStart, DateTime intervalEnd, int roomId)
         {
             try
             {
                 var reservationsList = this.reservationParser
                     .GetPossibleRoomReservationsInInterval(intervalStart, intervalEnd, roomId).ToList()
                     .Select(x => x.FieldValues);
-                isSuccessful = true;
-                return this.reservationConverter.Convert(reservationsList);
+                return new OperationResult<IEnumerable<Reservation>>
+                {
+                    IsSuccessful = true,
+                    Result = this.reservationConverter.Convert(reservationsList)
+                };
             }
             catch (ParserException)
             {
-                isSuccessful = false;
-                return null;
+                return new OperationResult<IEnumerable<Reservation>> { IsSuccessful = false };
             }
         }
 
-        protected IEnumerable<Reservation> GetUserActiveReservations(string userName, out bool isSuccessful)
+        protected OperationResult<IEnumerable<Reservation>> GetUserActiveReservationsFromParser(string userName)
         {
             try
             {
                 var userActiveReservations = this.reservationParser.GetUserActiveReservations(userName).ToList().Select(x => x.FieldValues);
-                var reservations = this.reservationConverter.Convert(userActiveReservations).ToList();
-                isSuccessful = true;
-                return reservations;
+                return new OperationResult<IEnumerable<Reservation>>
+                {
+                    IsSuccessful = true,
+                    Result = this.reservationConverter.Convert(userActiveReservations)
+                };
             }
             catch (ParserException)
             {
-                isSuccessful = false;
                 return null;
             }
         }
 
         // cannot user automapper Map because i need to get operation status
-        protected IEnumerable<ReservationDTO> DeeplyMapReservationsToReservationDTOs(IList<Reservation> sharePointReservations, out bool isSucсessful)
+        protected OperationResult<IEnumerable<ReservationDTO>> DeeplyMapReservationsToReservationDTOs(IList<Reservation> sharePointReservations)
         {
             if (sharePointReservations == null)
             {
-                isSucсessful = false;
-                return null;
+                return new OperationResult<IEnumerable<ReservationDTO>> { IsSuccessful = false };
             }
 
-            bool isResourceRetrievalSuccessful;
-            var allResources = this.GetAllResources(out isResourceRetrievalSuccessful).ToList();
-            if (!isResourceRetrievalSuccessful)
+            var allResourcesRetrievalResult = this.GetAllResources();
+            if (!allResourcesRetrievalResult.IsSuccessful)
             {
-                isSucсessful = false;
-                return null;
+                return new OperationResult<IEnumerable<ReservationDTO>> { IsSuccessful = false };
             }
 
-            isSucсessful = true;
             var convertedReservations = sharePointReservations.Select(Mapper.Map<Reservation, ReservationDTO>).ToList();
             for (int i = 0; i < convertedReservations.Count(); i++)
             {
-                var reservationResource = allResources.FirstOrDefault(resource => resource.Id == sharePointReservations[i].ResourceId);
+                var reservationResource = allResourcesRetrievalResult.Result.FirstOrDefault(resource => resource.Id == sharePointReservations[i].ResourceId);
                 if (reservationResource != null)
                 {
                     convertedReservations[i].Resource = Mapper.Map<Resource, ResourceDTO>(reservationResource);
                 }
             }
 
-            return convertedReservations;
+            return new OperationResult<IEnumerable<ReservationDTO>>
+            {
+                IsSuccessful = true,
+                Result = convertedReservations
+            };
         }
     }
 }

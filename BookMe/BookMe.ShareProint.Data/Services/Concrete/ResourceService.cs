@@ -26,33 +26,30 @@ namespace BookMe.ShareProint.Data.Services.Concrete
 
         public OperationResult<IEnumerable<ResourceDTO>> GetAll()
         {
-            bool areResourcesSuccessfullyRetrieved;
-            var resources = this.GetAllResources(out areResourcesSuccessfullyRetrieved);
+            var resourcesRetrieval = this.GetAllResources();
             return new OperationResult<IEnumerable<ResourceDTO>>()
             {
-                IsSuccessful = areResourcesSuccessfullyRetrieved,
-                Result = resources?.Select(Mapper.Map<Resource, ResourceDTO>)
+                IsSuccessful = resourcesRetrieval.IsSuccessful,
+                Result = resourcesRetrieval.Result?.Select(Mapper.Map<Resource, ResourceDTO>)
             };
         }
 
         public OperationResult<IEnumerable<ResourceDTO>> GetAvailbleResources(ResourceFilterParameters resourceFilterParameters)
         {
-            bool isAllResourceRetrievalSuccessful;
-            var allResources = this.GetAllResources(out isAllResourceRetrievalSuccessful);
-            if (!isAllResourceRetrievalSuccessful)
+            var resourcesRetrieval = this.GetAllResources();
+            if (!resourcesRetrieval.IsSuccessful)
             {
                 return new OperationResult<IEnumerable<ResourceDTO>>() { IsSuccessful = false };
             }
 
-            bool isPossibleReservationRetrievalSuccessful;
-            var possibleReservationInInterval = this.GetPossibleReservationsInInterval(resourceFilterParameters.From, resourceFilterParameters.To, out isPossibleReservationRetrievalSuccessful);
-            if (!isPossibleReservationRetrievalSuccessful)
+            var possibleReservationInIntervalRetrieval = this.GetPossibleReservationsInIntervalFromParser(resourceFilterParameters.From, resourceFilterParameters.To);
+            if (!possibleReservationInIntervalRetrieval.IsSuccessful)
             {
                 return new OperationResult<IEnumerable<ResourceDTO>>() { IsSuccessful = false };
             }
 
-            var availableResources = allResources.Where(resource => this.DoesResourceMatchFilterParameters(resource, resourceFilterParameters)
-                                                && !this.IsResourceAlreadyInUse(possibleReservationInInterval, resource));
+            var availableResources = resourcesRetrieval.Result.Where(resource => this.DoesResourceMatchFilterParameters(resource, resourceFilterParameters)
+                                                && !this.IsResourceAlreadyInUse(possibleReservationInIntervalRetrieval.Result, resource));
 
             return new OperationResult<IEnumerable<ResourceDTO>>()
             {
@@ -63,15 +60,13 @@ namespace BookMe.ShareProint.Data.Services.Concrete
 
         public OperationResult<IEnumerable<ReservationDTO>> GetRoomReservations(DateTime intervalStart, DateTime intervalEnd, int roomId)
         {
-            bool areReservationsSuccessfullyRetrieved;
-            var reservations = this.GetPossibleRoomReservationsInInterval(intervalStart, intervalEnd, roomId, out areReservationsSuccessfullyRetrieved).ToList();
-            bool isReservationsMappingSuccessful;
-            var mappedReservations = this.DeeplyMapReservationsToReservationDTOs(reservations, out isReservationsMappingSuccessful);
+            var reservationsRetrieval = this.GetPossibleRoomReservationsInIntervalFromParser(intervalStart, intervalEnd, roomId);
+            var reservationsMapping = this.DeeplyMapReservationsToReservationDTOs(reservationsRetrieval.Result.ToList());
 
             return new OperationResult<IEnumerable<ReservationDTO>>()
             {
-                IsSuccessful = areReservationsSuccessfullyRetrieved && isReservationsMappingSuccessful,
-                Result = mappedReservations
+                IsSuccessful = reservationsRetrieval.IsSuccessful && reservationsMapping.IsSuccessful,
+                Result = reservationsMapping.Result
             };
         }
 
@@ -82,7 +77,7 @@ namespace BookMe.ShareProint.Data.Services.Concrete
                 return false;
             }
 
-            if (filterParameters.RoomSize.HasValue && 
+            if (filterParameters.RoomSize.HasValue &&
                 (!resource.RoomSize.HasValue || Mapper.Map<RoomSizeDTO, RoomSize>(filterParameters.RoomSize.Value) != resource.RoomSize.Value))
             {
                 return false;
