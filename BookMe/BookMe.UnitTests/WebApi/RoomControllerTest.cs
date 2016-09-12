@@ -68,10 +68,10 @@ namespace BookMe.UnitTests.WebApi
             this.resourceService.Setup(x => x.GetAll()).Returns(getResourceIsFailed);
             this.controller = new RoomController(resourceService.Object);
             //act
-            IEnumerable<Room> rooms = this.controller.Get().Result.ToList();
+           var rooms = this.controller.Get();
 
             //assert
-            Assert.AreEqual(null, rooms);
+            Assert.AreEqual(false, rooms.IsOperationSuccessful);
         }
 
         [TestMethod]
