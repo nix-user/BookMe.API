@@ -68,6 +68,7 @@
     <Compile Include="SharePoint\RecurrenceData\DailyPatternTests.cs" />
     <Compile Include="SharePoint\RecurrenceData\MonthlyPatternTests.cs" />
     <Compile Include="SharePoint\RecurrenceData\RelativeMonthlyPatternTests.cs" />
+    <Compile Include="SharePoint\RecurrenceData\RelativeYearlyPatternTests.cs" />
     <Compile Include="SharePoint\RecurrenceData\WeeklyPatternTests.cs" />
     <Compile Include="SharePoint\RecurrenceData\YearlyPatternTests.cs" />
   </ItemGroup>

@@ -7,17 +7,99 @@ using BookMe.Core.Enums;
 
 namespace BookMe.Core.Models.Recurrence
 {
-    public sealed class RelativeYearlyPattern : RecurrenceData
+    public sealed class RelativeYearlyPattern : RelativePattern
     {
-        public IEnumerable<DayOfTheWeek> DaysOfTheWeek { get; set; }
-
-        public DayOfTheWeekIndex DayOfTheWeekIndex { get; set; }
-
         public Month Month { get; set; }
 
         public override bool IsBusyInDate(DateTime date)
         {
-            throw new NotImplementedException();
+            var totalMonth = date.Year - this.StartDate.Year;
+            var isDayOfMonthRight = this.DoesMatchDateCondition(date);
+            if (totalMonth % this.Interval != 0)
+            {
+                return false;
+            }
+            else
+            {
+                if (this.NumberOfOccurrences != null)
+                {
+                    var countOfInstances = this.CalculateInstancesCount(this.StartDate, date);
+                    if (countOfInstances <= this.NumberOfOccurrences)
+                    {
+                        return isDayOfMonthRight;
+                    }
+
+                    return false;
+                }
+            }
+
+            return (this.EndDate == null || this.EndDate > date) && isDayOfMonthRight;
+        }
+
+        private int CalculateInstancesCount(DateTime from, DateTime to)
+        {
+            var days = this.EachDay(from, to).ToList();
+            var yearsCount = 0;
+            var countOfInstances = 0;
+            for (var i = 0; i < days.Count; i++)
+            {
+                if (days[i].Day == 1 && days[i].Month == 1 && i != 0)
+                {
+                    yearsCount++;
+                }
+
+                if (yearsCount % this.Interval == 0)
+                {
+                    countOfInstances += this.DoesMatchDateCondition(days[i]) ? 1 : 0;
+                }
+            }
+
+            return countOfInstances;
+        }
+
+        public bool DoesMatchDateCondition(DateTime date)
+        {
+            if (date.Month != (int)this.Month)
+            {
+                return false;
+            }
+
+            var weeks = this.GetRange(date.Year, date.Month).ToList();
+            WeekRange neededWeek = null;
+            switch (this.DayOfTheWeekIndex)
+            {
+                case DayOfTheWeekIndex.First:
+                    neededWeek = this.GetNeededWeek(0, 1, weeks, date);
+                    break;
+                case DayOfTheWeekIndex.Second:
+                    neededWeek = this.GetNeededWeek(1, 2, weeks, date);
+                    break;
+                case DayOfTheWeekIndex.Third:
+                    neededWeek = this.GetNeededWeek(2, 3, weeks, date);
+                    break;
+                case DayOfTheWeekIndex.Fourth:
+                    neededWeek = this.GetNeededWeek(3, 4, weeks, date);
+                    break;
+                case DayOfTheWeekIndex.Last:
+                    var weekCount = weeks.Count;
+                    var lastWeekIndex = weekCount - 1;
+                    var weekBeforeLastIndex = weekCount - 2;
+                    neededWeek = this.GetNeededWeek(lastWeekIndex, weekBeforeLastIndex, weeks, date);
+                    break;
+            }
+
+            for (DateTime d = neededWeek.Start; d.Date <= neededWeek.End; d = d.AddDays(1))
+            {
+                if (d.Day == date.Day)
+                {
+                    if (this.IsDateInDaysOfTheWeek(d, this.DaysOfTheWeek))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
     }
 }

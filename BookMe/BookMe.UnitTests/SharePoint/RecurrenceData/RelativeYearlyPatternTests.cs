@@ -10,7 +10,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace BookMe.UnitTests.SharePoint.RecurrenceData
 {
     [TestClass]
-    public class RelativeMonthlyPatternTests
+    public class RelativeYearlyPatternTests
     {
         [TestMethod]
         public void IsBusyInDate_IntervalDaysOfTheWeekDayOfTheWeekIndexNumberOfOccurancesCaseWithBusyDate_ShouldReturnTrue()
@@ -18,13 +18,14 @@ namespace BookMe.UnitTests.SharePoint.RecurrenceData
             // arrange 
             var today = new DateTime(2016, 9, 4);
 
-            var pattern = new RelativeMonthlyPattern()
+            var pattern = new RelativeYearlyPattern()
             {
                 Interval = 2,
                 NumberOfOccurrences = 10,
-                StartDate = new DateTime(2016, 7, 8),
+                StartDate = new DateTime(2014, 7, 8),
                 DayOfTheWeekIndex = DayOfTheWeekIndex.First,
-                DaysOfTheWeek = new List<DayOfTheWeek>() { DayOfTheWeek.Sunday, DayOfTheWeek.Monday }
+                DaysOfTheWeek = new List<DayOfTheWeek>() { DayOfTheWeek.Sunday, DayOfTheWeek.Monday },
+                Month = Month.September
             };
 
             // act
@@ -40,13 +41,14 @@ namespace BookMe.UnitTests.SharePoint.RecurrenceData
             // arrange 
             var today = new DateTime(2016, 9, 1);
 
-            var pattern = new RelativeMonthlyPattern()
+            var pattern = new RelativeYearlyPattern()
             {
                 Interval = 2,
                 NumberOfOccurrences = 10,
-                StartDate = new DateTime(2016, 7, 8),
+                StartDate = new DateTime(2014, 7, 8),
                 DayOfTheWeekIndex = DayOfTheWeekIndex.First,
-                DaysOfTheWeek = new List<DayOfTheWeek>() { DayOfTheWeek.Sunday, DayOfTheWeek.Monday }
+                DaysOfTheWeek = new List<DayOfTheWeek>() { DayOfTheWeek.Sunday, DayOfTheWeek.Monday },
+                Month = Month.September
             };
 
             // act
@@ -60,15 +62,16 @@ namespace BookMe.UnitTests.SharePoint.RecurrenceData
         public void IsBusyInDate_IntervalDaysOfTheWeekDayOfTheWeekIndexNumberOfOccurancesCaseWithOverflownInstances_ShouldReturnFalse()
         {
             // arrange 
-            var today = new DateTime(2016, 9, 5);
+            var today = new DateTime(2016, 9, 3);
 
-            var pattern = new RelativeMonthlyPattern()
+            var pattern = new RelativeYearlyPattern()
             {
                 Interval = 2,
-                NumberOfOccurrences = 1,
-                StartDate = new DateTime(2016, 7, 8),
+                NumberOfOccurrences = 8,
+                StartDate = new DateTime(2014, 9, 2),
                 DayOfTheWeekIndex = DayOfTheWeekIndex.First,
-                DaysOfTheWeek = new List<DayOfTheWeek>() { DayOfTheWeek.Sunday, DayOfTheWeek.Monday }
+                DaysOfTheWeek = new List<DayOfTheWeek>() { DayOfTheWeek.Day },
+                Month = Month.September
             };
 
             // act
@@ -84,13 +87,14 @@ namespace BookMe.UnitTests.SharePoint.RecurrenceData
             // arrange 
             var today = new DateTime(2016, 9, 4);
 
-            var pattern = new RelativeMonthlyPattern()
+            var pattern = new RelativeYearlyPattern()
             {
                 Interval = 2,
                 EndDate = new DateTime(2016, 9, 5),
-                StartDate = new DateTime(2016, 7, 8),
+                StartDate = new DateTime(2014, 7, 8),
                 DayOfTheWeekIndex = DayOfTheWeekIndex.First,
-                DaysOfTheWeek = new List<DayOfTheWeek>() { DayOfTheWeek.Sunday, DayOfTheWeek.Monday }
+                DaysOfTheWeek = new List<DayOfTheWeek>() { DayOfTheWeek.Sunday, DayOfTheWeek.Monday },
+                Month = Month.September
             };
 
             // act
@@ -106,13 +110,14 @@ namespace BookMe.UnitTests.SharePoint.RecurrenceData
             // arrange 
             var today = new DateTime(2016, 9, 4);
 
-            var pattern = new RelativeMonthlyPattern()
+            var pattern = new RelativeYearlyPattern()
             {
                 Interval = 2,
                 EndDate = new DateTime(2016, 9, 3),
-                StartDate = new DateTime(2016, 7, 8),
+                StartDate = new DateTime(2014, 7, 8),
                 DayOfTheWeekIndex = DayOfTheWeekIndex.First,
-                DaysOfTheWeek = new List<DayOfTheWeek>() { DayOfTheWeek.Sunday, DayOfTheWeek.Monday }
+                DaysOfTheWeek = new List<DayOfTheWeek>() { DayOfTheWeek.Sunday, DayOfTheWeek.Monday },
+                Month = Month.September
             };
 
             // act

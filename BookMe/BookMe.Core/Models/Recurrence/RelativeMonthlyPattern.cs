@@ -7,12 +7,8 @@ using BookMe.Core.Enums;
 
 namespace BookMe.Core.Models.Recurrence
 {
-    public sealed class RelativeMonthlyPattern : RecurrenceData
+    public sealed class RelativeMonthlyPattern : RelativePattern
     {
-        public IEnumerable<DayOfTheWeek> DaysOfTheWeek { get; set; }
-
-        public DayOfTheWeekIndex DayOfTheWeekIndex { get; set; }
-
         public override bool IsBusyInDate(DateTime date)
         {
             var totalMonth = this.CalculateMonthCount(this.StartDate, date);
@@ -59,20 +55,6 @@ namespace BookMe.Core.Models.Recurrence
             return countOfInstances;
         }
 
-        private WeekRange GetNeededWeek(int firstWeekHasWeekdayIndex, int firstDayHasNotWeekdayIndex, IList<WeekRange> weeks, DateTime date)
-        {
-            var firstWeek = weeks[0];
-            for (var d = firstWeek.Start; d.Date <= firstWeek.End; d = d.AddDays(1))
-            {
-                if (d.Month == date.Month && this.IsDateInDaysOfTheWeek(d, this.DaysOfTheWeek))
-                {
-                    return weeks[firstWeekHasWeekdayIndex];
-                }
-            }
-
-            return weeks[firstDayHasNotWeekdayIndex];
-        }
-
         public bool DoesMatchDateCondition(DateTime date)
         {
             var weeks = this.GetRange(date.Year, date.Month).ToList();
@@ -111,15 +93,6 @@ namespace BookMe.Core.Models.Recurrence
             }
 
             return false;
-        }
-
-        private IEnumerable<DateTime> AllDatesInMonth(int year, int month)
-        {
-            int days = DateTime.DaysInMonth(year, month);
-            for (int day = 1; day <= days; day++)
-            {
-                yield return new DateTime(year, month, day);
-            }
         }
     }
 }

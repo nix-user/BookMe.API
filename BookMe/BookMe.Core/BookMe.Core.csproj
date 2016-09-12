@@ -50,6 +50,7 @@
     <Compile Include="Models\Recurrence\MonthlyPattern.cs" />
     <Compile Include="Models\Recurrence\RecurrenceData.cs" />
     <Compile Include="Models\Recurrence\RelativeMonthlyPattern.cs" />
+    <Compile Include="Models\Recurrence\RelativePattern.cs" />
     <Compile Include="Models\Recurrence\RelativeYearlyPattern.cs" />
     <Compile Include="Models\Recurrence\WeeklyPattern.cs" />
     <Compile Include="Models\Recurrence\WeekRange.cs" />
