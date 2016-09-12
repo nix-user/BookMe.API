@@ -4,11 +4,6 @@ namespace BookMe.WebApi.Models
 {
     public class Room
     {
-        public Room()
-        {
-            this.Reservations = new List<ReservationModel>();
-        }
-
         public int Id { get; set; }
 
         public string Number { get; set; }
@@ -16,7 +11,5 @@ namespace BookMe.WebApi.Models
         public bool IsBig { get; set; }
 
         public bool IsHasPolykom { get; set; }
-
-        public List<ReservationModel> Reservations { get; set; }
     }
 }
