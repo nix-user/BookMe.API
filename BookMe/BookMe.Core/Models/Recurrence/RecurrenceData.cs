@@ -87,5 +87,18 @@ namespace BookMe.Core.Models.Recurrence
         {
             return (to.Month - from.Month) + 12 * (to.Year - from.Year);
         }
+
+        protected IEnumerable<WeekRange> GetRange(int year, int month)
+        {
+            DateTime start = new DateTime(year, month, 1).AddDays(-6);
+            DateTime end = new DateTime(year, month, 1).AddMonths(1).AddDays(-1);
+            for (DateTime date = start; date <= end; date = date.AddDays(1))
+            {
+                if (date.DayOfWeek == DayOfWeek.Monday)
+                {
+                    yield return new WeekRange(date);
+                }
+            }
+        }
     }
 }

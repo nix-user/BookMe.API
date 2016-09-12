@@ -52,6 +52,7 @@
     <Compile Include="Models\Recurrence\RelativeMonthlyPattern.cs" />
     <Compile Include="Models\Recurrence\RelativeYearlyPattern.cs" />
     <Compile Include="Models\Recurrence\WeeklyPattern.cs" />
+    <Compile Include="Models\Recurrence\WeekRange.cs" />
     <Compile Include="Models\Recurrence\YearlyPattern.cs" />
     <Compile Include="Models\Reservation.cs" />
     <Compile Include="Models\Resource.cs" />
