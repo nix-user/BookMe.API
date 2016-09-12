@@ -3,6 +3,7 @@ using System.Linq;
 using BookMe.BusinessLogic.DTO;
 using BookMe.BusinessLogic.Interfaces.SharePoint;
 using BookMe.BusinessLogic.OperationResult;
+using BookMe.Core.Enums;
 using BookMe.Infrastructure.MapperConfiguration;
 using BookMe.WebApi.Controllers;
 using BookMe.WebApi.Models;
@@ -21,13 +22,13 @@ namespace BookMe.UnitTests.WebApi
         {
             Result = new List<ResourceDTO>
             {
-                new ResourceDTO() { Id = 1, Description = "1", HasPolycom = true, HasTv = false, RoomSize = RoomSize.Small, Title = "1"},
-                new ResourceDTO() { Id = 2, Description = "2", HasPolycom = true, HasTv = false, RoomSize = RoomSize.Small, Title = "2" },
-                new ResourceDTO() { Id = 3, Description = "3", HasPolycom = true, HasTv = false, RoomSize = RoomSize.Small, Title = "3" },
-                new ResourceDTO() { Id = 4, Description = "4", HasPolycom = true, HasTv = false, RoomSize = RoomSize.Small, Title = "4" },
-                new ResourceDTO() { Id = 5, Description = "5", HasPolycom = true, HasTv = false, RoomSize = RoomSize.Small, Title = "5" },
-                new ResourceDTO() { Id = 6, Description = "6", HasPolycom = true, HasTv = false, RoomSize = RoomSize.Small, Title = "6" },
-                new ResourceDTO() { Id = 7, Description = "7", HasPolycom = true, HasTv = false, RoomSize = RoomSize.Small, Title = "7" }
+                new ResourceDTO() { Id = 1, Description = "1", HasPolycom = true, HasTv = false, RoomSize = RoomSizeDTO.Small, Title = "1"},
+                new ResourceDTO() { Id = 2, Description = "2", HasPolycom = true, HasTv = false, RoomSize = RoomSizeDTO.Small, Title = "2" },
+                new ResourceDTO() { Id = 3, Description = "3", HasPolycom = true, HasTv = false, RoomSize = RoomSizeDTO.Small, Title = "3" },
+                new ResourceDTO() { Id = 4, Description = "4", HasPolycom = true, HasTv = false, RoomSize = RoomSizeDTO.Small, Title = "4" },
+                new ResourceDTO() { Id = 5, Description = "5", HasPolycom = true, HasTv = false, RoomSize = RoomSizeDTO.Small, Title = "5" },
+                new ResourceDTO() { Id = 6, Description = "6", HasPolycom = true, HasTv = false, RoomSize = RoomSizeDTO.Small, Title = "6" },
+                new ResourceDTO() { Id = 7, Description = "7", HasPolycom = true, HasTv = false, RoomSize = RoomSizeDTO.Small, Title = "7" }
             },
             IsSuccessful = true
         };
@@ -35,7 +36,7 @@ namespace BookMe.UnitTests.WebApi
         {
             Result = new List<ResourceDTO>
             {
-                new ResourceDTO() { Id = 1, Description = "1", HasPolycom = true, HasTv = false, RoomSize = RoomSize.Small, Title = "1" }
+                new ResourceDTO() { Id = 1, Description = "1", HasPolycom = true, HasTv = false, RoomSize = RoomSizeDTO.Small, Title = "1" }
             },
             IsSuccessful = false
         };
@@ -54,7 +55,7 @@ namespace BookMe.UnitTests.WebApi
             this.resourceService.Setup(x => x.GetAll()).Returns(getResourceIsSucess);
             this.controller = new RoomController(resourceService.Object);
             //act
-            List<Room> rooms = this.controller.Get().ToList();
+            List<Room> rooms = this.controller.Get().Result.ToList();
 
             //assert
             Assert.AreEqual(7, rooms.Count);
@@ -67,7 +68,7 @@ namespace BookMe.UnitTests.WebApi
             this.resourceService.Setup(x => x.GetAll()).Returns(getResourceIsFailed);
             this.controller = new RoomController(resourceService.Object);
             //act
-            IEnumerable<Room> rooms = this.controller.Get();
+            IEnumerable<Room> rooms = this.controller.Get().Result.ToList();
 
             //assert
             Assert.AreEqual(null, rooms);
@@ -80,7 +81,7 @@ namespace BookMe.UnitTests.WebApi
             this.resourceService.Setup(x => x.GetAll()).Returns(getResourceIsSucess);
             this.controller = new RoomController(resourceService.Object);
             //act
-            Room room = this.controller.Get(1);
+            Room room = this.controller.Get(1).Result;
 
             //assert
             Assert.AreEqual(getResourceIsSucess.Result.First().Id, room.Id);
@@ -93,7 +94,7 @@ namespace BookMe.UnitTests.WebApi
             this.resourceService.Setup(x => x.GetAll()).Returns(getResourceIsFailed);
             this.controller = new RoomController(resourceService.Object);
             //act
-            Room room = this.controller.Get(1);
+            Room room = this.controller.Get(1).Result;
 
             //assert
             Assert.AreEqual(null, room);
