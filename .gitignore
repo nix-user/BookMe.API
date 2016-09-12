@@ -2,3 +2,4 @@ BookMe/packages/
 **/bin/
 **/obj/
 **/.vs/
+!NuGet.exe
