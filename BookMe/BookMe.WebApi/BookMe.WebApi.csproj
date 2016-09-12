@@ -179,8 +179,15 @@
     </Compile>
     <Compile Include="MapperProfiles\ReservationToReservationDTOProfile.cs" />
     <Compile Include="MapperProfiles\ResourceDTOToRoomProfile.cs" />
+    <Compile Include="MapperProfiles\ReservationDTOProfile.cs" />
+    <Compile Include="MapperProfiles\ResourceDTOProfile.cs" />
+    <Compile Include="MapperProfiles\ResourceParametersProfile.cs" />
+    <Compile Include="Models\ResponseModel.cs" />
+    <Compile Include="Models\ResponseModelGeneric.cs" />
     <Compile Include="Models\ReservationModel.cs" />
     <Compile Include="Models\Room.cs" />
+    <Compile Include="Models\RoomFilterParameters.cs" />
+    <Compile Include="Models\RoomReservationsRequestModel.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />

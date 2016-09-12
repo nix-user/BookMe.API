@@ -6,13 +6,11 @@ using System.Threading.Tasks;
 
 namespace BookMe.BusinessLogic.DTO
 {
-    public class ResourceDTO : BaseDTO
+    public class ResourceFilterParameters
     {
-        public string Title { get; set; }
+        public DateTime From { get; set; }
 
-        public string Description { get; set; }
-
-        public bool HasTv { get; set; }
+        public DateTime To { get; set; }
 
         public bool HasPolycom { get; set; }
 

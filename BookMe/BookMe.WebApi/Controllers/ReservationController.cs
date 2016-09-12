@@ -46,5 +46,16 @@ namespace BookMe.WebApi.Controllers
             ReservationModel removeReservation = reservations.FirstOrDefault(x => x.Id == id);
             reservations.Remove(removeReservation);
         }
+
+        [Route("api/reservation/{userName}")]
+        public ResponseModel<IEnumerable<ReservationModel>> GetUserReservations(string userName)
+        {
+            var operationResult = this.reservationService.GetUserActiveReservations(userName);
+            return new ResponseModel<IEnumerable<ReservationModel>>()
+            {
+                IsOperationSuccessful = operationResult.IsSuccessful,
+                Result = operationResult.Result?.Select(Mapper.Map<ReservationDTO, ReservationModel>)
+            };
+        }
     }
 }
