@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,7 +29,37 @@ namespace BookMe.Core.Models.Recurrence
 
         public int? Interval { get; set; }
 
-        public abstract bool IsBusyInDate(DateTime date);
+        public virtual bool IsBusyInDate(DateTime date)
+        {
+            var totalPeriodsCount = this.CalculatePeriodsCount(date);
+            var doesMatchDateCondition = this.DoesMatchDateCondition(date);
+
+            if (totalPeriodsCount % this.Interval != 0)
+            {
+                return false;
+            }
+            else
+            {
+                if (this.NumberOfOccurrences != null)
+                {
+                    var countOfInstances = this.CalculateInstancesCount(date);
+                    if (countOfInstances <= this.NumberOfOccurrences)
+                    {
+                        return doesMatchDateCondition;
+                    }
+
+                    return false;
+                }
+            }
+
+            return (this.EndDate == null || this.EndDate > date) && doesMatchDateCondition;
+        }
+
+        protected abstract int CalculatePeriodsCount(DateTime to);
+
+        protected abstract int CalculateInstancesCount(DateTime to);
+
+        protected abstract bool DoesMatchDateCondition(DateTime date);
 
         protected bool IsDateInDaysOfTheWeek(DateTime date, IEnumerable<DayOfTheWeek> daysOfTheWeek)
         {
@@ -49,38 +80,6 @@ namespace BookMe.Core.Models.Recurrence
             {
                 yield return day;
             }
-        }
-
-        protected int CalculateWeeksCount(DateTime from, DateTime to)
-        {
-            const DayOfWeek FirstDayOfWeek = DayOfWeek.Monday;
-            const DayOfWeek LastDayOfWeek = DayOfWeek.Sunday;
-            const int DaysInWeek = 7;
-
-            DateTime firstDayOfWeekBeforeStartDate;
-            var daysBetweenStartDateAndPreviousFirstDayOfWeek = (int)from.DayOfWeek - (int)FirstDayOfWeek;
-            if (daysBetweenStartDateAndPreviousFirstDayOfWeek >= 0)
-            {
-                firstDayOfWeekBeforeStartDate = from.AddDays(-daysBetweenStartDateAndPreviousFirstDayOfWeek);
-            }
-            else
-            {
-                firstDayOfWeekBeforeStartDate = from.AddDays(-(daysBetweenStartDateAndPreviousFirstDayOfWeek + DaysInWeek));
-            }
-
-            DateTime lastDayOfWeekAfterEndDate;
-            var daysBetweenEndDateAndFollowingLastDayOfWeek = (int)LastDayOfWeek - (int)to.DayOfWeek;
-            if (daysBetweenEndDateAndFollowingLastDayOfWeek >= 0)
-            {
-                lastDayOfWeekAfterEndDate = to.AddDays(daysBetweenEndDateAndFollowingLastDayOfWeek);
-            }
-            else
-            {
-                lastDayOfWeekAfterEndDate = to.AddDays(daysBetweenEndDateAndFollowingLastDayOfWeek + DaysInWeek);
-            }
-
-            var calendarWeeks = 1 + (int)((lastDayOfWeekAfterEndDate - firstDayOfWeekBeforeStartDate).TotalDays / DaysInWeek);
-            return calendarWeeks;
         }
 
         protected int CalculateMonthCount(DateTime from, DateTime to)

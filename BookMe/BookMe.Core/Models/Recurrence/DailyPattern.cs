@@ -17,15 +17,13 @@ namespace BookMe.Core.Models.Recurrence
             {
                 if (this.NumberOfOccurrences != null)
                 {
-                    var countOfInstances = this.EachDay(this.StartDate, date)
-                        .Count(item => this.IsDateInDaysOfTheWeek(item, this.DaysOfTheWeek));
-
+                    var countOfInstances = this.CalculateInstancesCount(date);
                     return countOfInstances <= this.NumberOfOccurrences;
                 }
             }
             else
             {
-                var totalDays = (int)(date - this.StartDate).TotalDays;
+                var totalDays = this.CalculatePeriodsCount(date);
                 if (totalDays % this.Interval != 0)
                 {
                     return false;
@@ -37,6 +35,22 @@ namespace BookMe.Core.Models.Recurrence
             }
 
             return this.EndDate == null || this.EndDate > date;
+        }
+
+        protected override int CalculatePeriodsCount(DateTime to)
+        {
+            return (int)(to - this.StartDate).TotalDays;
+        }
+
+        protected override int CalculateInstancesCount(DateTime to)
+        {
+            return this.EachDay(this.StartDate, to)
+                .Count(item => this.IsDateInDaysOfTheWeek(item, this.DaysOfTheWeek));
+        }
+
+        protected override bool DoesMatchDateCondition(DateTime date)
+        {
+            return true;
         }
     }
 }

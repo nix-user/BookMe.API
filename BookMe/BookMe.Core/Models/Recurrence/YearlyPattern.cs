@@ -14,34 +14,14 @@ namespace BookMe.Core.Models.Recurrence
 
         public Month Month { get; set; }
 
-        public override bool IsBusyInDate(DateTime date)
+        protected override int CalculatePeriodsCount(DateTime to)
         {
-            var yearsCount = date.Year - this.StartDate.Year;
-            var isDayOfMonthRight = this.DayOfMonth == date.Day;
-            if (yearsCount % this.Interval != 0)
-            {
-                return false;
-            }
-            else
-            {
-                if (this.NumberOfOccurrences != null)
-                {
-                    var countOfInstances = this.CalculateInstancesCount(this.StartDate, date);
-                    if (countOfInstances <= this.NumberOfOccurrences)
-                    {
-                        return isDayOfMonthRight;
-                    }
-
-                    return false;
-                }
-            }
-
-            return (this.EndDate == null || this.EndDate > date) && isDayOfMonthRight;
+            return to.Year - this.StartDate.Year;
         }
 
-        private int CalculateInstancesCount(DateTime from, DateTime to)
+        protected override int CalculateInstancesCount(DateTime to)
         {
-            var days = this.EachDay(from, to).ToList();
+            var days = this.EachDay(this.StartDate, to).ToList();
             var yearsCount = 0;
             var countOfInstances = 0;
             for (var i = 0; i < days.Count; i++)
@@ -58,6 +38,11 @@ namespace BookMe.Core.Models.Recurrence
             }
 
             return countOfInstances;
+        }
+
+        protected override bool DoesMatchDateCondition(DateTime date)
+        {
+            return this.DayOfMonth == date.Day;
         }
     }
 }

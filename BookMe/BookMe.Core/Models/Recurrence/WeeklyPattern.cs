@@ -11,35 +11,41 @@ namespace BookMe.Core.Models.Recurrence
     {
         public IEnumerable<DayOfTheWeek> DaysOfTheWeek { get; set; }
 
-        public override bool IsBusyInDate(DateTime date)
+        protected override int CalculatePeriodsCount(DateTime to)
         {
-            var totalWeeks = this.CalculateWeeksCount(this.StartDate, date);
-            var isDateInDaysOfTheWeek = this.IsDateInDaysOfTheWeek(date, this.DaysOfTheWeek);
+            const DayOfWeek FirstDayOfWeek = DayOfWeek.Monday;
+            const DayOfWeek LastDayOfWeek = DayOfWeek.Sunday;
+            const int DaysInWeek = 7;
 
-            if ((totalWeeks - 1) % this.Interval != 0)
+            DateTime firstDayOfWeekBeforeStartDate;
+            var daysBetweenStartDateAndPreviousFirstDayOfWeek = (int)this.StartDate.DayOfWeek - (int)FirstDayOfWeek;
+            if (daysBetweenStartDateAndPreviousFirstDayOfWeek >= 0)
             {
-                return false;
+                firstDayOfWeekBeforeStartDate = this.StartDate.AddDays(-daysBetweenStartDateAndPreviousFirstDayOfWeek);
             }
             else
             {
-                if (this.NumberOfOccurrences != null)
-                {
-                    var countOfInstances = this.CalculateInstancesCount(this.StartDate, date);
-                    if (countOfInstances <= this.NumberOfOccurrences)
-                    {
-                        return isDateInDaysOfTheWeek;
-                    }
-
-                    return false;
-                }
+                firstDayOfWeekBeforeStartDate = this.StartDate.AddDays(-(daysBetweenStartDateAndPreviousFirstDayOfWeek + DaysInWeek));
             }
 
-            return (this.EndDate == null || this.EndDate > date) && isDateInDaysOfTheWeek;
+            DateTime lastDayOfWeekAfterEndDate;
+            var daysBetweenEndDateAndFollowingLastDayOfWeek = (int)LastDayOfWeek - (int)to.DayOfWeek;
+            if (daysBetweenEndDateAndFollowingLastDayOfWeek >= 0)
+            {
+                lastDayOfWeekAfterEndDate = to.AddDays(daysBetweenEndDateAndFollowingLastDayOfWeek);
+            }
+            else
+            {
+                lastDayOfWeekAfterEndDate = to.AddDays(daysBetweenEndDateAndFollowingLastDayOfWeek + DaysInWeek);
+            }
+
+            var calendarWeeks = (int)((lastDayOfWeekAfterEndDate - firstDayOfWeekBeforeStartDate).TotalDays / DaysInWeek);
+            return calendarWeeks;
         }
 
-        private int CalculateInstancesCount(DateTime from, DateTime to)
+        protected override int CalculateInstancesCount(DateTime to)
         {
-            var days = this.EachDay(from, to).ToList();
+            var days = this.EachDay(this.StartDate, to).ToList();
             var weekCount = 0;
             var countOfInstances = 0;
             for (var i = 0; i < days.Count; i++)
@@ -56,6 +62,11 @@ namespace BookMe.Core.Models.Recurrence
             }
 
             return countOfInstances;
+        }
+
+        protected override bool DoesMatchDateCondition(DateTime date)
+        {
+            return this.IsDateInDaysOfTheWeek(date, this.DaysOfTheWeek);
         }
     }
 }

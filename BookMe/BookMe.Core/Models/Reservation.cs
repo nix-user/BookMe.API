@@ -39,8 +39,16 @@ namespace BookMe.Core.Models
             }
 
             var isBusy = this.RecurrenceData.IsBusyInDate(date);
+            if (!isBusy)
+            {
+                return null;
+            }
 
-            return null;
+            return new Interval()
+            {
+                Start = this.EventDate,
+                End = this.EndDate
+            };
         }
     }
 }

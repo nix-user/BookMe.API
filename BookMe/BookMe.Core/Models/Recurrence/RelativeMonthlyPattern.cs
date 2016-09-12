@@ -9,34 +9,14 @@ namespace BookMe.Core.Models.Recurrence
 {
     public sealed class RelativeMonthlyPattern : RelativePattern
     {
-        public override bool IsBusyInDate(DateTime date)
+        protected override int CalculatePeriodsCount(DateTime to)
         {
-            var totalMonth = this.CalculateMonthCount(this.StartDate, date);
-            var isDayOfMonthRight = this.DoesMatchDateCondition(date);
-            if (totalMonth % this.Interval != 0)
-            {
-                return false;
-            }
-            else
-            {
-                if (this.NumberOfOccurrences != null)
-                {
-                    var countOfInstances = this.CalculateInstancesCount(this.StartDate, date);
-                    if (countOfInstances <= this.NumberOfOccurrences)
-                    {
-                        return isDayOfMonthRight;
-                    }
-
-                    return false;
-                }
-            }
-
-            return (this.EndDate == null || this.EndDate > date) && isDayOfMonthRight;
+            return this.CalculateMonthCount(this.StartDate, to);
         }
 
-        private int CalculateInstancesCount(DateTime from, DateTime to)
+        protected override int CalculateInstancesCount(DateTime to)
         {
-            var days = this.EachDay(from, to).ToList();
+            var days = this.EachDay(this.StartDate, to).ToList();
             var monthsCount = 0;
             var countOfInstances = 0;
             for (var i = 0; i < days.Count; i++)
@@ -55,7 +35,7 @@ namespace BookMe.Core.Models.Recurrence
             return countOfInstances;
         }
 
-        public bool DoesMatchDateCondition(DateTime date)
+        protected override bool DoesMatchDateCondition(DateTime date)
         {
             var weeks = this.GetRange(date.Year, date.Month).ToList();
             WeekRange neededWeek = null;
