@@ -14,27 +14,6 @@ namespace BookMe.Core.Models.Recurrence
             return this.CalculateMonthCount(this.StartDate, to);
         }
 
-        protected override int CalculateInstancesCount(DateTime to)
-        {
-            var days = this.EachDay(this.StartDate, to).ToList();
-            var monthsCount = 0;
-            var countOfInstances = 0;
-            for (var i = 0; i < days.Count; i++)
-            {
-                if (days[i].Day == 1 && i != 0)
-                {
-                    monthsCount++;
-                }
-
-                if (monthsCount % this.Interval == 0)
-                {
-                    countOfInstances += this.DoesMatchDateCondition(days[i]) ? 1 : 0;
-                }
-            }
-
-            return countOfInstances;
-        }
-
         protected override bool DoesMatchDateCondition(DateTime date)
         {
             var weeks = this.GetRange(date.Year, date.Month).ToList();
@@ -73,6 +52,11 @@ namespace BookMe.Core.Models.Recurrence
             }
 
             return false;
+        }
+
+        protected override bool IsNextInterval(IList<DateTime> days, int index)
+        {
+            return days[index].Day == 1 && index != 0;
         }
     }
 }

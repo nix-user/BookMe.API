@@ -19,30 +19,14 @@ namespace BookMe.Core.Models.Recurrence
             return to.Year - this.StartDate.Year;
         }
 
-        protected override int CalculateInstancesCount(DateTime to)
-        {
-            var days = this.EachDay(this.StartDate, to).ToList();
-            var yearsCount = 0;
-            var countOfInstances = 0;
-            for (var i = 0; i < days.Count; i++)
-            {
-                if (days[i].Day == 1 && days[i].Month == 1 && i != 0)
-                {
-                    yearsCount++;
-                }
-
-                if (yearsCount % this.Interval == 0)
-                {
-                    countOfInstances += this.DayOfMonth == days[i].Day && (int)this.Month == days[i].Month ? 1 : 0;
-                }
-            }
-
-            return countOfInstances;
-        }
-
         protected override bool DoesMatchDateCondition(DateTime date)
         {
-            return this.DayOfMonth == date.Day;
+            return this.DayOfMonth == date.Day && (int)this.Month == date.Month;
+        }
+
+        protected override bool IsNextInterval(IList<DateTime> days, int index)
+        {
+            return days[index].Day == 1 && days[index].Month == 1 && index != 0;
         }
     }
 }

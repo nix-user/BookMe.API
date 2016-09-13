@@ -52,5 +52,10 @@ namespace BookMe.Core.Models.Recurrence
         {
             return true;
         }
+
+        protected override bool IsNextInterval(IList<DateTime> days, int index)
+        {
+            return true;
+        }
     }
 }

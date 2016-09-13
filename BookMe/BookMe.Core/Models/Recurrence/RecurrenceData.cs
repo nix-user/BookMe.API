@@ -55,11 +55,32 @@ namespace BookMe.Core.Models.Recurrence
             return (this.EndDate == null || this.EndDate > date) && doesMatchDateCondition;
         }
 
+        protected virtual int CalculateInstancesCount(DateTime to)
+        {
+            var days = this.EachDay(this.StartDate, to).ToList();
+            var yearsCount = 0;
+            var countOfInstances = 0;
+            for (var i = 0; i < days.Count; i++)
+            {
+                if (this.IsNextInterval(days, i))
+                {
+                    yearsCount++;
+                }
+
+                if (yearsCount % this.Interval == 0)
+                {
+                    countOfInstances += this.DoesMatchDateCondition(days[i]) ? 1 : 0;
+                }
+            }
+
+            return countOfInstances;
+        }
+
         protected abstract int CalculatePeriodsCount(DateTime to);
 
-        protected abstract int CalculateInstancesCount(DateTime to);
-
         protected abstract bool DoesMatchDateCondition(DateTime date);
+
+        protected abstract bool IsNextInterval(IList<DateTime> days, int index);
 
         protected bool IsDateInDaysOfTheWeek(DateTime date, IEnumerable<DayOfTheWeek> daysOfTheWeek)
         {

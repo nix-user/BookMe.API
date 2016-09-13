@@ -43,30 +43,14 @@ namespace BookMe.Core.Models.Recurrence
             return calendarWeeks;
         }
 
-        protected override int CalculateInstancesCount(DateTime to)
-        {
-            var days = this.EachDay(this.StartDate, to).ToList();
-            var weekCount = 0;
-            var countOfInstances = 0;
-            for (var i = 0; i < days.Count; i++)
-            {
-                if (days[i].DayOfWeek == DayOfWeek.Monday && i != 0)
-                {
-                    weekCount++;
-                }
-
-                if (weekCount % this.Interval == 0)
-                {
-                    countOfInstances += this.IsDateInDaysOfTheWeek(days[i], this.DaysOfTheWeek) ? 1 : 0;
-                }
-            }
-
-            return countOfInstances;
-        }
-
         protected override bool DoesMatchDateCondition(DateTime date)
         {
             return this.IsDateInDaysOfTheWeek(date, this.DaysOfTheWeek);
+        }
+
+        protected override bool IsNextInterval(IList<DateTime> days, int index)
+        {
+            return days[index].DayOfWeek == DayOfWeek.Monday && index != 0;
         }
     }
 }
