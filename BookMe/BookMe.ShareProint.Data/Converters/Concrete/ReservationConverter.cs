@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BookMe.Core.Models;
+using BookMe.Core.Models.Recurrence;
 using BookMe.ShareProint.Data.Converters.Abstract;
 using Microsoft.SharePoint.Client;
 
@@ -20,6 +21,16 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
         private const string DurationKey = "Duration";
         private const string IsRecurrenceKey = "fRecurrence";
         private const string AuthorKey = "Author";
+        private const string ParrentIdKey = "MasterSeriesItemID";
+        private const string EventTypeKey = "EventType";
+        private const string IsAllDayEventKey = "fAllDayEvent";
+
+        private readonly IConverter<IDictionary<string, object>, RecurrenceData> recurrenceDataConverter;
+
+        public ReservationConverter(IConverter<IDictionary<string, object>, RecurrenceData> recurrenceDataConverter)
+        {
+            this.recurrenceDataConverter = recurrenceDataConverter;
+        }
 
         public Reservation Convert(IDictionary<string, object> value)
         {
@@ -28,7 +39,14 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
                 throw new ArgumentNullException(nameof(value));
             }
 
-            var reservation = new Reservation()
+            int? parrentIdValue = null;
+            var parrentId = value[ParrentIdKey];
+            if (parrentId != null)
+            {
+                parrentIdValue = int.Parse(parrentId.ToString());
+            }
+
+            var reservation = new Reservation
             {
                 Id = int.Parse(value[IdKey].ToString()),
                 Title = value[TitleKey].ToString(),
@@ -38,7 +56,11 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
                 EndDate = (DateTime)value[EndDateKey],
                 Duration = TimeSpan.FromSeconds(long.Parse(value[DurationKey].ToString())),
                 IsRecurrence = bool.Parse(value[IsRecurrenceKey].ToString()),
-                OwnerName = (value[AuthorKey] as FieldUserValue)?.LookupValue
+                OwnerName = (value[AuthorKey] as FieldUserValue)?.LookupValue,
+                RecurrenceData = this.recurrenceDataConverter.Convert(value),
+                EventType = int.Parse(value[EventTypeKey].ToString()),
+                ParentId = parrentIdValue,
+                IsAllDayEvent = bool.Parse(value[IsAllDayEventKey].ToString())
             };
 
             return reservation;

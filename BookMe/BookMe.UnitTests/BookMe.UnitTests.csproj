@@ -77,8 +77,15 @@
     <Compile Include="Controllers\RoomControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SharePoint\Converters\DescriptionParserTests.cs" />
+    <Compile Include="SharePoint\Converters\RecurrenceDataConverterTests.cs" />
     <Compile Include="SharePoint\Converters\ResourceConverterTests.cs" />
+    <Compile Include="SharePoint\RecurrenceData\DailyPatternTests.cs" />
     <Compile Include="WebApi\RoomControllerTest.cs" />
+    <Compile Include="SharePoint\RecurrenceData\MonthlyPatternTests.cs" />
+    <Compile Include="SharePoint\RecurrenceData\RelativeMonthlyPatternTests.cs" />
+    <Compile Include="SharePoint\RecurrenceData\RelativeYearlyPatternTests.cs" />
+    <Compile Include="SharePoint\RecurrenceData\WeeklyPatternTests.cs" />
+    <Compile Include="SharePoint\RecurrenceData\YearlyPatternTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BookMe.BusinessLogic\BookMe.BusinessLogic.csproj">
@@ -105,6 +112,9 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="SharePoint\Parsers\" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
