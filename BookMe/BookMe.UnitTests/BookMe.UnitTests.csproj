@@ -78,6 +78,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SharePoint\Converters\DescriptionParserTests.cs" />
     <Compile Include="SharePoint\Converters\RecurrenceDataConverterTests.cs" />
+    <Compile Include="SharePoint\Converters\ReservationConverterTests.cs" />
     <Compile Include="SharePoint\Converters\ResourceConverterTests.cs" />
     <Compile Include="SharePoint\RecurrenceData\DailyPatternTests.cs" />
     <Compile Include="WebApi\RoomControllerTest.cs" />
