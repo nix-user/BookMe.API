@@ -38,16 +38,16 @@ namespace BookMe.Core.Models.Recurrence
         protected virtual int CalculateInstancesCount(DateTime to)
         {
             var days = this.EachDay(this.StartDate, to).ToList();
-            var yearsCount = 0;
+            var intervalsCount = 0;
             var countOfInstances = 0;
             for (var i = 0; i < days.Count; i++)
             {
                 if (this.IsNextInterval(days, i))
                 {
-                    yearsCount++;
+                    intervalsCount++;
                 }
 
-                if (yearsCount % this.Interval == 0)
+                if (intervalsCount % this.Interval == 0)
                 {
                     countOfInstances += this.DoesMatchDateCondition(days[i]) ? 1 : 0;
                 }

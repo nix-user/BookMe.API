@@ -55,12 +55,9 @@ namespace BookMe.Core.Models.Recurrence
 
             for (DateTime d = neededWeek.Start; d.Date <= neededWeek.End; d = d.AddDays(1))
             {
-                if (d.Day == date.Day)
+                if (d.Day == date.Day && this.IsDateInDaysOfTheWeek(d, this.DaysOfTheWeek))
                 {
-                    if (this.IsDateInDaysOfTheWeek(d, this.DaysOfTheWeek))
-                    {
-                        return true;
-                    }
+                     return true;
                 }
             }
 
