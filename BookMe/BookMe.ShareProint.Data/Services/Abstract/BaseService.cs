@@ -7,6 +7,7 @@ using AutoMapper;
 using BookMe.BusinessLogic.DTO;
 using BookMe.BusinessLogic.OperationResult;
 using BookMe.Core.Models;
+using BookMe.Core.Models.Recurrence;
 using BookMe.ShareProint.Data.Converters.Abstract;
 using BookMe.ShareProint.Data.Parsers;
 using BookMe.ShareProint.Data.Parsers.Abstract;
@@ -49,17 +50,32 @@ namespace BookMe.ShareProint.Data.Services.Abstract
             }
         }
 
-        protected OperationResult<IEnumerable<Reservation>> GetPossibleReservationsInIntervalFromParser(DateTime intervalStart, DateTime intervalEnd)
+        protected OperationResult<IEnumerable<Reservation>> GetPossibleReservationsInIntervalFromParser(Interval interval)
         {
             try
             {
-                var reservationsList = this.reservationParser
-                    .GetAllPossibleReservationsInInterval(intervalStart, intervalEnd).ToList()
+                var reservationsDictionary = this.reservationParser
+                    .GetAllPossibleReservationsInInterval(interval).ToList()
                     .Select(x => x.FieldValues);
+
+                var reservationsList = this.reservationConverter.Convert(reservationsDictionary);
+                List<Reservation> reservationsInInterval = new List<Reservation>();
+                foreach (var reservation in reservationsList)
+                {
+                    for (DateTime date = interval.Start; date <= interval.End; date = date.AddDays(1))
+                    {
+                        var busyInterval = reservation.GetBusyInterval(date);
+                        if (busyInterval != null && busyInterval.IsIntersecting(interval))
+                        {
+                            reservationsInInterval.Add(reservation);
+                        }
+                    }
+                }
+
                 return new OperationResult<IEnumerable<Reservation>>
                 {
                     IsSuccessful = true,
-                    Result = this.reservationConverter.Convert(reservationsList)
+                    Result = reservationsInInterval
                 };
             }
             catch (ParserException)
@@ -68,12 +84,12 @@ namespace BookMe.ShareProint.Data.Services.Abstract
             }
         }
 
-        protected OperationResult<IEnumerable<Reservation>> GetPossibleRoomReservationsInIntervalFromParser(DateTime intervalStart, DateTime intervalEnd, int roomId)
+        protected OperationResult<IEnumerable<Reservation>> GetPossibleRoomReservationsInIntervalFromParser(Interval interval, int roomId)
         {
             try
             {
                 var reservationsList = this.reservationParser
-                    .GetPossibleRoomReservationsInInterval(intervalStart, intervalEnd, roomId).ToList()
+                    .GetPossibleRoomReservationsInInterval(interval, roomId).ToList()
                     .Select(x => x.FieldValues);
                 return new OperationResult<IEnumerable<Reservation>>
                 {

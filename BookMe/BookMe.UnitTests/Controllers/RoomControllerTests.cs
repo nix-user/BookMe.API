@@ -35,13 +35,13 @@ namespace BookMe.UnitTests.Controllers
                 IsSuccessful = true,
                 Result = new List<ReservationDTO>() { new ReservationDTO(), new ReservationDTO(), new ReservationDTO() }
             };
-            this.resourceServiceMock.Setup(m => m.GetRoomReservations(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int>())).Returns(roomReservationsResult);
+            this.resourceServiceMock.Setup(m => m.GetRoomReservations(It.IsAny<IntervalDTO>(), It.IsAny<int>())).Returns(roomReservationsResult);
 
             //act
             var roomReservationsRetrieval = this.roomController.GetRoomCurrentReservations(new RoomReservationsRequestModel());
 
             //assert
-            this.resourceServiceMock.Verify(m => m.GetRoomReservations(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int>()), Times.Once);
+            this.resourceServiceMock.Verify(m => m.GetRoomReservations(It.IsAny<IntervalDTO>(), It.IsAny<int>()), Times.Once);
             Assert.AreEqual(roomReservationsResult.Result.Count(), roomReservationsRetrieval.Result.Count());
         }
 
@@ -50,13 +50,13 @@ namespace BookMe.UnitTests.Controllers
         {
             //arrange
             var roomReservationsResult = new OperationResult<IEnumerable<ReservationDTO>> { IsSuccessful = false };
-            this.resourceServiceMock.Setup(m => m.GetRoomReservations(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int>())).Returns(roomReservationsResult);
+            this.resourceServiceMock.Setup(m => m.GetRoomReservations(It.IsAny<IntervalDTO>(), It.IsAny<int>())).Returns(roomReservationsResult);
 
             //act
             var roomReservationsRetrieval = this.roomController.GetRoomCurrentReservations(new RoomReservationsRequestModel());
 
             //assert
-            this.resourceServiceMock.Verify(m => m.GetRoomReservations(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int>()), Times.Once);
+            this.resourceServiceMock.Verify(m => m.GetRoomReservations(It.IsAny<IntervalDTO>(), It.IsAny<int>()), Times.Once);
             Assert.AreEqual(false, roomReservationsRetrieval.IsOperationSuccessful);
             Assert.IsNull(roomReservationsRetrieval.Result);
         }

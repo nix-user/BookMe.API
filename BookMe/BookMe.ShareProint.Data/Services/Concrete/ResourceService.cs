@@ -7,6 +7,7 @@ using BookMe.BusinessLogic.Interfaces.SharePoint;
 using BookMe.BusinessLogic.OperationResult;
 using BookMe.Core.Enums;
 using BookMe.Core.Models;
+using BookMe.Core.Models.Recurrence;
 using BookMe.ShareProint.Data.Converters.Abstract;
 using BookMe.ShareProint.Data.Parsers;
 using BookMe.ShareProint.Data.Parsers.Abstract;
@@ -42,7 +43,7 @@ namespace BookMe.ShareProint.Data.Services.Concrete
                 return new OperationResult<IEnumerable<ResourceDTO>>() { IsSuccessful = false };
             }
 
-            var possibleReservationInIntervalRetrieval = this.GetPossibleReservationsInIntervalFromParser(resourceFilterParameters.From, resourceFilterParameters.To);
+            var possibleReservationInIntervalRetrieval = this.GetPossibleReservationsInIntervalFromParser(new Interval(resourceFilterParameters.From, resourceFilterParameters.To));
             if (!possibleReservationInIntervalRetrieval.IsSuccessful)
             {
                 return new OperationResult<IEnumerable<ResourceDTO>>() { IsSuccessful = false };
@@ -58,9 +59,9 @@ namespace BookMe.ShareProint.Data.Services.Concrete
             };
         }
 
-        public OperationResult<IEnumerable<ReservationDTO>> GetRoomReservations(DateTime intervalStart, DateTime intervalEnd, int roomId)
+        public OperationResult<IEnumerable<ReservationDTO>> GetRoomReservations(IntervalDTO interval, int roomId)
         {
-            var reservationsRetrieval = this.GetPossibleRoomReservationsInIntervalFromParser(intervalStart, intervalEnd, roomId);
+            var reservationsRetrieval = this.GetPossibleRoomReservationsInIntervalFromParser(Mapper.Map<IntervalDTO, Interval>(interval), roomId);
             var reservationsMapping = this.DeeplyMapReservationsToReservationDTOs(reservationsRetrieval.Result.ToList());
 
             return new OperationResult<IEnumerable<ReservationDTO>>()
