@@ -187,7 +187,6 @@ namespace BookMe.UnitTests.SharePoint.Converters
             // assert
             for (var i = 0; i < actualReservations.Count; i++)
             {
-                // assert
                 Assert.AreEqual(expectedReservations[i].Id, actualReservations[i].Id);
                 Assert.AreEqual(expectedReservations[i].Title, actualReservations[i].Title);
                 Assert.AreEqual(expectedReservations[i].Description, actualReservations[i].Description);
