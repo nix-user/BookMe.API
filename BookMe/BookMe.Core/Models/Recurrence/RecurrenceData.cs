@@ -29,58 +29,7 @@ namespace BookMe.Core.Models.Recurrence
 
         public int? Interval { get; set; }
 
-        public virtual bool IsBusyInDate(DateTime date)
-        {
-            var totalPeriodsCount = this.CalculatePeriodsCount(date);
-            var doesMatchDateCondition = this.DoesMatchDateCondition(date);
-
-            if (totalPeriodsCount % this.Interval != 0)
-            {
-                return false;
-            }
-            else
-            {
-                if (this.NumberOfOccurrences != null)
-                {
-                    var countOfInstances = this.CalculateInstancesCount(date);
-                    if (countOfInstances <= this.NumberOfOccurrences)
-                    {
-                        return doesMatchDateCondition;
-                    }
-
-                    return false;
-                }
-            }
-
-            return (this.EndDate == null || this.EndDate > date) && doesMatchDateCondition;
-        }
-
-        protected virtual int CalculateInstancesCount(DateTime to)
-        {
-            var days = this.EachDay(this.StartDate, to).ToList();
-            var yearsCount = 0;
-            var countOfInstances = 0;
-            for (var i = 0; i < days.Count; i++)
-            {
-                if (this.IsNextInterval(days, i))
-                {
-                    yearsCount++;
-                }
-
-                if (yearsCount % this.Interval == 0)
-                {
-                    countOfInstances += this.DoesMatchDateCondition(days[i]) ? 1 : 0;
-                }
-            }
-
-            return countOfInstances;
-        }
-
-        protected abstract int CalculatePeriodsCount(DateTime to);
-
-        protected abstract bool DoesMatchDateCondition(DateTime date);
-
-        protected abstract bool IsNextInterval(IList<DateTime> days, int index);
+        public abstract bool IsBusyInDate(DateTime date);
 
         protected bool IsDateInDaysOfTheWeek(DateTime date, IEnumerable<DayOfTheWeek> daysOfTheWeek)
         {
@@ -100,24 +49,6 @@ namespace BookMe.Core.Models.Recurrence
             for (var day = from.Date; day.Date <= to.Date; day = day.AddDays(1))
             {
                 yield return day;
-            }
-        }
-
-        protected int CalculateMonthCount(DateTime from, DateTime to)
-        {
-            return (to.Month - from.Month) + 12 * (to.Year - from.Year);
-        }
-
-        protected IEnumerable<WeekRange> GetRange(int year, int month)
-        {
-            DateTime start = new DateTime(year, month, 1).AddDays(-6);
-            DateTime end = new DateTime(year, month, 1).AddMonths(1).AddDays(-1);
-            for (DateTime date = start; date <= end; date = date.AddDays(1))
-            {
-                if (date.DayOfWeek == DayOfWeek.Monday)
-                {
-                    yield return new WeekRange(date);
-                }
             }
         }
     }

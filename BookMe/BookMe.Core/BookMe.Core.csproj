@@ -45,6 +45,7 @@
     <Compile Include="Enums\DayOfTheWeekIndex.cs" />
     <Compile Include="Enums\Month.cs" />
     <Compile Include="Models\BaseEntity.cs" />
+    <Compile Include="Models\Recurrence\CommonPattern.cs" />
     <Compile Include="Models\Recurrence\DailyPattern.cs" />
     <Compile Include="Models\Recurrence\Interval.cs" />
     <Compile Include="Models\Recurrence\MonthlyPattern.cs" />

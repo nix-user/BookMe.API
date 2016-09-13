@@ -37,25 +37,15 @@ namespace BookMe.Core.Models.Recurrence
             return this.EndDate == null || this.EndDate > date;
         }
 
-        protected override int CalculatePeriodsCount(DateTime to)
+        private int CalculatePeriodsCount(DateTime to)
         {
             return (int)(to - this.StartDate).TotalDays;
         }
 
-        protected override int CalculateInstancesCount(DateTime to)
+        private int CalculateInstancesCount(DateTime to)
         {
             return this.EachDay(this.StartDate, to)
                 .Count(item => this.IsDateInDaysOfTheWeek(item, this.DaysOfTheWeek));
-        }
-
-        protected override bool DoesMatchDateCondition(DateTime date)
-        {
-            return true;
-        }
-
-        protected override bool IsNextInterval(IList<DateTime> days, int index)
-        {
-            return true;
         }
     }
 }

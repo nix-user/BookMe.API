@@ -82,7 +82,7 @@ namespace BookMe.UnitTests.SharePoint.RecurrenceData
         public void IsBusyInDate_IntervalMonthDayOfMonthAndEndDateCaseWithBusyDate_ShouldReturnTrue()
         {
             // arrange 
-            var today = new DateTime(2016, 9, 23);
+            var today = new DateTime(2016, 4, 23);
 
             var pattern = new YearlyPattern()
             {
@@ -104,12 +104,12 @@ namespace BookMe.UnitTests.SharePoint.RecurrenceData
         public void IsBusyInDate_IntervalMonthDayOfMonthAndEndDateCaseWithNotBusyDate_ShouldReturnFalse()
         {
             // arrange 
-            var today = new DateTime(2016, 9, 23);
+            var today = new DateTime(2016, 4, 23);
 
             var pattern = new YearlyPattern()
             {
                 Interval = 2,
-                EndDate = new DateTime(2016, 9, 22),
+                EndDate = new DateTime(2016, 4, 22),
                 StartDate = new DateTime(2016, 9, 8),
                 DayOfMonth = 23,
                 Month = Month.April
