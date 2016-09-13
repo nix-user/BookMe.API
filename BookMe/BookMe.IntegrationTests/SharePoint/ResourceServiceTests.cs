@@ -106,7 +106,7 @@ namespace BookMe.IntegrationTests.SharePoint
             var operationResult = this.resourceService.GetAvailbleResources(filterParameters);
 
             //assert
-            var allIntersectingReservations = reservationService.GetPossibleReservationsInInterval(filterParameters.From, filterParameters.To).Result.ToList();
+            var allIntersectingReservations = reservationService.GetPossibleReservationsInInterval(new IntervalDTO(filterParameters.From, filterParameters.To)).Result.ToList();
             Assert.IsTrue(operationResult.IsSuccessful);
             foreach (var resource in operationResult.Result)
             {
@@ -123,7 +123,7 @@ namespace BookMe.IntegrationTests.SharePoint
             DateTime intervalEnd = DateTime.Now.AddHours(1);
 
             //act
-            var operationResult = this.resourceService.GetRoomReservations(intervalStart, intervalEnd, roomId);
+            var operationResult = this.resourceService.GetRoomReservations(new IntervalDTO(intervalStart, intervalEnd), roomId);
 
             //assert
             Assert.IsTrue(operationResult.IsSuccessful);
@@ -142,7 +142,7 @@ namespace BookMe.IntegrationTests.SharePoint
             DateTime intervalEnd = DateTime.Now.AddHours(1);
 
             //act
-            var operationResult = this.resourceService.GetRoomReservations(intervalStart, intervalEnd, roomId);
+            var operationResult = this.resourceService.GetRoomReservations(new IntervalDTO(intervalStart, intervalEnd), roomId);
 
             //assert
             Assert.IsTrue(operationResult.IsSuccessful);

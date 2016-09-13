@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BookMe.BusinessLogic.DTO;
 using BookMe.Infrastructure.MapperConfiguration;
 using BookMe.ShareProint.Data;
 using BookMe.ShareProint.Data.Converters.Concrete;
@@ -56,7 +57,7 @@ namespace BookMe.IntegrationTests.SharePoint
             DateTime endDateTime = DateTime.Now.AddHours(1);
 
             //act
-            var operationResult = this.reservationService.GetPossibleReservationsInInterval(startDateTime, endDateTime);
+            var operationResult = this.reservationService.GetPossibleReservationsInInterval(new IntervalDTO(startDateTime, endDateTime));
 
             //assert
             Assert.AreEqual(true, operationResult.IsSuccessful);

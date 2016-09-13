@@ -75,7 +75,7 @@ namespace BookMe.WebApi.Controllers
         [HttpPost]
         public ResponseModel<IEnumerable<ReservationModel>> GetRoomCurrentReservations(RoomReservationsRequestModel reservationsModel)
         {
-            var operationResult = this.resourcesService.GetRoomReservations(reservationsModel.From, reservationsModel.To, reservationsModel.RoomId);
+            var operationResult = this.resourcesService.GetRoomReservations(new IntervalDTO(reservationsModel.From, reservationsModel.To), reservationsModel.RoomId);
             return new ResponseModel<IEnumerable<ReservationModel>>()
             {
                 IsOperationSuccessful = operationResult.IsSuccessful,

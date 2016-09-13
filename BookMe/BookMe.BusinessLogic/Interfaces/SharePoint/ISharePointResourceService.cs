@@ -11,6 +11,6 @@ namespace BookMe.BusinessLogic.Interfaces.SharePoint
 
         OperationResult<IEnumerable<ResourceDTO>> GetAvailbleResources(ResourceFilterParameters resourceFilterParameters);
 
-        OperationResult<IEnumerable<ReservationDTO>> GetRoomReservations(DateTime intervalStart, DateTime intervalEnd, int roomId);
+        OperationResult<IEnumerable<ReservationDTO>> GetRoomReservations(IntervalDTO interval, int roomId);
     }
 }

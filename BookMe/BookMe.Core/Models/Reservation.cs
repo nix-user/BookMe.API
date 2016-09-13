@@ -46,11 +46,10 @@ namespace BookMe.Core.Models
                 return null;
             }
 
-            return new Interval()
-            {
-                Start = this.EventDate,
-                End = this.EndDate
-            };
+            var startDate = new DateTime(date.Year, date.Month, date.Day, this.EventDate.Hour, this.EventDate.Minute, this.EventDate.Second);
+            var endDate = new DateTime(date.Year, date.Month, date.Day, this.EndDate.Hour, this.EndDate.Minute, this.EndDate.Second);
+
+            return new Interval(startDate, endDate);
         }
     }
 }
