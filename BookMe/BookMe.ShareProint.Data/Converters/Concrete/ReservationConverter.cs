@@ -23,6 +23,7 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
         private const string AuthorKey = "Author";
         private const string ParrentIdKey = "MasterSeriesItemID";
         private const string EventTypeKey = "EventType";
+        private const string IsAllDayEventKey = "fAllDayEvent";
 
         private readonly IConverter<IDictionary<string, object>, RecurrenceData> recurrenceDataConverter;
 
@@ -58,7 +59,8 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
                 OwnerName = (value[AuthorKey] as FieldUserValue)?.LookupValue,
                 RecurrenceData = this.recurrenceDataConverter.Convert(value),
                 EventType = int.Parse(value[EventTypeKey].ToString()),
-                ParentId = parrentIdValue
+                ParentId = parrentIdValue,
+                IsAllDayEvent = bool.Parse(value[IsAllDayEventKey].ToString())
             };
 
             return reservation;

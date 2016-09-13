@@ -31,6 +31,8 @@ namespace BookMe.Core.Models
 
         public int EventType { get; set; }
 
+        public bool IsAllDayEvent { get; set; }
+
         public Interval GetBusyInterval(DateTime date)
         {
             if (date > this.EndDate || this.RecurrenceData == null)
