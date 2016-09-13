@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BookMe.BusinessLogic.DTO
 {
-    public enum RoomSize
+    public enum RoomSizeDTO
     {
         Small,
         Middle,

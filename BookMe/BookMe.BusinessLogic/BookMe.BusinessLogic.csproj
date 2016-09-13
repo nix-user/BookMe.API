@@ -46,13 +46,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DTO\BaseDTO.cs" />
+    <Compile Include="DTO\ResourceFilterParameters.cs" />
     <Compile Include="DTO\ReservationDTO.cs" />
     <Compile Include="DTO\ResourceDTO.cs" />
-    <Compile Include="DTO\RoomSize.cs" />
+    <Compile Include="DTO\RoomSizeDTO.cs" />
     <Compile Include="Interfaces\SharePoint\ISharePointReservationService.cs" />
     <Compile Include="Interfaces\SharePoint\ISharePointResourceService.cs" />
     <Compile Include="MapperProfiles\ReservationProfile.cs" />
     <Compile Include="MapperProfiles\ResourceProfile.cs" />
+    <Compile Include="MapperProfiles\RoomSizeProfile.cs" />
     <Compile Include="OperationResult\OperationResult.cs" />
     <Compile Include="OperationResult\OperationResultGeneric.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
