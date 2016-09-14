@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using BookMe.Auth.Resources;
 using Microsoft.Owin.Security.OAuth;
 
 namespace BookMe.Auth.Providers
@@ -35,6 +36,8 @@ namespace BookMe.Auth.Providers
                 var userPrincipal = UserPrincipal.FindByIdentity(principalContext, context.UserName);
                 var identity = new ClaimsIdentity(context.Options.AuthenticationType);
                 identity.AddClaim(new Claim(ClaimTypes.Name, userPrincipal.Name));
+                identity.AddClaim(new Claim(ExtendedClaimTypes.UserName, context.UserName));
+                identity.AddClaim(new Claim(ExtendedClaimTypes.Password, context.Password));
                 context.Validated(identity);
             }
         }
