@@ -54,5 +54,15 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
 
             return values.Select(this.Convert);
         }
+
+        public IDictionary<string, object> ConvertBack(Resource value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<IDictionary<string, object>> ConvertBack(IEnumerable<Resource> values)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -18,6 +18,14 @@ namespace BookMe.ShareProint.Data.Parsers.Concrete
         private const string AuthorFieldName = "Author";
         private const string Facilities = "Facilities";
 
+        protected List ReservartionList
+        {
+            get
+            {
+                return this.Context.Web.Lists.GetByTitle(ListNames.Reservations);
+            }
+        }
+
         public ReservationParser(ClientContext context) : base(context)
         {
         }
@@ -37,8 +45,18 @@ namespace BookMe.ShareProint.Data.Parsers.Concrete
             return this.GetReservations(reservation => (string)reservation[AuthorFieldName] == userName && (DateTime)reservation[ReservationEndFieldName] > DateTime.Now);
         }
 
-        public void AddReservation(Reservation reservation)
+        public void AddReservation(IDictionary<string, object> reservatioFieldValues)
         {
+            ListItemCreationInformation itemCreateInfo = new ListItemCreationInformation();
+            ListItem newItem = this.ReservartionList.AddItem(itemCreateInfo);
+
+            foreach (var key in reservatioFieldValues.Keys)
+            {
+                newItem[key] = reservatioFieldValues[key];
+            }
+
+            newItem.Update();
+            this.Context.ExecuteQuery();
         }
 
         private ListItemCollection GetPossibleReservationsInInterval(Interval interval, int? roomId = null)
@@ -52,13 +70,12 @@ namespace BookMe.ShareProint.Data.Parsers.Concrete
         {
             try
             {
-                var reservationsList = this.Context.Web.Lists.GetByTitle(ListNames.Reservations);
-                ListItemCollection items = reservationsList.GetItems(this.CreateCamlQuery(Camlex.Query().Where(conditions).ToString()));
+                ListItemCollection items = this.ReservartionList.GetItems(this.CreateCamlQuery(Camlex.Query().Where(conditions).ToString()));
                 return this.LoadCollectionFromServer(items);
             }
-            catch
+            catch (Exception e)
             {
-                throw new ParserException(RetrivalErrorMessage);
+                throw new ParserException(RetrivalErrorMessage, e);
             }
         }
 
