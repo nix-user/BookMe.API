@@ -64,9 +64,7 @@ namespace BookMe.ShareProint.Data.Parsers.Concrete
 
         private Expression<Func<ListItem, bool>> GetRecurrentReservationCondition(Interval interval, int? roomId)
         {
-            Expression<Func<ListItem, bool>> recurrentCondition = reservation => (bool)reservation[RecurrentFieldName]
-            && (DateTime)reservation[ReservationStartFieldName] <= interval.End
-            && (DateTime)reservation[ReservationEndFieldName] > DateTime.Today.AddDays(-1);
+            Expression<Func<ListItem, bool>> recurrentCondition = reservation => (bool)reservation[RecurrentFieldName];
             if (roomId != null)
             {
                 recurrentCondition = recurrentCondition.AndAlso(reservation => reservation[Facilities] == (DataTypes.LookupId)roomId.Value.ToString());

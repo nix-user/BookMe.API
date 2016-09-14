@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BookMe.Core.Enums;
 using BookMe.Core.Models;
 using BookMe.Core.Models.Recurrence;
 using BookMe.ShareProint.Data.Converters.Abstract;
@@ -24,7 +25,7 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
         private const string ParrentIdKey = "MasterSeriesItemID";
         private const string EventTypeKey = "EventType";
         private const string IsAllDayEventKey = "fAllDayEvent";
-
+        private const string RecurrenceDate = "RecurrenceID";
         private readonly IConverter<IDictionary<string, object>, RecurrenceData> recurrenceDataConverter;
 
         public ReservationConverter(IConverter<IDictionary<string, object>, RecurrenceData> recurrenceDataConverter)
@@ -52,13 +53,14 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
                 Title = value[TitleKey].ToString(),
                 Description = value[DescriptionKey]?.ToString(),
                 ResourceId = (value[FacilitiesKey] as IList<FieldLookupValue>)?[0].LookupId,
-                EventDate = (DateTime)value[EventDateKey] + TimeZoneInfo.Local.GetUtcOffset(DateTime.UtcNow),
-                EndDate = (DateTime)value[EndDateKey] + TimeZoneInfo.Local.GetUtcOffset(DateTime.UtcNow),
+                EventDate = (DateTime)value[EventDateKey],
+                EndDate = (DateTime)value[EndDateKey],
                 Duration = TimeSpan.FromSeconds(long.Parse(value[DurationKey].ToString())),
                 IsRecurrence = bool.Parse(value[IsRecurrenceKey].ToString()),
                 OwnerName = (value[AuthorKey] as FieldUserValue)?.LookupValue,
                 RecurrenceData = this.recurrenceDataConverter.Convert(value),
-                EventType = int.Parse(value[EventTypeKey].ToString()),
+                RecurrenceDate = (value[RecurrenceDate] as DateTime?),
+                EventType = (EventType)int.Parse(value[EventTypeKey].ToString()),
                 ParentId = parrentIdValue,
                 IsAllDayEvent = bool.Parse(value[IsAllDayEventKey].ToString())
             };
