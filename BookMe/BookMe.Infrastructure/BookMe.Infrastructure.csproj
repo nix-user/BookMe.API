@@ -11,7 +11,7 @@
     <AssemblyName>BookMe.Infrastructure</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-	<StyleCopTreatErrorsAsWarnings>false</StyleCopTreatErrorsAsWarnings>
+    <StyleCopTreatErrorsAsWarnings>false</StyleCopTreatErrorsAsWarnings>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -76,6 +76,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IoC\AuthPackage.cs" />
     <Compile Include="IoC\IoCConfig.cs" />
     <Compile Include="IoC\SharePointPackage.cs" />
     <Compile Include="MapperConfiguration\AutoMapperConfiguration.cs" />
@@ -86,6 +87,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BookMe.Auth\BookMe.Auth.csproj">
+      <Project>{a98d8a3e-86e8-4d40-8752-be5b1dcd8e67}</Project>
+      <Name>BookMe.Auth</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BookMe.BusinessLogic\BookMe.BusinessLogic.csproj">
       <Project>{ce50cf28-5957-4835-8ff2-e74670598af9}</Project>
       <Name>BookMe.BusinessLogic</Name>

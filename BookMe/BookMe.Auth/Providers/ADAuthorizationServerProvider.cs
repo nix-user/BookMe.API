@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.DirectoryServices.AccountManagement;
 using System.Linq;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
-using System.Web;
 using Microsoft.Owin.Security.OAuth;
 
-namespace BookMe.WebApi.Auth
+namespace BookMe.Auth.Providers
 {
     public class ADAuthorizationServerProvider : OAuthAuthorizationServerProvider
     {

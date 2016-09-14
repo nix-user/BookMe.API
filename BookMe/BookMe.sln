@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookMe.Infrastructure", "Bo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookMe.IntegrationTests", "BookMe.IntegrationTests\BookMe.IntegrationTests.csproj", "{3F40587B-7CF6-43EB-8A3D-2F1729741065}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookMe.Auth", "BookMe.Auth\BookMe.Auth.csproj", "{A98D8A3E-86E8-4D40-8752-BE5B1DCD8E67}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{3F40587B-7CF6-43EB-8A3D-2F1729741065}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3F40587B-7CF6-43EB-8A3D-2F1729741065}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3F40587B-7CF6-43EB-8A3D-2F1729741065}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A98D8A3E-86E8-4D40-8752-BE5B1DCD8E67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A98D8A3E-86E8-4D40-8752-BE5B1DCD8E67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A98D8A3E-86E8-4D40-8752-BE5B1DCD8E67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A98D8A3E-86E8-4D40-8752-BE5B1DCD8E67}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

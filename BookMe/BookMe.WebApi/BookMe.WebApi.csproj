@@ -173,7 +173,6 @@
   <ItemGroup>
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Auth\ADAuthorizationServerProvider.cs" />
     <Compile Include="Controllers\ReservationController.cs" />
     <Compile Include="Controllers\RoomController.cs" />
     <Compile Include="Global.asax.cs">
@@ -216,6 +215,10 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BookMe.Auth\BookMe.Auth.csproj">
+      <Project>{a98d8a3e-86e8-4d40-8752-be5b1dcd8e67}</Project>
+      <Name>BookMe.Auth</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BookMe.BusinessLogic\BookMe.BusinessLogic.csproj">
       <Project>{ce50cf28-5957-4835-8ff2-e74670598af9}</Project>
       <Name>BookMe.BusinessLogic</Name>

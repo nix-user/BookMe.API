@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
-using BookMe.WebApi.Auth;
+using System.Web.Http.Dependencies;
+using System.Web.Mvc;
+using BookMe.Auth.Cryptography.Abstract;
+using BookMe.Auth.Providers;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.OAuth;
 using Owin;
@@ -25,6 +28,7 @@ namespace BookMe.WebApi
 
         public void ConfigureOAuth(IAppBuilder app)
         {
+            var symmetricCryptographyService = (ISymmetricCryptographyService)GlobalConfiguration.Configuration.DependencyResolver.GetService(typeof(ISymmetricCryptographyService));
             const int ExpirationTimeInDays = 365 * 100;
 
             var oAuthServerOptions = new OAuthAuthorizationServerOptions()
@@ -32,7 +36,8 @@ namespace BookMe.WebApi
                 AllowInsecureHttp = true,
                 TokenEndpointPath = new PathString("/token"),
                 AccessTokenExpireTimeSpan = TimeSpan.FromDays(ExpirationTimeInDays),
-                Provider = new ADAuthorizationServerProvider()
+                Provider = new ADAuthorizationServerProvider(),
+                AccessTokenProvider = new AuthenticationTokenProvider(symmetricCryptographyService)
             };
 
             // Token Generation
