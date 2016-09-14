@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.DirectoryServices;
 using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 using BookMe.Auth.Cryptography.Abstract;
 using BookMe.Auth.Resources;
 using Microsoft.Owin.Security;
 
-namespace BookMe.Auth.Providers
+namespace BookMe.Auth.Providers.Concrete
 {
     public class ADAccessTokenFormat : ISecureDataFormat<AuthenticationTicket>
     {

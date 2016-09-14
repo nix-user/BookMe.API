@@ -6,6 +6,7 @@ using System.Web.Http.Dependencies;
 using System.Web.Mvc;
 using BookMe.Auth.Cryptography.Abstract;
 using BookMe.Auth.Providers;
+using BookMe.Auth.Providers.Concrete;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.DataHandler;

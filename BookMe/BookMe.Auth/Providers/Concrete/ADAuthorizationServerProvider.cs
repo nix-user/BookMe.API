@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.DirectoryServices.AccountManagement;
-using System.Linq;
+﻿using System.DirectoryServices.AccountManagement;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 using BookMe.Auth.Resources;
 using Microsoft.Owin.Security.OAuth;
 
-namespace BookMe.Auth.Providers
+namespace BookMe.Auth.Providers.Concrete
 {
     public class ADAuthorizationServerProvider : OAuthAuthorizationServerProvider
     {
