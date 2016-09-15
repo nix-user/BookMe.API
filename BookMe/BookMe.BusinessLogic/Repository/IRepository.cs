@@ -20,5 +20,7 @@ namespace BookMe.BusinessLogic.Repository
         IQueryable<T> Find(Expression<Func<T, bool>> predicate);
 
         IQueryable<T> Entities { get; }
+
+        void Save();
     }
 }

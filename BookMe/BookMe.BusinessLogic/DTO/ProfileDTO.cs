@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookMe.Core.Models
+namespace BookMe.BusinessLogic.DTO
 {
-    public class Profile : BaseEntity
+    public class ProfileDTO : BaseDTO
     {
         public string UserName { get; set; }
 

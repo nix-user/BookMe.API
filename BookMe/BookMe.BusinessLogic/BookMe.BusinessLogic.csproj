@@ -11,7 +11,7 @@
     <AssemblyName>BookMe.BusinessLogic</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-	<StyleCopTreatErrorsAsWarnings>false</StyleCopTreatErrorsAsWarnings>
+    <StyleCopTreatErrorsAsWarnings>false</StyleCopTreatErrorsAsWarnings>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -48,6 +48,7 @@
     <Compile Include="DTO\BaseDTO.cs" />
     <Compile Include="DTO\CredentialsDTO.cs" />
     <Compile Include="DTO\IntervalDTO.cs" />
+    <Compile Include="DTO\ProfileDTO.cs" />
     <Compile Include="DTO\ResourceFilterParameters.cs" />
     <Compile Include="DTO\ReservationDTO.cs" />
     <Compile Include="DTO\ResourceDTO.cs" />
@@ -55,6 +56,7 @@
     <Compile Include="Interfaces\SharePoint\ISharePointReservationService.cs" />
     <Compile Include="Interfaces\SharePoint\ISharePointResourceService.cs" />
     <Compile Include="MapperProfiles\IntervalProfile.cs" />
+    <Compile Include="MapperProfiles\ProfileProfile.cs" />
     <Compile Include="MapperProfiles\ReservationProfile.cs" />
     <Compile Include="MapperProfiles\ResourceProfile.cs" />
     <Compile Include="MapperProfiles\RoomSizeProfile.cs" />
@@ -62,6 +64,8 @@
     <Compile Include="OperationResult\OperationResultGeneric.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\IRepository.cs" />
+    <Compile Include="Services\Abstract\IProfileService.cs" />
+    <Compile Include="Services\Concrete\ProfileService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BookMe.Core\BookMe.Core.csproj">

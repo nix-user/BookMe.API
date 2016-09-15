@@ -24,6 +24,10 @@ namespace BookMe.Data.Repository
         }
 
         public IQueryable<T> Entities => this.context.Set<T>();
+        public void Save()
+        {
+            this.context.SaveChanges();
+        }
 
         public IQueryable<T> Find(Expression<Func<T, bool>> predicate)
         {
