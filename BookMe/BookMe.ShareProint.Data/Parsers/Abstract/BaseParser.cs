@@ -5,6 +5,7 @@ namespace BookMe.ShareProint.Data.Parsers.Abstract
     public abstract class BaseParser
     {
         protected const string RetrivalErrorMessage = "Could not retrieve requested items";
+        protected const string AddingErrorMessage = "Could not add item to collection";
 
         protected BaseParser(ClientContext clientContext)
         {

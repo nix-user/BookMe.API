@@ -49,16 +49,23 @@ namespace BookMe.ShareProint.Data.Parsers.Concrete
 
         public void AddReservation(IDictionary<string, object> reservatioFieldValues)
         {
-            ListItemCreationInformation itemCreateInfo = new ListItemCreationInformation();
-            ListItem newItem = this.ReservartionList.AddItem(itemCreateInfo);
-
-            foreach (var key in reservatioFieldValues.Keys)
+            try
             {
-                newItem[key] = reservatioFieldValues[key];
-            }
+                ListItemCreationInformation itemCreateInfo = new ListItemCreationInformation();
+                ListItem newItem = this.ReservartionList.AddItem(itemCreateInfo);
 
-            newItem.Update();
-            this.Context.ExecuteQuery();
+                foreach (var key in reservatioFieldValues.Keys)
+                {
+                    newItem[key] = reservatioFieldValues[key];
+                }
+
+                newItem.Update();
+                this.Context.ExecuteQuery();
+            }
+            catch (Exception e)
+            {
+                throw new ParserException(AddingErrorMessage, e);
+            }
         }
 
         private IEnumerable<ListItem> GetPossibleReservationsInInterval(Interval interval, int? roomId = null)

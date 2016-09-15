@@ -63,7 +63,7 @@ namespace BookMe.ShareProint.Data.Services.Abstract
                     .GetAllPossibleReservationsInInterval(interval).ToList()
                     .Select(x => x.FieldValues);
 
-                var reservationsList = this.reservationConverter.Convert(reservationsDictionary).ToList();
+                var reservationsList = this.ReservationConverter.Convert(reservationsDictionary).ToList();
 
                 List<Reservation> intersectingReservations = new List<Reservation>();
                 foreach (var reservation in reservationsList)

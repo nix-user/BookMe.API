@@ -47,18 +47,6 @@ namespace BookMe.WebApi.Controllers
             return new ResponseModel<Room>() { IsOperationSuccessful = false };
         }
 
-        public void Post([FromBody]string value)
-        {
-        }
-
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        public void Delete(int id)
-        {
-        }
-
         [Route("api/room/available")]
         [HttpPost]
         public ResponseModel<IEnumerable<Room>> GetAvailableRooms([FromBody]RoomFilterParameters filterParameters)
