@@ -173,14 +173,17 @@
   <ItemGroup>
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\ProfileController.cs" />
     <Compile Include="Controllers\ReservationController.cs" />
     <Compile Include="Controllers\RoomController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="MapperProfiles\ProfileProfile.cs" />
     <Compile Include="MapperProfiles\ReservationDTOProfile.cs" />
     <Compile Include="MapperProfiles\ResourceDTOProfile.cs" />
     <Compile Include="MapperProfiles\ResourceParametersProfile.cs" />
+    <Compile Include="Models\ProfileModel.cs" />
     <Compile Include="Models\ResponseModel.cs" />
     <Compile Include="Models\ResponseModelGeneric.cs" />
     <Compile Include="Models\ReservationModel.cs" />

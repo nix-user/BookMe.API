@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Web;
 
-namespace BookMe.BusinessLogic.DTO
+namespace BookMe.WebApi.Models
 {
-    public class ProfileDTO : BaseDTO
+    public class ProfileModel
     {
         public int Floor { get; set; }
 

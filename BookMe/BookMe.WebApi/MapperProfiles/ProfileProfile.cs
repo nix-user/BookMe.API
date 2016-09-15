@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Web;
 using BookMe.BusinessLogic.DTO;
-using BookMe.Core.Models;
+using BookMe.WebApi.Models;
 
-namespace BookMe.BusinessLogic.MapperProfiles
+namespace BookMe.WebApi.MapperProfiles
 {
     public class ProfileProfile : AutoMapper.Profile
     {
         public ProfileProfile()
         {
-            this.CreateMap<Profile, ProfileDTO>();
+            this.CreateMap<ProfileModel, ProfileDTO>();
         }
     }
 }
