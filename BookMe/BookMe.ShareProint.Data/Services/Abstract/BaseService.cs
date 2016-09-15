@@ -18,10 +18,13 @@ namespace BookMe.ShareProint.Data.Services.Abstract
 {
     public abstract class BaseService
     {
-        private readonly IResourceParser resourceParser;
-        private readonly IReservationParser reservationParser;
-        private IConverter<IDictionary<string, object>, Resource> resourcesConverter;
-        private IConverter<IDictionary<string, object>, Reservation> reservationConverter;
+        protected IResourceParser ResourceParser { get; set; }
+
+        protected IReservationParser ReservationParser { get; set; }
+
+        protected IConverter<IDictionary<string, object>, Resource> ResourcesConverter { get; set; }
+
+        protected IConverter<IDictionary<string, object>, Reservation> ReservationConverter { get; set; }
 
         protected BaseService(
             IConverter<IDictionary<string, object>, Resource> resourcesConverter,
@@ -29,21 +32,21 @@ namespace BookMe.ShareProint.Data.Services.Abstract
             IResourceParser resourceParser,
             IReservationParser reservationParser)
         {
-            this.resourceParser = resourceParser;
-            this.reservationParser = reservationParser;
-            this.resourcesConverter = resourcesConverter;
-            this.reservationConverter = reservationConverter;
+            this.ResourceParser = resourceParser;
+            this.ReservationParser = reservationParser;
+            this.ResourcesConverter = resourcesConverter;
+            this.ReservationConverter = reservationConverter;
         }
 
         protected OperationResult<IEnumerable<Resource>> GetAllResources()
         {
             try
             {
-                var resourceDictionariesCollection = this.resourceParser.GetAll().ToList().Select(x => x.FieldValues);
+                var resourceDictionariesCollection = this.ResourceParser.GetAll().ToList().Select(x => x.FieldValues);
                 return new OperationResult<IEnumerable<Resource>>
                 {
                     IsSuccessful = true,
-                    Result = this.resourcesConverter.Convert(resourceDictionariesCollection)
+                    Result = this.ResourcesConverter.Convert(resourceDictionariesCollection)
                 };
             }
             catch (ParserException)
@@ -56,11 +59,11 @@ namespace BookMe.ShareProint.Data.Services.Abstract
         {
             try
             {
-                var reservationsDictionary = this.reservationParser
+                var reservationsDictionary = this.ReservationParser
                     .GetPossibleReservationsInInterval(interval, roomId).ToList()
                     .Select(x => x.FieldValues);
 
-                var reservationsList = this.reservationConverter.Convert(reservationsDictionary).ToList();
+                var reservationsList = this.ReservationConverter.Convert(reservationsDictionary).ToList();
 
                 List<Reservation> intersectingReservations = new List<Reservation>();
                 foreach (var reservation in reservationsList)
@@ -93,11 +96,11 @@ namespace BookMe.ShareProint.Data.Services.Abstract
         {
             try
             {
-                var userActiveReservations = this.reservationParser.GetUserActiveReservations(userName).ToList().Select(x => x.FieldValues);
+                var userActiveReservations = this.ReservationParser.GetUserActiveReservations(userName).ToList().Select(x => x.FieldValues);
                 return new OperationResult<IEnumerable<Reservation>>
                 {
                     IsSuccessful = true,
-                    Result = this.reservationConverter.Convert(userActiveReservations)
+                    Result = this.ReservationConverter.Convert(userActiveReservations)
                 };
             }
             catch (ParserException)

@@ -17,7 +17,7 @@ namespace BookMe.IntegrationTests.SharePoint.Parsers
         [TestMethod]
         public void CheckConnection_ValidBaseAddress_Should_Not_Throw_Exception()
         {
-            ResourceParser parser = new ResourceParser(new ClientContext(Constants.BaseAddress));
+            ResourceParser parser = new ResourceParser(new ClientContext(Constants.BaseAddress), null);
             parser.CheckConnection();
         }
 
@@ -27,7 +27,7 @@ namespace BookMe.IntegrationTests.SharePoint.Parsers
         {
             string wrongBaseAddress = "http://wrongBaseAddress.com";
 
-            ResourceParser parser = new ResourceParser(new ClientContext(wrongBaseAddress));
+            ResourceParser parser = new ResourceParser(new ClientContext(wrongBaseAddress), null);
             parser.CheckConnection();
         }
     }

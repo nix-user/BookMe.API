@@ -12,6 +12,7 @@ using BookMe.WebApi.Models;
 
 namespace BookMe.WebApi.Controllers
 {
+    [Authorize]
     public class RoomController : ApiController
     {
         private ISharePointResourceService resourcesService;
@@ -45,18 +46,6 @@ namespace BookMe.WebApi.Controllers
             }
 
             return new ResponseModel<Room>() { IsOperationSuccessful = false };
-        }
-
-        public void Post([FromBody]string value)
-        {
-        }
-
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        public void Delete(int id)
-        {
         }
 
         [Route("api/room/available")]

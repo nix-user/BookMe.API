@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using BookMe.Auth.Providers.Abstract;
 using BookMe.Core.Models;
 using BookMe.Core.Models.Recurrence;
 using BookMe.ShareProint.Data.Parsers.Abstract;
@@ -20,7 +21,15 @@ namespace BookMe.ShareProint.Data.Parsers.Concrete
         private const string Facilities = "Facilities";
         private const string Duration = "Duration";
 
-        public ReservationParser(ClientContext context) : base(context)
+        protected List ReservartionList
+        {
+            get
+            {
+                return this.Context.Web.Lists.GetByTitle(ListNames.Reservations);
+            }
+        }
+
+        public ReservationParser(ClientContext context, ICredentialsProvider credentialsProvider) : base(context, credentialsProvider)
         {
         }
 
@@ -29,8 +38,25 @@ namespace BookMe.ShareProint.Data.Parsers.Concrete
             return this.GetReservations(reservation => (string)reservation[AuthorFieldName] == userName && (DateTime)reservation[ReservationEndFieldName] > DateTime.Today.AddDays(-1));
         }
 
-        public void AddReservation(Reservation reservation)
+        public void AddReservation(IDictionary<string, object> reservatioFieldValues)
         {
+            try
+            {
+                ListItemCreationInformation itemCreateInfo = new ListItemCreationInformation();
+                ListItem newItem = this.ReservartionList.AddItem(itemCreateInfo);
+
+                foreach (var key in reservatioFieldValues.Keys)
+                {
+                    newItem[key] = reservatioFieldValues[key];
+                }
+
+                newItem.Update();
+                this.Context.ExecuteQuery();
+            }
+            catch (Exception e)
+            {
+                throw new ParserException(AddingErrorMessage, e);
+            }
         }
 
         public IEnumerable<ListItem> GetPossibleReservationsInInterval(Interval interval, int? roomId)
@@ -43,13 +69,12 @@ namespace BookMe.ShareProint.Data.Parsers.Concrete
         {
             try
             {
-                var reservationsList = this.Context.Web.Lists.GetByTitle(ListNames.Reservations);
-                ListItemCollection items = reservationsList.GetItems(this.CreateCamlQuery(Camlex.Query().Where(conditions).ToString()));
+                ListItemCollection items = this.ReservartionList.GetItems(this.CreateCamlQuery(Camlex.Query().Where(conditions).ToString()));
                 return this.LoadCollectionFromServer(items).ToList().Where(reservation => (reservation[Facilities] as IList<FieldLookupValue>)?[0].LookupId != null && reservation[Duration] != null);
             }
-            catch
+            catch (Exception e)
             {
-                throw new ParserException(RetrivalErrorMessage);
+                throw new ParserException(RetrivalErrorMessage, e);
             }
         }
 

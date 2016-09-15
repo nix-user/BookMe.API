@@ -77,5 +77,24 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
 
             return values.Select(this.Convert);
         }
+
+        public IDictionary<string, object> ConvertBack(Reservation value)
+        {
+            return new Dictionary<string, object>()
+            {
+                { TitleKey, value.Title },
+                { DescriptionKey, value.Description },
+                { FacilitiesKey, new FieldLookupValue() { LookupId = value.ResourceId.Value } },
+                { EventDateKey, value.EventDate },
+                { EndDateKey, value.EndDate },
+                { DurationKey, value.Duration.Seconds },
+                { IsAllDayEventKey, value.IsAllDayEvent }
+            };
+        }
+
+        public IEnumerable<IDictionary<string, object>> ConvertBack(IEnumerable<Reservation> values)
+        {
+            return values.Select(this.ConvertBack);
+        }
     }
 }
