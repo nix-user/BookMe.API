@@ -41,7 +41,7 @@ namespace BookMe.UnitTests.Controllers
             this.sharePointReservationServiceMock.Setup(m => m.GetUserActiveReservations(It.IsAny<string>())).Returns(userActiveReservationResult);
 
             //act
-            var userReservations = this.reservationController.GetUserReservations(string.Empty);
+            var userReservations = this.reservationController.Get();
 
             //assert
             this.sharePointReservationServiceMock.Verify(m => m.GetUserActiveReservations(It.IsAny<string>()), Times.Once);
@@ -56,7 +56,7 @@ namespace BookMe.UnitTests.Controllers
             this.sharePointReservationServiceMock.Setup(m => m.GetUserActiveReservations(It.IsAny<string>())).Returns(userActiveReservationResult);
 
             //act
-            var userReservationsRetrieval = this.reservationController.GetUserReservations(string.Empty);
+            var userReservationsRetrieval = this.reservationController.Get();
 
             //assert
             this.sharePointReservationServiceMock.Verify(m => m.GetUserActiveReservations(It.IsAny<string>()), Times.Once);

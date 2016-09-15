@@ -11,6 +11,7 @@ using BookMe.WebApi.Models;
 
 namespace BookMe.WebApi.Controllers
 {
+    [Authorize]
     public class ReservationController : ApiController
     {
         private readonly ISharePointReservationService reservationService;
@@ -31,10 +32,9 @@ namespace BookMe.WebApi.Controllers
             };
         }
 
-        [Route("api/reservation/{userName}")]
-        public ResponseModel<IEnumerable<ReservationModel>> GetUserReservations(string userName)
+        public ResponseModel<IEnumerable<ReservationModel>> Get()
         {
-            var operationResult = this.reservationService.GetUserActiveReservations(userName);
+            var operationResult = this.reservationService.GetUserActiveReservations(User.Identity.Name);
             return new ResponseModel<IEnumerable<ReservationModel>>()
             {
                 IsOperationSuccessful = operationResult.IsSuccessful,

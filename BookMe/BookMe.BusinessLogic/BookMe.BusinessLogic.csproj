@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DTO\BaseDTO.cs" />
+    <Compile Include="DTO\CredentialsDTO.cs" />
     <Compile Include="DTO\IntervalDTO.cs" />
     <Compile Include="DTO\ResourceFilterParameters.cs" />
     <Compile Include="DTO\ReservationDTO.cs" />

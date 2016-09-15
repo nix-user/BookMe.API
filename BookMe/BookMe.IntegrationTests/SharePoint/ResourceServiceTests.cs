@@ -30,10 +30,10 @@ namespace BookMe.IntegrationTests.SharePoint
             DescriptionParser descriptionParser = new DescriptionParser();
             ResourceConverter resourceConverter = new ResourceConverter(descriptionParser);
             ClientContext context = new ClientContext(Constants.BaseAddress);
-            ResourceParser resourceParser = new ResourceParser(context);
+            ResourceParser resourceParser = new ResourceParser(context, null);
             RecurrenceDataConverter recurrenceDataConverter = new RecurrenceDataConverter();
             ReservationConverter reservationConverter = new ReservationConverter(recurrenceDataConverter);
-            ReservationParser reservationParser = new ReservationParser(context);
+            ReservationParser reservationParser = new ReservationParser(context, null);
             this.resourceService = new ResourceService(resourceConverter, reservationConverter, resourceParser, reservationParser);
             this.reservationService = new ReservationService(resourceConverter, reservationConverter, resourceParser, reservationParser);
         }
