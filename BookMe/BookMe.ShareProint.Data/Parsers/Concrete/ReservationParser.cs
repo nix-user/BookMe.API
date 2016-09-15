@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using BookMe.Auth.Providers.Abstract;
 using BookMe.Core.Models;
 using BookMe.Core.Models.Recurrence;
 using BookMe.ShareProint.Data.Parsers.Abstract;
@@ -18,7 +19,7 @@ namespace BookMe.ShareProint.Data.Parsers.Concrete
         private const string AuthorFieldName = "Author";
         private const string Facilities = "Facilities";
 
-        public ReservationParser(ClientContext context) : base(context)
+        public ReservationParser(ClientContext context, ICredentialsProvider credentialsProvider) : base(context, credentialsProvider)
         {
         }
 

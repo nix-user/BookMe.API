@@ -1,22 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Security.Claims;
-using System.Web.Http;
+using System.Text;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Routing;
+using BookMe.Auth.Providers.Abstract;
 using BookMe.Auth.Resources;
 using BookMe.BusinessLogic.DTO;
 
-namespace BookMe.WebApi.Controllers
+namespace BookMe.Auth.Providers.Concrete
 {
-    public abstract class IdentityController : ApiController
+    public class CredentialsProvider : ICredentialsProvider
     {
-        protected CredentialsDTO Credentials
+        public CredentialsDTO Credentials
         {
             get
             {
-                var claimsIdentity = User.Identity as ClaimsIdentity;
+                var claimsIdentity = HttpContext.Current.User?.Identity as ClaimsIdentity;
 
                 if (claimsIdentity == null)
                 {

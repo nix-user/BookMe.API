@@ -12,6 +12,7 @@ using BookMe.WebApi.Models;
 
 namespace BookMe.WebApi.Controllers
 {
+    [Authorize]
     public class RoomController : ApiController
     {
         private ISharePointResourceService resourcesService;

@@ -63,6 +63,7 @@
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
       <Private>True</Private>
@@ -84,8 +85,10 @@
     <Compile Include="Cryptography\Concrete\AESCryptographyService.cs" />
     <Compile Include="Cryptography\Concrete\AppConfigSimetricCryptographyKeyProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Providers\Abstract\ICredentialsProvider.cs" />
     <Compile Include="Providers\Concrete\ADAccessTokenFormat.cs" />
     <Compile Include="Providers\Concrete\ADAuthorizationServerProvider.cs" />
+    <Compile Include="Providers\Concrete\CredentialsProvider.cs" />
     <Compile Include="Resources\ExtendedClaimTypes.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -103,7 +106,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Providers\Abstract\" />
+    <ProjectReference Include="..\BookMe.BusinessLogic\BookMe.BusinessLogic.csproj">
+      <Project>{ce50cf28-5957-4835-8ff2-e74670598af9}</Project>
+      <Name>BookMe.BusinessLogic</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

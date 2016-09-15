@@ -11,6 +11,7 @@ using BookMe.WebApi.Models;
 
 namespace BookMe.WebApi.Controllers
 {
+    [Authorize]
     public class ReservationController : ApiController
     {
         private static List<ReservationModel> reservations = new List<ReservationModel>();
@@ -21,7 +22,8 @@ namespace BookMe.WebApi.Controllers
             this.reservationService = reservationService;
         }
 
-        public IEnumerable<ReservationModel> Get()
+        [Route("api/reservation/all")]
+        public IEnumerable<ReservationModel> GetAll()
         {
             return reservations.Where(x => true);
         }
@@ -47,10 +49,9 @@ namespace BookMe.WebApi.Controllers
             reservations.Remove(removeReservation);
         }
 
-        [Route("api/reservation/{userName}")]
-        public ResponseModel<IEnumerable<ReservationModel>> GetUserReservations(string userName)
+        public ResponseModel<IEnumerable<ReservationModel>> Get()
         {
-            var operationResult = this.reservationService.GetUserActiveReservations(userName);
+            var operationResult = this.reservationService.GetUserActiveReservations(User.Identity.Name);
             return new ResponseModel<IEnumerable<ReservationModel>>()
             {
                 IsOperationSuccessful = operationResult.IsSuccessful,

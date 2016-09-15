@@ -7,6 +7,8 @@ using System.Web.Mvc;
 using BookMe.Auth.Cryptography.Abstract;
 using BookMe.Auth.Providers;
 using BookMe.Auth.Providers.Concrete;
+using BookMe.Infrastructure.IoC;
+using BookMe.Infrastructure.MapperConfiguration;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.DataHandler;
@@ -21,18 +23,12 @@ namespace BookMe.WebApi
     {
         public void Configuration(IAppBuilder app)
         {
-            var config = new HttpConfiguration();
-
             this.ConfigureOAuth(app);
-
-            WebApiConfig.Register(config);
-            app.UseWebApi(config);
+            app.UseWebApi(GlobalConfiguration.Configuration);
         }
 
         public void ConfigureOAuth(IAppBuilder app)
         {
-            const int ExpirationTimeInDays = 365 * 100;
-
             var symmetricCryptographyService = (ISymmetricCryptographyService)GlobalConfiguration.Configuration.DependencyResolver.GetService(typeof(ISymmetricCryptographyService));
             var adAccessTokenFormat = new ADAccessTokenFormat(symmetricCryptographyService);
 
@@ -40,7 +36,6 @@ namespace BookMe.WebApi
             {
                 AllowInsecureHttp = true,
                 TokenEndpointPath = new PathString("/token"),
-                AccessTokenExpireTimeSpan = TimeSpan.FromDays(ExpirationTimeInDays),
                 Provider = new ADAuthorizationServerProvider(),
                 AccessTokenFormat = adAccessTokenFormat
             };
