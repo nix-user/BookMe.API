@@ -14,39 +14,22 @@ namespace BookMe.WebApi.Controllers
     [Authorize]
     public class ReservationController : ApiController
     {
-        private static List<ReservationModel> reservations = new List<ReservationModel>();
-        private ISharePointReservationService reservationService;
+        private readonly ISharePointReservationService reservationService;
 
         public ReservationController(ISharePointReservationService reservationService)
         {
             this.reservationService = reservationService;
         }
 
-        [Route("api/reservation/all")]
-        public IEnumerable<ReservationModel> GetAll()
-        {
-            return reservations.Where(x => true);
-        }
-
-        public ReservationModel Get(int id)
-        {
-            return reservations.FirstOrDefault(x => x.Id == id);
-        }
-
         [HttpPost]
-        public void Post([FromBody]ReservationModel value)
+        public ResponseModel Post([FromBody]ReservationModel value)
         {
-            this.reservationService.AddReservation(Mapper.Map<ReservationModel, ReservationDTO>(value));
-        }
+            var operationResult = this.reservationService.AddReservation(Mapper.Map<ReservationModel, ReservationDTO>(value));
 
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        public void Delete(int id)
-        {
-            ReservationModel removeReservation = reservations.FirstOrDefault(x => x.Id == id);
-            reservations.Remove(removeReservation);
+            return new ResponseModel()
+            {
+                IsOperationSuccessful = operationResult.IsSuccessful
+            };
         }
 
         public ResponseModel<IEnumerable<ReservationModel>> Get()

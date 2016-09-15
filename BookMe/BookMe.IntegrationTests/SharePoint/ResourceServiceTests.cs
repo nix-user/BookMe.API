@@ -148,7 +148,7 @@ namespace BookMe.IntegrationTests.SharePoint
             Assert.IsTrue(operationResult.IsSuccessful);
             foreach (var reservation in operationResult.Result)
             {
-                Assert.IsTrue(reservation.EventDate < intervalEnd && reservation.EndDate > intervalStart);
+                Assert.IsTrue(reservation.EventDate.Date <= intervalEnd.Date && reservation.EndDate.Date >= intervalStart.Date);
             }
         }
 

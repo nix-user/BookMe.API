@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BookMe.Core.Enums;
 using BookMe.Core.Models;
 using BookMe.Core.Models.Recurrence;
 using BookMe.ShareProint.Data.Converters.Abstract;
@@ -24,7 +25,7 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
         private const string ParrentIdKey = "MasterSeriesItemID";
         private const string EventTypeKey = "EventType";
         private const string IsAllDayEventKey = "fAllDayEvent";
-
+        private const string RecurrenceDate = "RecurrenceID";
         private readonly IConverter<IDictionary<string, object>, RecurrenceData> recurrenceDataConverter;
 
         public ReservationConverter(IConverter<IDictionary<string, object>, RecurrenceData> recurrenceDataConverter)
@@ -58,7 +59,8 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
                 IsRecurrence = bool.Parse(value[IsRecurrenceKey].ToString()),
                 OwnerName = (value[AuthorKey] as FieldUserValue)?.LookupValue,
                 RecurrenceData = this.recurrenceDataConverter.Convert(value),
-                EventType = int.Parse(value[EventTypeKey].ToString()),
+                RecurrenceDate = (value[RecurrenceDate] as DateTime?),
+                EventType = (EventType)int.Parse(value[EventTypeKey].ToString()),
                 ParentId = parrentIdValue,
                 IsAllDayEvent = bool.Parse(value[IsAllDayEventKey].ToString())
             };
@@ -74,6 +76,25 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
             }
 
             return values.Select(this.Convert);
+        }
+
+        public IDictionary<string, object> ConvertBack(Reservation value)
+        {
+            return new Dictionary<string, object>()
+            {
+                { TitleKey, value.Title },
+                { DescriptionKey, value.Description },
+                { FacilitiesKey, new FieldLookupValue() { LookupId = value.ResourceId.Value } },
+                { EventDateKey, value.EventDate },
+                { EndDateKey, value.EndDate },
+                { DurationKey, value.Duration.Seconds },
+                { IsAllDayEventKey, value.IsAllDayEvent }
+            };
+        }
+
+        public IEnumerable<IDictionary<string, object>> ConvertBack(IEnumerable<Reservation> values)
+        {
+            return values.Select(this.ConvertBack);
         }
     }
 }

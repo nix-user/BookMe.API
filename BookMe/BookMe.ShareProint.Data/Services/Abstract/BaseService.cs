@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using BookMe.BusinessLogic.DTO;
 using BookMe.BusinessLogic.OperationResult;
+using BookMe.Core.Enums;
 using BookMe.Core.Models;
 using BookMe.Core.Models.Recurrence;
 using BookMe.ShareProint.Data.Converters.Abstract;
@@ -16,10 +18,13 @@ namespace BookMe.ShareProint.Data.Services.Abstract
 {
     public abstract class BaseService
     {
-        private readonly IResourceParser resourceParser;
-        private readonly IReservationParser reservationParser;
-        private IConverter<IDictionary<string, object>, Resource> resourcesConverter;
-        private IConverter<IDictionary<string, object>, Reservation> reservationConverter;
+        protected IResourceParser ResourceParser { get; set; }
+
+        protected IReservationParser ReservationParser { get; set; }
+
+        protected IConverter<IDictionary<string, object>, Resource> ResourcesConverter { get; set; }
+
+        protected IConverter<IDictionary<string, object>, Reservation> ReservationConverter { get; set; }
 
         protected BaseService(
             IConverter<IDictionary<string, object>, Resource> resourcesConverter,
@@ -27,21 +32,21 @@ namespace BookMe.ShareProint.Data.Services.Abstract
             IResourceParser resourceParser,
             IReservationParser reservationParser)
         {
-            this.resourceParser = resourceParser;
-            this.reservationParser = reservationParser;
-            this.resourcesConverter = resourcesConverter;
-            this.reservationConverter = reservationConverter;
+            this.ResourceParser = resourceParser;
+            this.ReservationParser = reservationParser;
+            this.ResourcesConverter = resourcesConverter;
+            this.ReservationConverter = reservationConverter;
         }
 
         protected OperationResult<IEnumerable<Resource>> GetAllResources()
         {
             try
             {
-                var resourceDictionariesCollection = this.resourceParser.GetAll().ToList().Select(x => x.FieldValues);
+                var resourceDictionariesCollection = this.ResourceParser.GetAll().ToList().Select(x => x.FieldValues);
                 return new OperationResult<IEnumerable<Resource>>
                 {
                     IsSuccessful = true,
-                    Result = this.resourcesConverter.Convert(resourceDictionariesCollection)
+                    Result = this.ResourcesConverter.Convert(resourceDictionariesCollection)
                 };
             }
             catch (ParserException)
@@ -54,20 +59,23 @@ namespace BookMe.ShareProint.Data.Services.Abstract
         {
             try
             {
-                var reservationsDictionary = this.reservationParser
+                var reservationsDictionary = this.ReservationParser
                     .GetAllPossibleReservationsInInterval(interval).ToList()
                     .Select(x => x.FieldValues);
 
-                var reservationsList = this.reservationConverter.Convert(reservationsDictionary);
-                List<Reservation> reservationsInInterval = new List<Reservation>();
+                var reservationsList = this.ReservationConverter.Convert(reservationsDictionary).ToList();
+
+                List<Reservation> intersectingReservations = new List<Reservation>();
                 foreach (var reservation in reservationsList)
                 {
-                    for (DateTime date = interval.Start; date <= interval.End; date = date.AddDays(1))
+                    if (!reservation.IsRecurrence
+                        || reservation.EventType == EventType.Modified
+                        || (reservation.EventType == EventType.Recurrent && !this.WasRecurrentReservationModifiedOrDeletedOnGivenDay(reservation, reservationsList, interval.Start)))
                     {
-                        var busyInterval = reservation.GetBusyInterval(date);
-                        if (busyInterval != null && busyInterval.IsIntersecting(interval))
+                        var reservationBusyInterval = reservation.GetBusyInterval(interval.Start);
+                        if (reservationBusyInterval != null && reservationBusyInterval.IsIntersecting(interval))
                         {
-                            reservationsInInterval.Add(reservation);
+                            intersectingReservations.Add(reservation);
                         }
                     }
                 }
@@ -75,7 +83,7 @@ namespace BookMe.ShareProint.Data.Services.Abstract
                 return new OperationResult<IEnumerable<Reservation>>
                 {
                     IsSuccessful = true,
-                    Result = reservationsInInterval
+                    Result = intersectingReservations
                 };
             }
             catch (ParserException)
@@ -88,13 +96,13 @@ namespace BookMe.ShareProint.Data.Services.Abstract
         {
             try
             {
-                var reservationsList = this.reservationParser
+                var reservationsList = this.ReservationParser
                     .GetPossibleRoomReservationsInInterval(interval, roomId).ToList()
                     .Select(x => x.FieldValues);
                 return new OperationResult<IEnumerable<Reservation>>
                 {
                     IsSuccessful = true,
-                    Result = this.reservationConverter.Convert(reservationsList)
+                    Result = this.ReservationConverter.Convert(reservationsList)
                 };
             }
             catch (ParserException)
@@ -107,11 +115,11 @@ namespace BookMe.ShareProint.Data.Services.Abstract
         {
             try
             {
-                var userActiveReservations = this.reservationParser.GetUserActiveReservations(userName).ToList().Select(x => x.FieldValues);
+                var userActiveReservations = this.ReservationParser.GetUserActiveReservations(userName).ToList().Select(x => x.FieldValues);
                 return new OperationResult<IEnumerable<Reservation>>
                 {
                     IsSuccessful = true,
-                    Result = this.reservationConverter.Convert(userActiveReservations)
+                    Result = this.ReservationConverter.Convert(userActiveReservations)
                 };
             }
             catch (ParserException)
@@ -149,6 +157,16 @@ namespace BookMe.ShareProint.Data.Services.Abstract
                 IsSuccessful = true,
                 Result = convertedReservations
             };
+        }
+
+        private bool WasRecurrentReservationModifiedOrDeletedOnGivenDay(Reservation reservationToCheck, IEnumerable<Reservation> allReservations, DateTime day)
+        {
+            if (reservationToCheck.EventType != EventType.Recurrent)
+            {
+                return false;
+            }
+
+            return allReservations.Any(reservation => reservation.ParentId == reservationToCheck.Id && reservation.RecurrenceDate.Value.Date == day.Date);
         }
     }
 }

@@ -8,6 +8,7 @@ namespace BookMe.ShareProint.Data.Parsers.Abstract
     {
         protected const string RetrivalErrorMessage = "Could not retrieve requested items";
         protected const string NixDomain = "nix";
+        protected const string AddingErrorMessage = "Could not add item to collection";
 
         private readonly ICredentialsProvider credentialsProvider;
 

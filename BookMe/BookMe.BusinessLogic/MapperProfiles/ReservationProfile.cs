@@ -14,6 +14,7 @@ namespace BookMe.BusinessLogic.MapperProfiles
         public ReservationProfile()
         {
             this.CreateMap<Reservation, ReservationDTO>();
+            this.CreateMap<ReservationDTO, Reservation>();
         }
     }
 }
