@@ -24,16 +24,6 @@ namespace BookMe.ShareProint.Data.Parsers.Concrete
         {
         }
 
-        public IEnumerable<ListItem> GetAllPossibleReservationsInInterval(Interval interval)
-        {
-            return this.GetPossibleReservationsInInterval(interval);
-        }
-
-        public IEnumerable<ListItem> GetPossibleRoomReservationsInInterval(Interval interval, int roomId)
-        {
-            return this.GetPossibleReservationsInInterval(interval, roomId);
-        }
-
         public IEnumerable<ListItem> GetUserActiveReservations(string userName)
         {
             return this.GetReservations(reservation => (string)reservation[AuthorFieldName] == userName && (DateTime)reservation[ReservationEndFieldName] > DateTime.Today.AddDays(-1));
@@ -43,7 +33,7 @@ namespace BookMe.ShareProint.Data.Parsers.Concrete
         {
         }
 
-        private IEnumerable<ListItem> GetPossibleReservationsInInterval(Interval interval, int? roomId = null)
+        public IEnumerable<ListItem> GetPossibleReservationsInInterval(Interval interval, int? roomId)
         {
             Expression<Func<ListItem, bool>> reservationsRetrievalCondition = this.GetRecurrentReservationCondition(roomId).OrElse(this.GetRegularReservationCondition(interval, roomId));
             return this.GetReservations(reservationsRetrievalCondition);
