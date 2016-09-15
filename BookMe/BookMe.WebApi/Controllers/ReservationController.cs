@@ -41,5 +41,15 @@ namespace BookMe.WebApi.Controllers
                 Result = operationResult.Result?.Select(Mapper.Map<ReservationDTO, ReservationModel>)
             };
         }
+
+        public ResponseModel Delete(int id)
+        {
+            var operationResult = this.reservationService.RemoveReservation(id);
+
+            return new ResponseModel()
+            {
+                IsOperationSuccessful = operationResult.IsSuccessful
+            };
+        }
     }
 }

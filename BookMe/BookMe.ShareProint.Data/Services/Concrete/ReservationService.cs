@@ -60,5 +60,19 @@ namespace BookMe.ShareProint.Data.Services.Concrete
 
             return new OperationResult() { IsSuccessful = true };
         }
+
+        public OperationResult RemoveReservation(int reservationId)
+        {
+            try
+            {
+                this.ReservationParser.RemoveReservation(reservationId);
+            }
+            catch (ParserException)
+            {
+                return new OperationResult() { IsSuccessful = false };
+            }
+
+            return new OperationResult() { IsSuccessful = true };
+        }
     }
 }

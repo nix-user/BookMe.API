@@ -12,5 +12,7 @@ namespace BookMe.BusinessLogic.Interfaces.SharePoint
         OperationResult<IEnumerable<ReservationDTO>> GetUserActiveReservations(string userName);
 
         OperationResult.OperationResult AddReservation(ReservationDTO reservationDTO);
+
+        OperationResult.OperationResult RemoveReservation(int reservationId);
     }
 }

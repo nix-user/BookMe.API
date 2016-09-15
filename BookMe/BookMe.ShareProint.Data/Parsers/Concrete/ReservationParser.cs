@@ -14,6 +14,7 @@ namespace BookMe.ShareProint.Data.Parsers.Concrete
 {
     public class ReservationParser : BaseParser, IReservationParser
     {
+        private const string IdFieldName = "ID";
         private const string ReservationStartFieldName = "EventDate";
         private const string ReservationEndFieldName = "EndDate";
         private const string RecurrentFieldName = "fRecurrence";
@@ -56,6 +57,21 @@ namespace BookMe.ShareProint.Data.Parsers.Concrete
             catch (Exception e)
             {
                 throw new ParserException(AddingErrorMessage, e);
+            }
+        }
+
+        public void RemoveReservation(int reservationId)
+        {
+            Expression<Func<ListItem, bool>> neededReservationCondition = reservation => (int)reservation[IdFieldName] == reservationId;
+            var neededReservation = this.GetReservations(neededReservationCondition).FirstOrDefault();
+            neededReservation.DeleteObject();
+            try
+            {
+                this.Context.ExecuteQuery();
+            }
+            catch (Exception e)
+            {
+                throw new ParserException(e.Message, e);
             }
         }
 
