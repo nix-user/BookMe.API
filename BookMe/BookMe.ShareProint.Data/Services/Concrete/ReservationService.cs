@@ -46,8 +46,18 @@ namespace BookMe.ShareProint.Data.Services.Concrete
             };
         }
 
-        public OperationResult AddReservation(ReservationDTO reservationDTO)
+        public OperationResult AddReservation(ReservationDTO reservation)
         {
+            try
+            {
+                var convertedReservation = this.ReservationConverter.ConvertBack(Mapper.Map<ReservationDTO, Reservation>(reservation));
+                this.ReservationParser.AddReservation(convertedReservation);
+            }
+            catch (ParserException)
+            {
+                return new OperationResult() { IsSuccessful = false };
+            }
+
             return new OperationResult() { IsSuccessful = true };
         }
     }

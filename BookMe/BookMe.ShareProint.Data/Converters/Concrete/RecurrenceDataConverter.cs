@@ -88,6 +88,16 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
             return values.Select(this.Convert);
         }
 
+        public IDictionary<string, object> ConvertBack(RecurrenceData value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<IDictionary<string, object>> ConvertBack(IEnumerable<RecurrenceData> values)
+        {
+            throw new NotImplementedException();
+        }
+
         #region RecurrenceData instantiation methods
 
         private static RecurrenceData InstanceDailyPattern(DateTime eventDate, XElement ruleElement)

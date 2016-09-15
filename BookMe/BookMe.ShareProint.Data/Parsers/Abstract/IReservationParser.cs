@@ -14,6 +14,6 @@ namespace BookMe.ShareProint.Data.Parsers.Abstract
 
         IEnumerable<ListItem> GetUserActiveReservations(string userName);
 
-        void AddReservation(Reservation reservation);
+        void AddReservation(IDictionary<string, object> reservation);
     }
 }
