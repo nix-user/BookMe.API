@@ -9,7 +9,7 @@ namespace BookMe.Auth.Providers.Concrete
     public class ADAuthorizationServerProvider : OAuthAuthorizationServerProvider
     {
         private const string InvalidGrantKey = "invalid_grant";
-        private const string InvalidGrantMessage = "The user name or password is incorrect";
+        private const string InvalidGrantMessage = "Логин или пароль указан неверно";
 
         public override async Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
         {
