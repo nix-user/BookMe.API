@@ -67,7 +67,7 @@ namespace BookMe.ShareProint.Data.Services.Concrete
             {
                 this.ReservationParser.RemoveReservation(reservationId);
             }
-            catch (ServerUnauthorizedAccessException)
+            catch (ParserException)
             {
                 return new OperationResult() { IsSuccessful = false };
             }

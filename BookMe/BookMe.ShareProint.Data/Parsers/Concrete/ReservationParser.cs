@@ -65,7 +65,14 @@ namespace BookMe.ShareProint.Data.Parsers.Concrete
             Expression<Func<ListItem, bool>> neededReservationCondition = reservation => (int)reservation[IdFieldName] == reservationId;
             var neededReservation = this.GetReservations(neededReservationCondition).FirstOrDefault();
             neededReservation.DeleteObject();
-            this.Context.ExecuteQuery();
+            try
+            {
+                this.Context.ExecuteQuery();
+            }
+            catch (Exception e)
+            {
+                throw new ParserException(e.Message, e);
+            }
         }
 
         public IEnumerable<ListItem> GetPossibleReservationsInInterval(Interval interval, int? roomId)
