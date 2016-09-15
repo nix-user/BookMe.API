@@ -87,7 +87,8 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
                 { FacilitiesKey, new FieldLookupValue() { LookupId = value.ResourceId.Value } },
                 { EventDateKey, value.EventDate },
                 { EndDateKey, value.EndDate },
-                { DurationKey, value.Duration.Seconds }
+                { DurationKey, value.Duration.Seconds },
+                { IsAllDayEventKey, value.IsAllDayEvent }
             };
         }
 
