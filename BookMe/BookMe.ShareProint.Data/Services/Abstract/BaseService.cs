@@ -55,12 +55,12 @@ namespace BookMe.ShareProint.Data.Services.Abstract
             }
         }
 
-        protected OperationResult<IEnumerable<Reservation>> GetPossibleReservationsInIntervalFromParser(Interval interval)
+        protected OperationResult<IEnumerable<Reservation>> GetPossibleReservationsInIntervalFromParser(Interval interval, int? roomId = null)
         {
             try
             {
                 var reservationsDictionary = this.ReservationParser
-                    .GetAllPossibleReservationsInInterval(interval).ToList()
+                    .GetPossibleReservationsInInterval(interval, roomId).ToList()
                     .Select(x => x.FieldValues);
 
                 var reservationsList = this.ReservationConverter.Convert(reservationsDictionary).ToList();
@@ -84,25 +84,6 @@ namespace BookMe.ShareProint.Data.Services.Abstract
                 {
                     IsSuccessful = true,
                     Result = intersectingReservations
-                };
-            }
-            catch (ParserException)
-            {
-                return new OperationResult<IEnumerable<Reservation>> { IsSuccessful = false };
-            }
-        }
-
-        protected OperationResult<IEnumerable<Reservation>> GetPossibleRoomReservationsInIntervalFromParser(Interval interval, int roomId)
-        {
-            try
-            {
-                var reservationsList = this.ReservationParser
-                    .GetPossibleRoomReservationsInInterval(interval, roomId).ToList()
-                    .Select(x => x.FieldValues);
-                return new OperationResult<IEnumerable<Reservation>>
-                {
-                    IsSuccessful = true,
-                    Result = this.ReservationConverter.Convert(reservationsList)
                 };
             }
             catch (ParserException)
