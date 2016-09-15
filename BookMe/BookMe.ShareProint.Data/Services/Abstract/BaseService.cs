@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using BookMe.BusinessLogic.DTO;
 using BookMe.BusinessLogic.OperationResult;
+using BookMe.Core.Enums;
 using BookMe.Core.Models;
 using BookMe.Core.Models.Recurrence;
 using BookMe.ShareProint.Data.Converters.Abstract;
@@ -61,16 +63,19 @@ namespace BookMe.ShareProint.Data.Services.Abstract
                     .GetAllPossibleReservationsInInterval(interval).ToList()
                     .Select(x => x.FieldValues);
 
-                var reservationsList = this.ReservationConverter.Convert(reservationsDictionary);
-                List<Reservation> reservationsInInterval = new List<Reservation>();
+                var reservationsList = this.reservationConverter.Convert(reservationsDictionary).ToList();
+
+                List<Reservation> intersectingReservations = new List<Reservation>();
                 foreach (var reservation in reservationsList)
                 {
-                    for (DateTime date = interval.Start; date <= interval.End; date = date.AddDays(1))
+                    if (!reservation.IsRecurrence
+                        || reservation.EventType == EventType.Modified
+                        || (reservation.EventType == EventType.Recurrent && !this.WasRecurrentReservationModifiedOrDeletedOnGivenDay(reservation, reservationsList, interval.Start)))
                     {
-                        var busyInterval = reservation.GetBusyInterval(date);
-                        if (busyInterval != null && busyInterval.IsIntersecting(interval))
+                        var reservationBusyInterval = reservation.GetBusyInterval(interval.Start);
+                        if (reservationBusyInterval != null && reservationBusyInterval.IsIntersecting(interval))
                         {
-                            reservationsInInterval.Add(reservation);
+                            intersectingReservations.Add(reservation);
                         }
                     }
                 }
@@ -78,7 +83,7 @@ namespace BookMe.ShareProint.Data.Services.Abstract
                 return new OperationResult<IEnumerable<Reservation>>
                 {
                     IsSuccessful = true,
-                    Result = reservationsInInterval
+                    Result = intersectingReservations
                 };
             }
             catch (ParserException)
@@ -152,6 +157,16 @@ namespace BookMe.ShareProint.Data.Services.Abstract
                 IsSuccessful = true,
                 Result = convertedReservations
             };
+        }
+
+        private bool WasRecurrentReservationModifiedOrDeletedOnGivenDay(Reservation reservationToCheck, IEnumerable<Reservation> allReservations, DateTime day)
+        {
+            if (reservationToCheck.EventType != EventType.Recurrent)
+            {
+                return false;
+            }
+
+            return allReservations.Any(reservation => reservation.ParentId == reservationToCheck.Id && reservation.RecurrenceDate.Value.Date == day.Date);
         }
     }
 }

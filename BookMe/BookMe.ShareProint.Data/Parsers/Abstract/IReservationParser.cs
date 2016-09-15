@@ -8,11 +8,11 @@ namespace BookMe.ShareProint.Data.Parsers.Abstract
 {
     public interface IReservationParser
     {
-        ListItemCollection GetAllPossibleReservationsInInterval(Interval interval);
+        IEnumerable<ListItem> GetAllPossibleReservationsInInterval(Interval interval);
 
-        ListItemCollection GetPossibleRoomReservationsInInterval(Interval interval, int roomId);
+        IEnumerable<ListItem> GetPossibleRoomReservationsInInterval(Interval interval, int roomId);
 
-        ListItemCollection GetUserActiveReservations(string userName);
+        IEnumerable<ListItem> GetUserActiveReservations(string userName);
 
         void AddReservation(IDictionary<string, object> reservation);
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BookMe.Core.Enums;
 using BookMe.Core.Models;
 using BookMe.ShareProint.Data.Converters.Abstract;
 using BookMe.ShareProint.Data.Converters.Concrete;
@@ -27,19 +28,20 @@ namespace BookMe.UnitTests.SharePoint.Converters
         private const string ParrentIdKey = "MasterSeriesItemID";
         private const string EventTypeKey = "EventType";
         private const string IsAllDayEventKey = "fAllDayEvent";
+        private const string RecurrenceDateKey = "RecurrenceID";
 
         private IConverter<IDictionary<string, object>, RecurrenceDataType> ArrangeRecurrenceDataConverter()
         {
             var recurrenceDataConverterMock = new Mock<IConverter<IDictionary<string, object>, RecurrenceDataType>>();
             recurrenceDataConverterMock
                 .Setup(x => x.Convert(It.IsAny<IDictionary<string, object>>()))
-                .Returns((RecurrenceDataType) null);
+                .Returns((RecurrenceDataType)null);
 
             return recurrenceDataConverterMock.Object;
         }
 
         [TestMethod]
-        [ExpectedException(typeof (ArgumentNullException))]
+        [ExpectedException(typeof(ArgumentNullException))]
         public void Convert_ArgumentNull_ShouldThrowArgumentNullException()
         {
             // arrange
@@ -47,11 +49,11 @@ namespace BookMe.UnitTests.SharePoint.Converters
             var reservationConverter = new ReservationConverter(recurrenceDataConverter);
 
             // act
-            reservationConverter.Convert((IDictionary<string, object>) null);
+            reservationConverter.Convert((IDictionary<string, object>)null);
         }
 
         [TestMethod]
-        [ExpectedException(typeof (ArgumentNullException))]
+        [ExpectedException(typeof(ArgumentNullException))]
         public void Convert_IEnumerableArgumentNull_ShouldThrowArgumentNullException()
         {
             // arrange
@@ -59,7 +61,7 @@ namespace BookMe.UnitTests.SharePoint.Converters
             var reservationConverter = new ReservationConverter(recurrenceDataConverter);
 
             // act
-            reservationConverter.Convert((IEnumerable<IDictionary<string, object>>) null);
+            reservationConverter.Convert((IEnumerable<IDictionary<string, object>>)null);
         }
 
         [TestMethod]
@@ -78,12 +80,13 @@ namespace BookMe.UnitTests.SharePoint.Converters
                 EventDate = new DateTime(2016, 1, 1),
                 Description = "description",
                 ParentId = null,
-                EventType = 1,
+                EventType = (EventType)1,
                 IsAllDayEvent = false,
                 Title = "title",
                 Duration = new TimeSpan(0, 1, 0),
                 OwnerName = "Jon Snow",
-                ResourceId = 42
+                ResourceId = 42,
+                RecurrenceDate = null
             };
 
             var value = new Dictionary<string, object>()
@@ -98,8 +101,9 @@ namespace BookMe.UnitTests.SharePoint.Converters
                 {IsRecurrenceKey, expectedReservation.IsRecurrence},
                 {AuthorKey, expectedReservation.OwnerName},
                 {ParrentIdKey, expectedReservation.ParentId},
-                {EventTypeKey, expectedReservation.EventType},
+                {EventTypeKey, (int)expectedReservation.EventType},
                 {IsAllDayEventKey, expectedReservation.IsAllDayEvent},
+                { RecurrenceDateKey,expectedReservation.RecurrenceDate}
             };
 
             // act
@@ -134,12 +138,13 @@ namespace BookMe.UnitTests.SharePoint.Converters
                 EventDate = new DateTime(2016, 1, 1),
                 Description = "description",
                 ParentId = null,
-                EventType = 1,
+                EventType = EventType.Recurrent,
                 IsAllDayEvent = false,
                 Title = "title",
                 Duration = new TimeSpan(0, 1, 0),
                 OwnerName = "Jon Snow",
-                ResourceId = 42
+                ResourceId = 42,
+                RecurrenceDate = null
             };
 
             var expectedReservation2 = new Reservation()
@@ -151,15 +156,16 @@ namespace BookMe.UnitTests.SharePoint.Converters
                 EventDate = new DateTime(2015, 1, 1),
                 Description = "description2",
                 ParentId = null,
-                EventType = 1,
+                EventType = EventType.Recurrent,
                 IsAllDayEvent = false,
                 Title = "title2",
                 Duration = new TimeSpan(0, 2, 0),
                 OwnerName = "Tyrion Lannister",
-                ResourceId = 99
+                ResourceId = 99,
+                RecurrenceDate = null
             };
 
-            var expectedReservations = new List<Reservation>() {expectedReservation1, expectedReservation2};
+            var expectedReservations = new List<Reservation>() { expectedReservation1, expectedReservation2 };
             var value = new List<Dictionary<string, object>>();
 
             for (var i = 0; i < expectedReservations.Count; i++)
@@ -176,8 +182,9 @@ namespace BookMe.UnitTests.SharePoint.Converters
                     {IsRecurrenceKey, expectedReservations[i].IsRecurrence},
                     {AuthorKey, expectedReservations[i].OwnerName},
                     {ParrentIdKey, expectedReservations[i].ParentId},
-                    {EventTypeKey, expectedReservations[i].EventType},
+                    {EventTypeKey, (int)expectedReservations[i].EventType},
                     {IsAllDayEventKey, expectedReservations[i].IsAllDayEvent},
+                    { RecurrenceDateKey,expectedReservations[i].RecurrenceDate}
                 });
             }
 
