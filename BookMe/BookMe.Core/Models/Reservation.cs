@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BookMe.Core.Enums;
 using BookMe.Core.Models.Recurrence;
 
 namespace BookMe.Core.Models
@@ -17,6 +18,8 @@ namespace BookMe.Core.Models
 
         public DateTime EndDate { get; set; }
 
+        public DateTime? RecurrenceDate { get; set; }
+
         public bool IsRecurrence { get; set; }
 
         public int? ResourceId { get; set; }
@@ -29,15 +32,20 @@ namespace BookMe.Core.Models
 
         public int? ParentId { get; set; }
 
-        public int EventType { get; set; }
+        public EventType EventType { get; set; }
 
         public bool IsAllDayEvent { get; set; }
 
         public Interval GetBusyInterval(DateTime date)
         {
-            if (date > this.EndDate || this.RecurrenceData == null)
+            if (date > this.EndDate)
             {
                 return null;
+            }
+
+            if (this.RecurrenceData == null)
+            {
+                return new Interval(this.EventDate, this.EndDate);
             }
 
             var isBusy = this.RecurrenceData.IsBusyInDate(date);

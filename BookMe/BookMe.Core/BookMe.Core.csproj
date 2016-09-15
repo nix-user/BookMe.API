@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Enums\DayOfTheWeek.cs" />
     <Compile Include="Enums\DayOfTheWeekIndex.cs" />
+    <Compile Include="Enums\EventType.cs" />
     <Compile Include="Enums\Month.cs" />
     <Compile Include="Models\BaseEntity.cs" />
     <Compile Include="Models\Recurrence\CommonPattern.cs" />
