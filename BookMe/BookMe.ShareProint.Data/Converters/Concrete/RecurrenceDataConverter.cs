@@ -8,6 +8,7 @@ using System.Xml.Linq;
 using BookMe.Core.Enums;
 using BookMe.Core.Models;
 using BookMe.Core.Models.Recurrence;
+using BookMe.ShareProint.Data.Constants;
 using BookMe.ShareProint.Data.Converters.Abstract;
 
 namespace BookMe.ShareProint.Data.Converters.Concrete
@@ -52,11 +53,9 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
         {
             const string RecurrenceKey = "recurrence";
             const string RuleKey = "rule";
-            const string RecurrenceDataKey = "RecurrenceData";
-            const string EventDateKey = "EventDate";
 
-            var recurrenceDataXml = value[RecurrenceDataKey];
-            var eventDate = (DateTime)value[EventDateKey];
+            var recurrenceDataXml = value[FieldNames.RecurrenceDataKey];
+            var eventDate = (DateTime)value[FieldNames.EventDateKey];
 
             if (recurrenceDataXml == null)
             {

@@ -7,6 +7,7 @@ using BookMe.BusinessLogic.Interfaces.SharePoint;
 using BookMe.Core.Models;
 using BookMe.Core.Models.Recurrence;
 using BookMe.ShareProint.Data;
+using BookMe.ShareProint.Data.Constants;
 using BookMe.ShareProint.Data.Converters.Abstract;
 using BookMe.ShareProint.Data.Converters.Concrete;
 using BookMe.ShareProint.Data.Parsers.Abstract;
@@ -58,7 +59,7 @@ namespace BookMe.Infrastructure.IoC
         private void RegisterSPContext()
         {
             var webApiRequestLifestyle = new WebApiRequestLifestyle();
-            this.container.Register(() => new ClientContext(Constants.BaseAddress), webApiRequestLifestyle);
+            this.container.Register(() => new ClientContext(UriConstants.BaseAddress), webApiRequestLifestyle);
         }
     }
 }
