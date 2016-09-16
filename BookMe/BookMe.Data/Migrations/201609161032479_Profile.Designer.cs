@@ -13,7 +13,7 @@ namespace BookMe.Data.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201609160745573_Profile"; }
+            get { return "201609161032479_Profile"; }
         }
         
         string IMigrationMetadata.Source

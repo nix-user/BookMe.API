@@ -8,7 +8,7 @@ namespace BookMe.Data.Migrations
         public override void Up()
         {
             CreateTable(
-                "dbo.Profiles",
+                "dbo.UserProfiles",
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
@@ -23,8 +23,8 @@ namespace BookMe.Data.Migrations
         
         public override void Down()
         {
-            DropIndex("dbo.Profiles", "UserNameIndex");
-            DropTable("dbo.Profiles");
+            DropIndex("dbo.UserProfiles", "UserNameIndex");
+            DropTable("dbo.UserProfiles");
         }
     }
 }
