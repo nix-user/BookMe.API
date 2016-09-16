@@ -88,6 +88,7 @@
     <Compile Include="IoC\AuthPackage.cs" />
     <Compile Include="IoC\DataPackage.cs" />
     <Compile Include="IoC\IoCConfig.cs" />
+    <Compile Include="IoC\ServicesPackage.cs" />
     <Compile Include="IoC\SharePointPackage.cs" />
     <Compile Include="MapperConfiguration\AutoMapperConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -14,6 +14,7 @@ using BookMe.WebApi.Models;
 
 namespace BookMe.WebApi.Controllers
 {
+    [Authorize]
     public class ProfileController : ApiController
     {
         private readonly IProfileService profileService;
@@ -33,17 +34,25 @@ namespace BookMe.WebApi.Controllers
         }
 
         // GET: api/Profile
-        public ProfileModel Get()
+        public ResponseModel<ProfileModel> Get()
         {
-            var profileDto = this.profileService.GetProfile(this.UserName);
-            return Mapper.Map<ProfileModel>(profileDto);
+            var operationResult = this.profileService.GetProfile(this.UserName);
+            return new ResponseModel<ProfileModel>()
+            {
+                IsOperationSuccessful = operationResult.IsSuccessful,
+                Result = Mapper.Map<ProfileModel>(operationResult.Result)
+            };
         }
 
         // PUT: api/Profile/5
-        public void Put([FromBody]ProfileModel value)
+        public ResponseModel Put([FromBody]ProfileModel value)
         {
             var profileDto = Mapper.Map<ProfileDTO>(value);
-            this.profileService.UpdateProfile(profileDto, this.UserName);
+            var operationResult = this.profileService.UpdateProfile(profileDto, this.UserName);
+            return new ResponseModel()
+            {
+                IsOperationSuccessful = operationResult.IsSuccessful
+            };
         }
     }
 }

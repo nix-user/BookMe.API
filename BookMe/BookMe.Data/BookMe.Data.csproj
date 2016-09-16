@@ -50,6 +50,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Context\AppContext.cs" />
+    <Compile Include="Migrations\201609160745573_Profile.cs" />
+    <Compile Include="Migrations\201609160745573_Profile.Designer.cs">
+      <DependentUpon>201609160745573_Profile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\EFRepository.cs" />
   </ItemGroup>
@@ -57,7 +62,6 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\BookMe.BusinessLogic\BookMe.BusinessLogic.csproj">
       <Project>{CE50CF28-5957-4835-8FF2-E74670598AF9}</Project>
@@ -67,6 +71,11 @@
       <Project>{762a809b-7236-4fc3-8e3c-f0cba88d6fe4}</Project>
       <Name>BookMe.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201609160745573_Profile.resx">
+      <DependentUpon>201609160745573_Profile.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

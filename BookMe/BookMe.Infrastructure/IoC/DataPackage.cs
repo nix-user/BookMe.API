@@ -22,7 +22,7 @@ namespace BookMe.Infrastructure.IoC
             var webApiRequestLifestyle = new WebApiRequestLifestyle();
 
             container.Register(typeof(IRepository<>), typeof(EFRepository<>), webApiRequestLifestyle);
-            container.Register<DbContext, AppContext>(Lifestyle.Transient);
+            container.Register<DbContext, AppContext>(webApiRequestLifestyle);
         }
     }
 }

@@ -12,6 +12,7 @@ namespace BookMe.WebApi.MapperProfiles
         public ProfileProfile()
         {
             this.CreateMap<ProfileModel, ProfileDTO>();
+            this.CreateMap<ProfileDTO, ProfileModel>();
         }
     }
 }

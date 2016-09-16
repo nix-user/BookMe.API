@@ -13,6 +13,7 @@ namespace BookMe.BusinessLogic.MapperProfiles
         public ProfileProfile()
         {
             this.CreateMap<Profile, ProfileDTO>();
+            this.CreateMap<ProfileDTO, Profile>();
         }
     }
 }

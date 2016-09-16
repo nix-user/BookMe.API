@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BookMe.BusinessLogic.DTO
 {
-    public class ProfileDTO : BaseDTO
+    public class ProfileDTO
     {
         public int Floor { get; set; }
 
