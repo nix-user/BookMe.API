@@ -3,4 +3,3 @@ BookMe/packages/
 **/obj/
 **/.vs/
 !NuGet.exe
-BookMe/BookMe.WebApi/connectionStrings.config
