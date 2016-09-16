@@ -46,7 +46,7 @@
     <Compile Include="Enums\EventType.cs" />
     <Compile Include="Enums\Month.cs" />
     <Compile Include="Models\BaseEntity.cs" />
-    <Compile Include="Models\Profile.cs" />
+    <Compile Include="Models\UserProfile.cs" />
     <Compile Include="Models\Recurrence\CommonPattern.cs" />
     <Compile Include="Models\Recurrence\DailyPattern.cs" />
     <Compile Include="Models\Recurrence\Interval.cs" />

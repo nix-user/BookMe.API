@@ -4,12 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookMe.Core.Models
+namespace BookMe.BusinessLogic.DTO
 {
-    public class Profile : BaseEntity
+    public class UserProfileDTO
     {
-        public string UserName { get; set; }
-
         public int Floor { get; set; }
 
         public string FavouriteRoom { get; set; }

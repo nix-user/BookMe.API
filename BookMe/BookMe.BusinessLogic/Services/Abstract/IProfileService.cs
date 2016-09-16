@@ -10,8 +10,8 @@ namespace BookMe.BusinessLogic.Services.Abstract
 {
     public interface IProfileService
     {
-        OperationResult.OperationResult UpdateProfile(ProfileDTO profile, string userName);
+        OperationResult.OperationResult UpdateProfile(UserProfileDTO profile, string userName);
 
-        OperationResult<ProfileDTO> GetProfile(string userName);
+        OperationResult<UserProfileDTO> GetProfile(string userName);
     }
 }

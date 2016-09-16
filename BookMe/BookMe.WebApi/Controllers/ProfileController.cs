@@ -34,20 +34,20 @@ namespace BookMe.WebApi.Controllers
         }
 
         // GET: api/Profile
-        public ResponseModel<ProfileModel> Get()
+        public ResponseModel<UserProfileModel> Get()
         {
             var operationResult = this.profileService.GetProfile(this.UserName);
-            return new ResponseModel<ProfileModel>()
+            return new ResponseModel<UserProfileModel>()
             {
                 IsOperationSuccessful = operationResult.IsSuccessful,
-                Result = Mapper.Map<ProfileModel>(operationResult.Result)
+                Result = Mapper.Map<UserProfileModel>(operationResult.Result)
             };
         }
 
         // PUT: api/Profile/5
-        public ResponseModel Put([FromBody]ProfileModel value)
+        public ResponseModel Put([FromBody]UserProfileModel value)
         {
-            var profileDto = Mapper.Map<ProfileDTO>(value);
+            var profileDto = Mapper.Map<UserProfileDTO>(value);
             var operationResult = this.profileService.UpdateProfile(profileDto, this.UserName);
             return new ResponseModel()
             {

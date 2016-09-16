@@ -9,7 +9,7 @@ using BookMe.Core.Models;
 
 namespace BookMe.BusinessLogic.MapperProfiles
 {
-    public class ReservationProfile : AutoMapper.Profile
+    public class ReservationProfile : Profile
     {
         public ReservationProfile()
         {

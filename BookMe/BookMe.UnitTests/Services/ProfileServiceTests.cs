@@ -26,17 +26,17 @@ namespace BookMe.UnitTests.Services
         {
             // arrange
             const string userName = "adorable_user_name";
-            Profile expectedProfile = null;
+            UserProfile expectedUserProfile = null;
             var expectedIsSuccess = true;
 
-            var fakeProfileRepository = new FakeRepository<Profile>();
+            var fakeProfileRepository = new FakeRepository<UserProfile>();
             var profileService = new ProfileService(fakeProfileRepository);
 
             // act
             var result = profileService.GetProfile(userName);
 
             // assert 
-            Assert.AreEqual(expectedProfile, result.Result);
+            Assert.AreEqual(expectedUserProfile, result.Result);
             Assert.AreEqual(expectedIsSuccess, result.IsSuccessful);
         }
 
@@ -45,7 +45,7 @@ namespace BookMe.UnitTests.Services
         {
             // arrange
             const string userName = "adorable_user_name";
-            var expectedProfile = new Profile()
+            var expectedProfile = new UserProfile()
             {
                 UserName = userName,
                 Id = 1,
@@ -54,7 +54,7 @@ namespace BookMe.UnitTests.Services
             };
             var expectedIsSuccess = true;
 
-            var fakeProfileRepository = new FakeRepository<Profile>(new List<Profile>() { expectedProfile });
+            var fakeProfileRepository = new FakeRepository<UserProfile>(new List<UserProfile>() { expectedProfile });
             var profileService = new ProfileService(fakeProfileRepository);
 
             // act
@@ -71,7 +71,7 @@ namespace BookMe.UnitTests.Services
         {
             // arrange
             const string userName = "adorable_user_name";
-            var oldProfile = new Profile()
+            var oldProfile = new UserProfile()
             {
                 UserName = userName,
                 Id = 1,
@@ -79,7 +79,7 @@ namespace BookMe.UnitTests.Services
                 Floor = 4
             };
 
-            var newProfile = new ProfileDTO()
+            var newProfile = new UserProfileDTO()
             {
                 FavouriteRoom = "503b",
                 Floor = 5
@@ -87,7 +87,7 @@ namespace BookMe.UnitTests.Services
 
             var expectedIsSuccess = true;
 
-            var fakeProfileRepository = new FakeRepository<Profile>(new List<Profile>() { oldProfile });
+            var fakeProfileRepository = new FakeRepository<UserProfile>(new List<UserProfile>() { oldProfile });
             var profileService = new ProfileService(fakeProfileRepository);
 
             // act
@@ -107,7 +107,7 @@ namespace BookMe.UnitTests.Services
             // arrange
             const string userName = "adorable_user_name";
 
-            var newProfile = new ProfileDTO()
+            var newProfile = new UserProfileDTO()
             {
                 FavouriteRoom = "503b",
                 Floor = 5
@@ -115,7 +115,7 @@ namespace BookMe.UnitTests.Services
 
             var expectedIsSuccess = true;
 
-            var fakeProfileRepository = new FakeRepository<Profile>();
+            var fakeProfileRepository = new FakeRepository<UserProfile>();
             var profileService = new ProfileService(fakeProfileRepository);
 
             // act

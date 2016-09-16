@@ -17,16 +17,16 @@ namespace BookMe.Data.Context
         {
         }
 
-        public DbSet<Profile> Records { get; set; }
+        public DbSet<UserProfile> UserProfiles { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Profile>()
+            modelBuilder.Entity<UserProfile>()
                 .Property(e => e.UserName).HasColumnType("NVARCHAR").HasMaxLength(128);
 
-            modelBuilder.Entity<Profile>()
+            modelBuilder.Entity<UserProfile>()
                 .Property(x => x.UserName)
                 .HasColumnAnnotation("Index",
                     new IndexAnnotation(new IndexAttribute("UserNameIndex") { IsUnique = true }));

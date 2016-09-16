@@ -8,12 +8,12 @@ using BookMe.Core.Models;
 
 namespace BookMe.BusinessLogic.MapperProfiles
 {
-    public class ProfileProfile : AutoMapper.Profile
+    public class UserProfileProfile : AutoMapper.Profile
     {
-        public ProfileProfile()
+        public UserProfileProfile()
         {
-            this.CreateMap<Profile, ProfileDTO>();
-            this.CreateMap<ProfileDTO, Profile>();
+            this.CreateMap<UserProfile, UserProfileDTO>();
+            this.CreateMap<UserProfileDTO, UserProfile>();
         }
     }
 }

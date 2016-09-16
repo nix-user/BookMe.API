@@ -8,20 +8,20 @@ using BookMe.BusinessLogic.DTO;
 using BookMe.BusinessLogic.OperationResult;
 using BookMe.BusinessLogic.Repository;
 using BookMe.BusinessLogic.Services.Abstract;
-using Profile = BookMe.Core.Models.Profile;
+using BookMe.Core.Models;
 
 namespace BookMe.BusinessLogic.Services.Concrete
 {
     public class ProfileService : IProfileService
     {
-        private readonly IRepository<Profile> profileRepository;
+        private readonly IRepository<UserProfile> profileRepository;
 
-        public ProfileService(IRepository<Profile> profileRepository)
+        public ProfileService(IRepository<UserProfile> profileRepository)
         {
             this.profileRepository = profileRepository;
         }
 
-        public OperationResult.OperationResult UpdateProfile(ProfileDTO profile, string userName)
+        public OperationResult.OperationResult UpdateProfile(UserProfileDTO profile, string userName)
         {
             try
             {
@@ -29,7 +29,7 @@ namespace BookMe.BusinessLogic.Services.Concrete
 
                 if (profileEntity == null)
                 {
-                    profileEntity = new Profile()
+                    profileEntity = new UserProfile()
                     {
                         UserName = userName
                     };
@@ -50,14 +50,14 @@ namespace BookMe.BusinessLogic.Services.Concrete
             }
         }
 
-        public OperationResult<ProfileDTO> GetProfile(string userName)
+        public OperationResult<UserProfileDTO> GetProfile(string userName)
         {
             try
             {
                 var profileEntity = this.profileRepository.Find(x => x.UserName == userName).FirstOrDefault();
-                var profileDto = Mapper.Map<ProfileDTO>(profileEntity);
+                var profileDto = Mapper.Map<UserProfileDTO>(profileEntity);
 
-                return new OperationResult<ProfileDTO>()
+                return new OperationResult<UserProfileDTO>()
                 {
                     IsSuccessful = true,
                     Result = profileDto
@@ -65,7 +65,7 @@ namespace BookMe.BusinessLogic.Services.Concrete
             }
             catch (Exception)
             {
-                return new OperationResult<ProfileDTO>()
+                return new OperationResult<UserProfileDTO>()
                 {
                     IsSuccessful = false
                 };

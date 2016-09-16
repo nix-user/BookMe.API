@@ -4,7 +4,7 @@ using BookMe.Core.Models;
 
 namespace BookMe.BusinessLogic.MapperProfiles
 {
-    public class ResourceProfile : AutoMapper.Profile
+    public class ResourceProfile : Profile
     {
         public ResourceProfile()
         {

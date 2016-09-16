@@ -48,7 +48,7 @@
     <Compile Include="DTO\BaseDTO.cs" />
     <Compile Include="DTO\CredentialsDTO.cs" />
     <Compile Include="DTO\IntervalDTO.cs" />
-    <Compile Include="DTO\ProfileDTO.cs" />
+    <Compile Include="DTO\UserProfileDTO.cs" />
     <Compile Include="DTO\ResourceFilterParameters.cs" />
     <Compile Include="DTO\ReservationDTO.cs" />
     <Compile Include="DTO\ResourceDTO.cs" />
@@ -56,7 +56,7 @@
     <Compile Include="Interfaces\SharePoint\ISharePointReservationService.cs" />
     <Compile Include="Interfaces\SharePoint\ISharePointResourceService.cs" />
     <Compile Include="MapperProfiles\IntervalProfile.cs" />
-    <Compile Include="MapperProfiles\ProfileProfile.cs" />
+    <Compile Include="MapperProfiles\UserProfileProfile.cs" />
     <Compile Include="MapperProfiles\ReservationProfile.cs" />
     <Compile Include="MapperProfiles\ResourceProfile.cs" />
     <Compile Include="MapperProfiles\RoomSizeProfile.cs" />
