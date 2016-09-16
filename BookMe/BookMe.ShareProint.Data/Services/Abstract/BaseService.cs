@@ -70,7 +70,8 @@ namespace BookMe.ShareProint.Data.Services.Abstract
                 {
                     if (!reservation.IsRecurrence
                         || reservation.EventType == EventType.Modified
-                        || (reservation.EventType == EventType.Recurrent && !this.WasRecurrentReservationModifiedOrDeletedOnGivenDay(reservation, reservationsList, interval.Start)))
+                        || (reservation.EventType == EventType.Recurrent && reservation.ParentId == null
+                        && !this.WasRecurrentReservationModifiedOrDeletedOnGivenDay(reservation, reservationsList, interval.Start)))
                     {
                         var reservationBusyInterval = reservation.GetBusyInterval(interval.Start);
                         if (reservationBusyInterval != null && reservationBusyInterval.IsIntersecting(interval))
