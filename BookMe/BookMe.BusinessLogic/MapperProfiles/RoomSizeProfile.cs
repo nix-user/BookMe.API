@@ -13,7 +13,7 @@ namespace BookMe.BusinessLogic.MapperProfiles
     {
         public RoomSizeProfile()
         {
-            this.CreateMap<RoomSizeDTO, RoomSize>();
+            this.CreateMap<RoomSizeDTO?, RoomSize?>();
         }
     }
 }
