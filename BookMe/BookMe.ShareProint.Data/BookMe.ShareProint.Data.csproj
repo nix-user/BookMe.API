@@ -55,7 +55,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Constants.cs" />
+    <Compile Include="Constants\UriConstants.cs" />
+    <Compile Include="Constants\FieldNames.cs" />
     <Compile Include="Converters\Abstract\IConverter.cs" />
     <Compile Include="Converters\Abstract\IDescriptionParser.cs" />
     <Compile Include="Converters\Concrete\DescriptionParser.cs" />

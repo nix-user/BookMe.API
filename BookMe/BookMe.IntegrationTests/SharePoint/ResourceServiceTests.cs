@@ -8,6 +8,7 @@ using BookMe.BusinessLogic.DTO;
 using BookMe.Core.Enums;
 using BookMe.Infrastructure.MapperConfiguration;
 using BookMe.ShareProint.Data;
+using BookMe.ShareProint.Data.Constants;
 using BookMe.ShareProint.Data.Converters.Concrete;
 using BookMe.ShareProint.Data.Parsers.Concrete;
 using BookMe.ShareProint.Data.Services.Concrete;
@@ -29,7 +30,7 @@ namespace BookMe.IntegrationTests.SharePoint
 
             DescriptionParser descriptionParser = new DescriptionParser();
             ResourceConverter resourceConverter = new ResourceConverter(descriptionParser);
-            ClientContext context = new ClientContext(Constants.BaseAddress);
+            ClientContext context = new ClientContext(UriConstants.BaseAddress);
             ResourceParser resourceParser = new ResourceParser(context, null);
             RecurrenceDataConverter recurrenceDataConverter = new RecurrenceDataConverter();
             ReservationConverter reservationConverter = new ReservationConverter(recurrenceDataConverter);

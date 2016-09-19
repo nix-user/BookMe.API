@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using BookMe.Core.Models;
+using BookMe.ShareProint.Data.Constants;
 using BookMe.ShareProint.Data.Converters.Abstract;
 using Microsoft.SharePoint.Client;
 
@@ -12,10 +13,6 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
 {
     public class ResourceConverter : IConverter<IDictionary<string, object>, Resource>
     {
-        private const string IdKey = "ID";
-        private const string TitleKey = "Title";
-        private const string DescriptionKey = "Description";
-
         private readonly IDescriptionParser descriptionParser;
 
         public ResourceConverter(IDescriptionParser descriptionParser)
@@ -30,12 +27,12 @@ namespace BookMe.ShareProint.Data.Converters.Concrete
                 throw new ArgumentNullException(nameof(value));
             }
 
-            var decription = value[DescriptionKey]?.ToString();
+            var decription = value[FieldNames.DescriptionKey]?.ToString();
 
             var resource = new Resource()
             {
-                Id = int.Parse(value[IdKey].ToString()),
-                Title = value[TitleKey].ToString(),
+                Id = int.Parse(value[FieldNames.IdKey].ToString()),
+                Title = value[FieldNames.TitleKey].ToString(),
                 Description = decription,
                 HasPolycom = this.descriptionParser.HasPolycom(decription),
                 HasTv = this.descriptionParser.HasTv(decription),
