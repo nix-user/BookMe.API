@@ -16,6 +16,8 @@ namespace BookMe.WebApi.Models
 
         public bool IsRecursive { get; set; }
 
+        public int? ResourceId { get; set; }
+
         public TimeSpan Duration { get; set; }
 
         public Room Room { get; set; }

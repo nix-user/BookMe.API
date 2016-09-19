@@ -20,6 +20,8 @@ namespace BookMe.BusinessLogic.DTO
 
         public ResourceDTO Resource { get; set; }
 
+        public int? ResourceId { get; set; }
+
         public TimeSpan Duration { get; set; }
 
         public string OwnerName { get; set; }
