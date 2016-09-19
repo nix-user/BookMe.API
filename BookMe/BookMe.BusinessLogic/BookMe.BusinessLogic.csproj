@@ -65,7 +65,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\IRepository.cs" />
     <Compile Include="Services\Abstract\IProfileService.cs" />
+    <Compile Include="Services\Abstract\IResourceService.cs" />
     <Compile Include="Services\Concrete\ProfileService.cs" />
+    <Compile Include="Services\Concrete\ResourceService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BookMe.Core\BookMe.Core.csproj">

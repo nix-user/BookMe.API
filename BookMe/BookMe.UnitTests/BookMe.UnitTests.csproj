@@ -79,6 +79,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AESCryptographyServiceTests.cs" />
     <Compile Include="Services\ProfileServiceTests.cs" />
+    <Compile Include="Services\ResourceServiceTests.cs" />
     <Compile Include="SharePoint\Converters\DescriptionParserTests.cs" />
     <Compile Include="SharePoint\Converters\RecurrenceDataConverterTests.cs" />
     <Compile Include="SharePoint\Converters\ReservationConverterTests.cs" />

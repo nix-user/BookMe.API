@@ -19,6 +19,8 @@ namespace BookMe.Data.Context
 
         public DbSet<UserProfile> UserProfiles { get; set; }
 
+        public DbSet<Resource> Resources { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -30,6 +32,11 @@ namespace BookMe.Data.Context
                 .Property(x => x.UserName)
                 .HasColumnAnnotation("Index",
                     new IndexAnnotation(new IndexAttribute("UserNameIndex") { IsUnique = true }));
+
+            modelBuilder
+                .Entity<Resource>()
+                .Property(f => f.Id)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
         }
     }
 }
