@@ -93,6 +93,44 @@ namespace BookMe.ShareProint.Data.Services.Abstract
             }
         }
 
+        protected OperationResult<IEnumerable<Reservation>> GetPossibleReservationsInIntervalFromParserOptimized(Interval interval, IEnumerable<ResourceDTO> resources)
+        {
+            try
+            {
+                var reservationsDictionary = this.ReservationParser
+                    .GetPossibleReservationsInIntervalOptimized(interval, resources.Select(r => r.Id)).ToList()
+                    .Select(x => x.FieldValues);
+
+                var reservationsList = this.ReservationConverter.Convert(reservationsDictionary).ToList();
+
+                List<Reservation> intersectingReservations = new List<Reservation>();
+                foreach (var reservation in reservationsList)
+                {
+                    if (!reservation.IsRecurrence
+                        || reservation.EventType == EventType.Modified
+                        || (reservation.EventType == EventType.Recurrent && reservation.ParentId == null
+                        && !this.WasRecurrentReservationModifiedOrDeletedOnGivenDay(reservation, reservationsList, interval.Start)))
+                    {
+                        var reservationBusyInterval = reservation.GetBusyInterval(interval.Start);
+                        if (reservationBusyInterval != null && reservationBusyInterval.IsIntersecting(interval))
+                        {
+                            intersectingReservations.Add(reservation);
+                        }
+                    }
+                }
+
+                return new OperationResult<IEnumerable<Reservation>>
+                {
+                    IsSuccessful = true,
+                    Result = intersectingReservations
+                };
+            }
+            catch (ParserException ex)
+            {
+                return new OperationResult<IEnumerable<Reservation>> { IsSuccessful = false };
+            }
+        }
+
         protected OperationResult<IEnumerable<Reservation>> GetUserActiveReservationsFromParser(string userName)
         {
             try

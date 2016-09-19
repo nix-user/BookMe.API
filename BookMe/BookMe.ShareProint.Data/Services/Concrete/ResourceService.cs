@@ -25,6 +25,18 @@ namespace BookMe.ShareProint.Data.Services.Concrete
         {
         }
 
+        private static readonly IEnumerable<string> UnallowedResources = new List<string>()
+        {
+            "709",
+            "710",
+            "712a",
+            "713",
+            "Netatmo",
+            "NetatmoCityHall",
+            "Projector 1",
+            "Projector 2"
+        };
+
         public OperationResult<IEnumerable<ResourceDTO>> GetAll()
         {
             var resourcesRetrieval = this.GetAllResources();
@@ -43,8 +55,19 @@ namespace BookMe.ShareProint.Data.Services.Concrete
                 return new OperationResult<IEnumerable<ResourceDTO>>() { IsSuccessful = false };
             }
 
+            var currentRoutineWatch = System.Diagnostics.Stopwatch.StartNew();
             var possibleReservationInIntervalRetrieval = this.GetPossibleReservationsInIntervalFromParser(new Interval(resourceFilterParameters.From, resourceFilterParameters.To));
-            if (!possibleReservationInIntervalRetrieval.IsSuccessful)
+            currentRoutineWatch.Stop();
+            var elapsedMs = currentRoutineWatch.ElapsedMilliseconds;
+
+            var filteredResources = resourcesRetrieval.Result.Where(r => !UnallowedResources.Contains(r.Title)).Select(Mapper.Map<Resource, ResourceDTO>).ToList();
+            var optimizedRoutineWatch = System.Diagnostics.Stopwatch.StartNew();
+            var optimizedPossibleReservationInIntervalRetrieval =
+                this.GetPossibleReservationsInIntervalFromParserOptimized(new Interval(resourceFilterParameters.From, resourceFilterParameters.To), filteredResources);
+            optimizedRoutineWatch.Stop();
+            var elapsedMsOptimized = optimizedRoutineWatch.ElapsedMilliseconds;
+
+            if (!possibleReservationInIntervalRetrieval.IsSuccessful && !optimizedPossibleReservationInIntervalRetrieval.IsSuccessful)
             {
                 return new OperationResult<IEnumerable<ResourceDTO>>() { IsSuccessful = false };
             }

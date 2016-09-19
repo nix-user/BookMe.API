@@ -8,6 +8,7 @@ using BookMe.Core.Models.Recurrence;
 using BookMe.ShareProint.Data.Constants;
 using BookMe.ShareProint.Data.Parsers.Abstract;
 using CamlexNET;
+using CamlexNET.Impl.Helpers;
 using Microsoft.SharePoint.Client;
 using Mono.Linq.Expressions;
 
@@ -25,6 +26,13 @@ namespace BookMe.ShareProint.Data.Parsers.Concrete
 
         public ReservationParser(ClientContext context, ICredentialsProvider credentialsProvider) : base(context, credentialsProvider)
         {
+        }
+
+        public IEnumerable<ListItem> GetPossibleReservationsInIntervalOptimized(Interval interval, IEnumerable<int> resourcesIds)
+        {
+            /*Expression<Func<ListItem, bool>> reservationsRetrievalCondition = this.GetRecurrentReservationCondition(null)
+                .OrElse(this.GetRegularReservationCondition(interval, null)).AndAlso(this.GetRoomsFilteringCondition(interval, resourcesIds.ToList()));*/
+            return this.GetReservations(this.GetRoomsFilteringCondition(interval, resourcesIds.ToList()));
         }
 
         public IEnumerable<ListItem> GetUserActiveReservations(string userName)
@@ -79,6 +87,7 @@ namespace BookMe.ShareProint.Data.Parsers.Concrete
             try
             {
                 ListItemCollection items = this.ReservartionList.GetItems(this.GetCamlquery(conditions));
+                var a = this.GetCamlquery(conditions);
                 return this.LoadCollectionFromServer(items).ToList().Where(reservation => (reservation[FieldNames.FacilitiesKey] as IList<FieldLookupValue>)?[0].LookupId != null);
             }
             catch (Exception e)
@@ -133,6 +142,39 @@ namespace BookMe.ShareProint.Data.Parsers.Concrete
             }
 
             return regularReservationCondition;
+        }
+
+        private Expression<Func<ListItem, bool>> GetRoomsFilteringCondition(Interval interval, IList<int> roomsIds)
+        {
+            var languageConditions = new List<Expression<Func<ListItem, bool>>>();
+            languageConditions.Add(x => (string)x["Language"] == "Russian");
+            languageConditions.Add(x => (string)x["Language"] == "English");
+            var langExpr = ExpressionsHelper.CombineOr(languageConditions);
+
+            // (Language = Russian or Language = English) and
+            // (FileLeafRef contains “.docx” or FileLeafRef contains “.xlsx” or ...)
+            var expressions = new List<Expression<Func<ListItem, bool>>>();
+            expressions.Add(langExpr);
+
+            string query = CamlexNET.Camlex.Query().WhereAll(expressions).ToString();
+
+            if (roomsIds.Any())
+            {
+                List<Expression<Func<ListItem, bool>>> roomFilteringExpressions = new List<Expression<Func<ListItem, bool>>>();
+                for (int i = 1; i < roomsIds.Count(); i++)
+                {
+                    int roomId = roomsIds[i];
+                    roomFilteringExpressions.Add(reservation => reservation[FieldNames.FacilitiesKey] == (DataTypes.LookupId)roomId.ToString());
+                }
+
+                var combinedExpressions = ExpressionsHelper.CombineOr(roomFilteringExpressions);
+                var listWithCombExpression = new List<Expression<Func<ListItem, bool>>>();
+                listWithCombExpression.Add(combinedExpressions);
+                var myQuery = CamlexNET.Camlex.Query().WhereAll(listWithCombExpression).ToString();
+                return ExpressionsHelper.CombineOr(roomFilteringExpressions);
+            }
+
+            return null;
         }
     }
 }
