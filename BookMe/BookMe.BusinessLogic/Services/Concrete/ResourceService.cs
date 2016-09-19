@@ -19,7 +19,7 @@ namespace BookMe.BusinessLogic.Services.Concrete
         public ResourceService(IRepository<Resource> resourceRepository)
         {
             this.resourceRepository = resourceRepository;
-        } 
+        }
 
         public OperationResult<IEnumerable<ResourceDTO>> GetAll()
         {

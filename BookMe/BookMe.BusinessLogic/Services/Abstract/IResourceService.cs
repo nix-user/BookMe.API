@@ -13,6 +13,5 @@ namespace BookMe.BusinessLogic.Services.Abstract
         OperationResult<IEnumerable<ResourceDTO>> GetAll();
 
         OperationResult.OperationResult AddResource(ResourceDTO resource);
-
     }
 }
