@@ -49,8 +49,8 @@ namespace BookMe.WebApi.Controllers
         }
 
         [Route("api/room/available")]
-        [HttpPost]
-        public ResponseModel<IEnumerable<Room>> GetAvailableRooms([FromBody]RoomFilterParameters filterParameters)
+        [HttpGet]
+        public ResponseModel<IEnumerable<Room>> GetAvailableRooms([FromUri]RoomFilterParameters filterParameters)
         {
             var operationResult = this.resourcesService.GetAvailbleResources(Mapper.Map<RoomFilterParameters, ResourceFilterParameters>(filterParameters));
             return new ResponseModel<IEnumerable<Room>>()
@@ -61,8 +61,8 @@ namespace BookMe.WebApi.Controllers
         }
 
         [Route("api/room/reservations")]
-        [HttpPost]
-        public ResponseModel<IEnumerable<ReservationModel>> GetRoomCurrentReservations(RoomReservationsRequestModel reservationsModel)
+        [HttpGet]
+        public ResponseModel<IEnumerable<ReservationModel>> GetRoomCurrentReservations([FromUri]RoomReservationsRequestModel reservationsModel)
         {
             var operationResult = this.resourcesService.GetRoomReservations(new IntervalDTO(reservationsModel.From, reservationsModel.To), reservationsModel.RoomId);
             return new ResponseModel<IEnumerable<ReservationModel>>()
