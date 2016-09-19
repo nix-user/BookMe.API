@@ -122,9 +122,10 @@ namespace BookMe.ShareProint.Data.Parsers.Concrete
 
         private Expression<Func<ListItem, bool>> GetRegularReservationCondition(Interval interval, int? roomId)
         {
-            Expression<Func<ListItem, bool>> regularReservationCondition = reservation => !(bool)reservation[FieldNames.IsRecurrenceKey]
-            && (DateTime)reservation[FieldNames.EventDateKey] <= interval.End
-            && (DateTime)reservation[FieldNames.EndDateKey] > DateTime.Today.AddDays(-1);
+            Expression<Func<ListItem, bool>> regularReservationCondition =
+                reservation => !(bool)reservation[FieldNames.IsRecurrenceKey]
+                               && (DateTime)reservation[FieldNames.EventDateKey] <= interval.End
+                               && (DateTime)reservation[FieldNames.EndDateKey] >= interval.Start;
 
             if (roomId != null)
             {
