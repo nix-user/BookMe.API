@@ -28,13 +28,6 @@ namespace BookMe.ShareProint.Data.Parsers.Concrete
         {
         }
 
-        public IEnumerable<ListItem> GetPossibleReservationsInIntervalOptimized(Interval interval, IEnumerable<int> resourcesIds)
-        {
-            /*Expression<Func<ListItem, bool>> reservationsRetrievalCondition = this.GetRecurrentReservationCondition(null)
-                .OrElse(this.GetRegularReservationCondition(interval, null)).AndAlso(this.GetRoomsFilteringCondition(interval, resourcesIds.ToList()));*/
-            return this.GetReservations(this.GetRoomsFilteringCondition(interval, resourcesIds.ToList()));
-        }
-
         public IEnumerable<ListItem> GetUserActiveReservations(string userName)
         {
             return this.GetReservations(reservation => (string)reservation[FieldNames.AuthorKey] == userName && (DateTime)reservation[FieldNames.EndDateKey] > DateTime.Today.AddDays(-1));
@@ -76,9 +69,10 @@ namespace BookMe.ShareProint.Data.Parsers.Concrete
             }
         }
 
-        public IEnumerable<ListItem> GetPossibleReservationsInInterval(Interval interval, int? roomId)
+        public IEnumerable<ListItem> GetPossibleReservationsInInterval(Interval interval, IEnumerable<string> resourceNames)
         {
-            Expression<Func<ListItem, bool>> reservationsRetrievalCondition = this.GetRecurrentReservationCondition(roomId).OrElse(this.GetRegularReservationCondition(interval, roomId));
+            Expression<Func<ListItem, bool>> reservationsRetrievalCondition = this.GetRecurrentReservationCondition(null)
+    .OrElse(this.GetRegularReservationCondition(interval, null)).AndAlso(this.GetRoomsFilteringCondition(resourceNames.ToList()));
             return this.GetReservations(reservationsRetrievalCondition);
         }
 
@@ -144,37 +138,10 @@ namespace BookMe.ShareProint.Data.Parsers.Concrete
             return regularReservationCondition;
         }
 
-        private Expression<Func<ListItem, bool>> GetRoomsFilteringCondition(Interval interval, IList<int> roomsIds)
+        private Expression<Func<ListItem, bool>> GetRoomsFilteringCondition(IList<string> roomsIds)
         {
-            var languageConditions = new List<Expression<Func<ListItem, bool>>>();
-            languageConditions.Add(x => (string)x["Language"] == "Russian");
-            languageConditions.Add(x => (string)x["Language"] == "English");
-            var langExpr = ExpressionsHelper.CombineOr(languageConditions);
-
-            // (Language = Russian or Language = English) and
-            // (FileLeafRef contains “.docx” or FileLeafRef contains “.xlsx” or ...)
-            var expressions = new List<Expression<Func<ListItem, bool>>>();
-            expressions.Add(langExpr);
-
-            string query = CamlexNET.Camlex.Query().WhereAll(expressions).ToString();
-
-            if (roomsIds.Any())
-            {
-                List<Expression<Func<ListItem, bool>>> roomFilteringExpressions = new List<Expression<Func<ListItem, bool>>>();
-                for (int i = 1; i < roomsIds.Count(); i++)
-                {
-                    int roomId = roomsIds[i];
-                    roomFilteringExpressions.Add(reservation => reservation[FieldNames.FacilitiesKey] == (DataTypes.LookupId)roomId.ToString());
-                }
-
-                var combinedExpressions = ExpressionsHelper.CombineOr(roomFilteringExpressions);
-                var listWithCombExpression = new List<Expression<Func<ListItem, bool>>>();
-                listWithCombExpression.Add(combinedExpressions);
-                var myQuery = CamlexNET.Camlex.Query().WhereAll(listWithCombExpression).ToString();
-                return ExpressionsHelper.CombineOr(roomFilteringExpressions);
-            }
-
-            return null;
+            Expression<Func<ListItem, bool>> expression = reservation => roomsIds.Contains((string)reservation[FieldNames.FacilitiesKey]);
+            return expression;
         }
     }
 }
