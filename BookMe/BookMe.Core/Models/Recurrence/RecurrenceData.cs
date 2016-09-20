@@ -10,7 +10,7 @@ namespace BookMe.Core.Models.Recurrence
 {
     public abstract class RecurrenceData
     {
-        protected IDictionary<DayOfWeek, IEnumerable<DayOfTheWeek>> DaysOThefWeekByDayOfWeek { get; set; } = new Dictionary<DayOfWeek, IEnumerable<DayOfTheWeek>>()
+        protected static readonly IDictionary<DayOfWeek, IEnumerable<DayOfTheWeek>> DaysOTheWeekByDayOfWeek = new Dictionary<DayOfWeek, IEnumerable<DayOfTheWeek>>()
         {
             { DayOfWeek.Sunday, new List<DayOfTheWeek>() { DayOfTheWeek.Sunday, DayOfTheWeek.Day, DayOfTheWeek.WeekendDay } },
             { DayOfWeek.Monday, new List<DayOfTheWeek>() { DayOfTheWeek.Monday, DayOfTheWeek.Day, DayOfTheWeek.Weekday } },
@@ -19,6 +19,20 @@ namespace BookMe.Core.Models.Recurrence
             { DayOfWeek.Thursday, new List<DayOfTheWeek>() { DayOfTheWeek.Thursday, DayOfTheWeek.Day, DayOfTheWeek.Weekday } },
             { DayOfWeek.Friday, new List<DayOfTheWeek>() { DayOfTheWeek.Friday, DayOfTheWeek.Day, DayOfTheWeek.Weekday } },
             { DayOfWeek.Saturday, new List<DayOfTheWeek>() { DayOfTheWeek.Saturday, DayOfTheWeek.Day, DayOfTheWeek.WeekendDay } },
+        };
+
+        private static readonly IDictionary<DayOfTheWeek, string> DayOfTheWeekToText = new Dictionary<DayOfTheWeek, string>()
+        {
+            { DayOfTheWeek.Day, "день" },
+            { DayOfTheWeek.Weekday, "рабочий день" },
+            { DayOfTheWeek.WeekendDay, "выходной" },
+            { DayOfTheWeek.Monday, "ПН" },
+            { DayOfTheWeek.Tuesday, "ВТ" },
+            { DayOfTheWeek.Wednesday, "СР" },
+            { DayOfTheWeek.Thursday, "ЧТ" },
+            { DayOfTheWeek.Friday, "ПТ" },
+            { DayOfTheWeek.Saturday, "СБ" },
+            { DayOfTheWeek.Sunday, "ВС" },
         };
 
         public DateTime? EndDate { get; set; }
@@ -31,11 +45,18 @@ namespace BookMe.Core.Models.Recurrence
 
         public abstract bool IsBusyInDate(DateTime date);
 
+        protected static string DaysOfWeekToString(IEnumerable<DayOfTheWeek> daysOfTheWeek)
+        {
+            const string Separator = ", ";
+
+            return string.Join(Separator, daysOfTheWeek.Select(x => DayOfTheWeekToText[x]));
+        }
+
         protected bool IsDateInDaysOfTheWeek(DateTime date, IEnumerable<DayOfTheWeek> daysOfTheWeek)
         {
             foreach (var item in daysOfTheWeek)
             {
-                if (this.DaysOThefWeekByDayOfWeek[date.DayOfWeek].Contains(item))
+                if (DaysOTheWeekByDayOfWeek[date.DayOfWeek].Contains(item))
                 {
                     return true;
                 }

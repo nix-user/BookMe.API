@@ -11,20 +11,6 @@ namespace BookMe.Core.Models.Recurrence
     {
         public IEnumerable<DayOfTheWeek> DaysOfTheWeek { get; set; }
 
-        private static IDictionary<DayOfTheWeek, string> DayOfTheWeekToText = new Dictionary<DayOfTheWeek, string>()
-        {
-            { DayOfTheWeek.Day, "день" },
-            { DayOfTheWeek.Weekday, "рабочий день" },
-            { DayOfTheWeek.WeekendDay, "выходной" },
-            { DayOfTheWeek.Monday, "ПН" },
-            { DayOfTheWeek.Tuesday, "ВТ" },
-            { DayOfTheWeek.Wednesday, "СР" },
-            { DayOfTheWeek.Thursday, "ЧТ" },
-            { DayOfTheWeek.Friday, "ПТ" },
-            { DayOfTheWeek.Saturday, "СБ" },
-            { DayOfTheWeek.Sunday, "ВС" },
-        };
-
         public override bool IsBusyInDate(DateTime date)
         {
             if (this.Interval == null)
@@ -72,17 +58,10 @@ namespace BookMe.Core.Models.Recurrence
             }
             else
             {
-                result += DaysOfWeekToString(this.DaysOfTheWeek);
+                result += $"Каждый {DaysOfWeekToString(this.DaysOfTheWeek)}.";
             }
 
             return result;
-        }
-
-        private static string DaysOfWeekToString(IEnumerable<DayOfTheWeek> daysOfTheWeek)
-        {
-            const string separator = ", ";
-
-            return string.Join(separator, daysOfTheWeek.Select(x => DayOfTheWeekToText[x]));
         }
     }
 }
