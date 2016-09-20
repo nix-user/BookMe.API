@@ -33,7 +33,7 @@ namespace BookMe.Core.Models.Recurrence
 
         public override string ToString()
         {
-            return $"Каждый {this.Interval} год, {DaysOfWeekToString(this.DaysOfTheWeek)} {DayOfTheWeekIndexToText[this.DayOfTheWeekIndex]} недели {MonthToText[this.Month]}";
+            return $"Каждый {this.Interval} год, каждый {DaysOfWeekToString(this.DaysOfTheWeek)} {DayOfTheWeekIndexToText[this.DayOfTheWeekIndex]} недели {MonthToText[this.Month]}.";
         }
     }
 }

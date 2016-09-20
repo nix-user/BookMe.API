@@ -21,7 +21,7 @@ namespace BookMe.Core.Models.Recurrence
 
         public override string ToString()
         {
-            return $"Каждый {this.Interval} месяц, {DaysOfWeekToString(this.DaysOfTheWeek)} {DayOfTheWeekIndexToText[this.DayOfTheWeekIndex]} недели";
+            return $"Каждый {this.Interval} месяц, каждый {DaysOfWeekToString(this.DaysOfTheWeek)} {DayOfTheWeekIndexToText[this.DayOfTheWeekIndex]} недели.";
         }
     }
 }
