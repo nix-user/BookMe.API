@@ -52,6 +52,11 @@ namespace BookMe.ShareProint.Data.Services.Concrete
             };
         }
 
+        public OperationResult<IEnumerable<ReservationDTO>> GetUserReservations(IntervalDTO interval, string userName)
+        {
+            return null;
+        }
+
         public OperationResult AddReservation(ReservationDTO reservation)
         {
             try
