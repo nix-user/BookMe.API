@@ -5,7 +5,11 @@ using System.Runtime.Remoting;
 using System.Text;
 using System.Threading.Tasks;
 using BookMe.BusinessLogic.DTO;
+using BookMe.BusinessLogic.Repository;
 using BookMe.Core.Enums;
+using BookMe.Core.Models;
+using BookMe.Data.Context;
+using BookMe.Data.Repository;
 using BookMe.Infrastructure.MapperConfiguration;
 using BookMe.ShareProint.Data;
 using BookMe.ShareProint.Data.Constants;
@@ -14,14 +18,15 @@ using BookMe.ShareProint.Data.Parsers.Concrete;
 using BookMe.ShareProint.Data.Services.Concrete;
 using Microsoft.SharePoint.Client;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
+using BLLServices = BookMe.BusinessLogic.Services.Concrete;
 namespace BookMe.IntegrationTests.SharePoint
 {
     [TestClass]
     public class ResourceServiceTests
     {
-        private ResourceService resourceService;
+        private ResourceService SPResourceService;
         private ReservationService reservationService;
+        private BLLServices.ResourceService resourceService;
 
         [TestInitialize]
         public void Init()
@@ -35,7 +40,9 @@ namespace BookMe.IntegrationTests.SharePoint
             RecurrenceDataConverter recurrenceDataConverter = new RecurrenceDataConverter();
             ReservationConverter reservationConverter = new ReservationConverter(recurrenceDataConverter);
             ReservationParser reservationParser = new ReservationParser(context, null);
-            this.resourceService = new ResourceService(resourceConverter, reservationConverter, resourceParser, reservationParser);
+            IRepository<Resource> resourcesRepository = new EFRepository<Resource>(new AppContext());
+            this.SPResourceService = new ResourceService(resourceConverter, reservationConverter, resourceParser, reservationParser);
+            this.resourceService = new BLLServices.ResourceService(resourcesRepository, this.SPResourceService);
             this.reservationService = new ReservationService(resourceConverter, reservationConverter, resourceParser, reservationParser);
         }
 
@@ -43,7 +50,7 @@ namespace BookMe.IntegrationTests.SharePoint
         public void GetAll_ShouldSuccessfullyReturnAllResources()
         {
             //act
-            var operationResult = this.resourceService.GetAll();
+            var operationResult = this.SPResourceService.GetAll();
 
             //assert
             Assert.IsTrue(operationResult.IsSuccessful);
@@ -59,9 +66,10 @@ namespace BookMe.IntegrationTests.SharePoint
                 To = DateTime.Now.AddHours(1),
                 HasPolycom = true
             };
+            var allResources = this.resourceService.GetAll().Result;
 
             //act
-            var operationResult = this.resourceService.GetAvailbleResources(filterParameters);
+            var operationResult = this.SPResourceService.GetAvailableResources(filterParameters, allResources);
 
             //assert
             Assert.IsTrue(operationResult.IsSuccessful);
@@ -81,9 +89,10 @@ namespace BookMe.IntegrationTests.SharePoint
                 To = DateTime.Now.AddHours(1),
                 RoomSize = RoomSizeDTO.Large
             };
+            var allResources = this.resourceService.GetAll().Result;
 
-            //act
-            var operationResult = this.resourceService.GetAvailbleResources(filterParameters);
+            //act           
+            var operationResult = this.SPResourceService.GetAvailableResources(filterParameters, allResources);
 
             //assert
             Assert.IsTrue(operationResult.IsSuccessful);
@@ -99,15 +108,17 @@ namespace BookMe.IntegrationTests.SharePoint
             //arrange 
             var filterParameters = new ResourceFilterParameters()
             {
-                From = DateTime.Now,
-                To = DateTime.Now.AddHours(1)
+                From = DateTime.Today.AddHours(16),
+                To = DateTime.Today.AddHours(17)
             };
+            var allResources = this.resourceService.GetAll().Result.ToList();
 
             //act
-            var operationResult = this.resourceService.GetAvailbleResources(filterParameters);
+            var operationResult = this.SPResourceService.GetAvailableResources(filterParameters, allResources);
+            var interval = new IntervalDTO(filterParameters.From, filterParameters.To);
 
             //assert
-            var allIntersectingReservations = reservationService.GetPossibleReservationsInInterval(new IntervalDTO(filterParameters.From, filterParameters.To)).Result.ToList();
+            var allIntersectingReservations = reservationService.GetPossibleReservationsInInterval(interval, allResources).Result.ToList();
             Assert.IsTrue(operationResult.IsSuccessful);
             foreach (var resource in operationResult.Result)
             {
@@ -119,18 +130,17 @@ namespace BookMe.IntegrationTests.SharePoint
         public void GetRoomReservations_ShouldReturnOnlyRequestedRoomReservations()
         {
             //arrange
-            var roomId = this.resourceService.GetAll().Result.Last().Id;
-            DateTime intervalStart = DateTime.Now;
-            DateTime intervalEnd = DateTime.Now.AddHours(1);
+            var rooms = this.resourceService.GetAll().Result;
+            var interval = new IntervalDTO(DateTime.Now, DateTime.Now.AddHours(1));
 
             //act
-            var operationResult = this.resourceService.GetRoomReservations(new IntervalDTO(intervalStart, intervalEnd), roomId);
+            var operationResult = this.SPResourceService.GetRoomsReservations(interval, rooms);
 
             //assert
             Assert.IsTrue(operationResult.IsSuccessful);
             foreach (var reservation in operationResult.Result)
             {
-                Assert.IsTrue(reservation.Resource.Id == roomId);
+                Assert.IsTrue(rooms.Any(r => r.Id == reservation.Resource.Id));
             }
         }
 
@@ -138,18 +148,17 @@ namespace BookMe.IntegrationTests.SharePoint
         public void GetRoomReservations_ShouldReturnOnlyReservationsInInterval()
         {
             //arrange 
-            var roomId = this.resourceService.GetAll().Result.Last().Id;
-            DateTime intervalStart = DateTime.Now;
-            DateTime intervalEnd = DateTime.Now.AddHours(1);
+            var rooms = this.resourceService.GetAll().Result;
+            var interval = new IntervalDTO(DateTime.Now, DateTime.Now.AddHours(1));
 
             //act
-            var operationResult = this.resourceService.GetRoomReservations(new IntervalDTO(intervalStart, intervalEnd), roomId);
+            var operationResult = this.SPResourceService.GetRoomsReservations(interval, rooms);
 
             //assert
             Assert.IsTrue(operationResult.IsSuccessful);
             foreach (var reservation in operationResult.Result)
             {
-                Assert.IsTrue(reservation.EventDate.Date <= intervalEnd.Date && reservation.EndDate.Date >= intervalStart.Date);
+                Assert.IsTrue(reservation.EventDate.Date <= interval.End.Date && reservation.EndDate.Date >= interval.Start.Date);
             }
         }
 

@@ -55,12 +55,12 @@ namespace BookMe.ShareProint.Data.Services.Abstract
             }
         }
 
-        protected OperationResult<IEnumerable<Reservation>> GetPossibleReservationsInIntervalFromParser(Interval interval, int? roomId = null)
+        protected OperationResult<IEnumerable<Reservation>> GetPossibleReservationsInIntervalFromParser(Interval interval, IEnumerable<Resource> resources)
         {
             try
             {
                 var reservationsDictionary = this.ReservationParser
-                    .GetPossibleReservationsInInterval(interval, roomId).ToList()
+                    .GetPossibleReservationsInInterval(interval, resources.Select(r => r.Title)).ToList()
                     .Select(x => x.FieldValues);
 
                 var reservationsList = this.ReservationConverter.Convert(reservationsDictionary).ToList();

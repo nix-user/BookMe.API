@@ -7,7 +7,7 @@ namespace BookMe.BusinessLogic.Interfaces.SharePoint
 {
     public interface ISharePointReservationService
     {
-        OperationResult<IEnumerable<ReservationDTO>> GetPossibleReservationsInInterval(IntervalDTO interval);
+        OperationResult<IEnumerable<ReservationDTO>> GetPossibleReservationsInInterval(IntervalDTO interval, IEnumerable<ResourceDTO> resources);
 
         OperationResult<IEnumerable<ReservationDTO>> GetUserActiveReservations(string userName);
 

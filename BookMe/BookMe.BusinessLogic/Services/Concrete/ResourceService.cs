@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using BookMe.BusinessLogic.DTO;
+using BookMe.BusinessLogic.Interfaces.SharePoint;
 using BookMe.BusinessLogic.OperationResult;
 using BookMe.BusinessLogic.Repository;
 using BookMe.BusinessLogic.Services.Abstract;
@@ -15,10 +16,12 @@ namespace BookMe.BusinessLogic.Services.Concrete
     public class ResourceService : IResourceService
     {
         private readonly IRepository<Resource> resourceRepository;
+        private readonly ISharePointResourceService sharePointResourceService;
 
-        public ResourceService(IRepository<Resource> resourceRepository)
+        public ResourceService(IRepository<Resource> resourceRepository, ISharePointResourceService sharePointResourceService)
         {
             this.resourceRepository = resourceRepository;
+            this.sharePointResourceService = sharePointResourceService;
         }
 
         public OperationResult<IEnumerable<ResourceDTO>> GetAll()
@@ -38,6 +41,39 @@ namespace BookMe.BusinessLogic.Services.Concrete
             {
                 return new OperationResult<IEnumerable<ResourceDTO>> { IsSuccessful = false };
             }
+        }
+
+        public OperationResult<IEnumerable<ResourceDTO>> GetAvailableResources(ResourceFilterParameters resourceFilterParameters)
+        {
+            var allResourcesRetrieval = this.GetAll();
+            if (!allResourcesRetrieval.IsSuccessful)
+            {
+                return new OperationResult<IEnumerable<ResourceDTO>>() { IsSuccessful = false };
+            }
+
+            var operationResult = this.sharePointResourceService.GetAvailableResources(resourceFilterParameters, allResourcesRetrieval.Result);
+            return new OperationResult<IEnumerable<ResourceDTO>>()
+            {
+                IsSuccessful = operationResult.IsSuccessful,
+                Result = operationResult.Result
+            };
+        }
+
+        public OperationResult<IEnumerable<ReservationDTO>> GetRoomReservations(IntervalDTO interval, int resourceId)
+        {
+            var allResourcesRetrieval = this.GetAll();
+            if (!allResourcesRetrieval.IsSuccessful)
+            {
+                return new OperationResult<IEnumerable<ReservationDTO>>() { IsSuccessful = false };
+            }
+
+            var neededResource = allResourcesRetrieval.Result.Where(resource => resource.Id == resourceId);
+            var operationResult = this.sharePointResourceService.GetRoomsReservations(interval, neededResource);
+            return new OperationResult<IEnumerable<ReservationDTO>>()
+            {
+                IsSuccessful = operationResult.IsSuccessful,
+                Result = operationResult.Result
+            };
         }
 
         public OperationResult.OperationResult AddResource(ResourceDTO resource)

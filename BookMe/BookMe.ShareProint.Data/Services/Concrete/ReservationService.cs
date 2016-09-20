@@ -24,9 +24,15 @@ namespace BookMe.ShareProint.Data.Services.Concrete
         {
         }
 
-        public OperationResult<IEnumerable<ReservationDTO>> GetPossibleReservationsInInterval(IntervalDTO interval)
+        public OperationResult<IEnumerable<ReservationDTO>> GetPossibleReservationsInInterval(IntervalDTO interval, IEnumerable<ResourceDTO> resources)
         {
-            var reservationsRetrieval = this.GetPossibleReservationsInIntervalFromParser(Mapper.Map<IntervalDTO, Interval>(interval));
+            var mappedResources = resources.Select(Mapper.Map<ResourceDTO, Resource>);
+            var reservationsRetrieval = this.GetPossibleReservationsInIntervalFromParser(Mapper.Map<IntervalDTO, Interval>(interval), mappedResources);
+            if (!reservationsRetrieval.IsSuccessful)
+            {
+                return new OperationResult<IEnumerable<ReservationDTO>>() { IsSuccessful = false };
+            }
+
             var reservationsMapping = this.DeeplyMapReservationsToReservationDTOs(reservationsRetrieval.Result.ToList());
             return new OperationResult<IEnumerable<ReservationDTO>>()
             {

@@ -35,7 +35,7 @@ namespace BookMe.UnitTests.Services
             };
 
             var fakeProfileRepository = new FakeRepository<Resource>(resources);
-            var resourceService = new ResourceService(fakeProfileRepository);
+            var resourceService = new ResourceService(fakeProfileRepository, null);
 
             // act
             var result = resourceService.GetAll();
@@ -59,7 +59,7 @@ namespace BookMe.UnitTests.Services
             var expectedIsSuccess = true;
 
             var fakeProfileRepository = new FakeRepository<Resource>();
-            var resourceService = new ResourceService(fakeProfileRepository);
+            var resourceService = new ResourceService(fakeProfileRepository, null);
 
             var resourceToAdd = new ResourceDTO { Id = 1 };
             // act

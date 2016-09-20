@@ -8,6 +8,7 @@ using BookMe.Core.Models.Recurrence;
 using BookMe.ShareProint.Data.Constants;
 using BookMe.ShareProint.Data.Parsers.Abstract;
 using CamlexNET;
+using CamlexNET.Impl.Helpers;
 using Microsoft.SharePoint.Client;
 using Mono.Linq.Expressions;
 
@@ -68,10 +69,17 @@ namespace BookMe.ShareProint.Data.Parsers.Concrete
             }
         }
 
-        public IEnumerable<ListItem> GetPossibleReservationsInInterval(Interval interval, int? roomId)
+        public IEnumerable<ListItem> GetPossibleReservationsInInterval(Interval interval, IEnumerable<string> resourceNames)
         {
-            Expression<Func<ListItem, bool>> reservationsRetrievalCondition = this.GetRecurrentReservationCondition(roomId).OrElse(this.GetRegularReservationCondition(interval, roomId));
-            return this.GetReservations(reservationsRetrievalCondition);
+            if (resourceNames.Any())
+            {
+                Expression<Func<ListItem, bool>> reservationsRetrievalCondition = this.GetRecurrentReservationCondition()
+                    .OrElse(this.GetRegularReservationCondition(interval))
+                    .AndAlso(this.GetRoomsFilteringCondition(resourceNames.ToList()));
+                return this.GetReservations(reservationsRetrievalCondition);
+            }
+
+            return new List<ListItem>();
         }
 
         private IEnumerable<ListItem> GetReservations(Expression<Func<ListItem, bool>> conditions)
@@ -109,30 +117,21 @@ namespace BookMe.ShareProint.Data.Parsers.Concrete
             return this.CreateCamlQuery(query);
         }
 
-        private Expression<Func<ListItem, bool>> GetRecurrentReservationCondition(int? roomId)
+        private Expression<Func<ListItem, bool>> GetRecurrentReservationCondition()
         {
-            Expression<Func<ListItem, bool>> recurrentCondition = reservation => (bool)reservation[FieldNames.IsRecurrenceKey];
-            if (roomId != null)
-            {
-                recurrentCondition = recurrentCondition.AndAlso(reservation => reservation[FieldNames.FacilitiesKey] == (DataTypes.LookupId)roomId.Value.ToString());
-            }
-
-            return recurrentCondition;
+            return reservation => (bool)reservation[FieldNames.IsRecurrenceKey];
         }
 
-        private Expression<Func<ListItem, bool>> GetRegularReservationCondition(Interval interval, int? roomId)
+        private Expression<Func<ListItem, bool>> GetRegularReservationCondition(Interval interval)
         {
-            Expression<Func<ListItem, bool>> regularReservationCondition =
-                reservation => !(bool)reservation[FieldNames.IsRecurrenceKey]
-                               && (DateTime)reservation[FieldNames.EventDateKey] <= interval.End
-                               && (DateTime)reservation[FieldNames.EndDateKey] >= interval.Start;
+            return reservation => !(bool)reservation[FieldNames.IsRecurrenceKey]
+                                && (DateTime)reservation[FieldNames.EventDateKey] <= interval.End
+                                && (DateTime)reservation[FieldNames.EndDateKey] >= interval.Start;
+        }
 
-            if (roomId != null)
-            {
-                regularReservationCondition = regularReservationCondition.AndAlso(reservation => reservation[FieldNames.FacilitiesKey] == (DataTypes.LookupId)roomId.Value.ToString());
-            }
-
-            return regularReservationCondition;
+        private Expression<Func<ListItem, bool>> GetRoomsFilteringCondition(IList<string> roomsTitles)
+        {
+            return reservation => roomsTitles.Contains((string)reservation[FieldNames.FacilitiesKey]);
         }
     }
 }
