@@ -35,6 +35,22 @@ namespace BookMe.Core.Models.Recurrence
             { DayOfTheWeek.Sunday, "ВС" },
         };
 
+        protected static readonly IDictionary<Month, string> MonthToText = new Dictionary<Month, string>()
+        {
+            { Month.January, "января" },
+            { Month.February, "февраля" },
+            { Month.March, "марта" },
+            { Month.April, "апреля" },
+            { Month.May, "мая" },
+            { Month.June, "июня" },
+            { Month.July, "июля" },
+            { Month.August, "августа" },
+            { Month.September, "сентября" },
+            { Month.October, "октября" },
+            { Month.November, "ноября" },
+            { Month.December, "декабря" },
+        };
+
         public DateTime? EndDate { get; set; }
 
         public int? NumberOfOccurrences { get; set; }
