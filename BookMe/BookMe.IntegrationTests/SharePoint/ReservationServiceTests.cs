@@ -19,7 +19,8 @@ using BookMe.ShareProint.Data.Parsers.Concrete;
 using BookMe.ShareProint.Data.Services.Concrete;
 using Microsoft.SharePoint.Client;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ResourceService = BookMe.BusinessLogic.Services.Concrete.ResourceService;
+using BLLServices = BookMe.BusinessLogic.Services.Concrete;
+using SharePointServices = BookMe.ShareProint.Data.Services.Concrete;
 
 namespace BookMe.IntegrationTests.SharePoint
 {
@@ -43,9 +44,9 @@ namespace BookMe.IntegrationTests.SharePoint
             ReservationParser reservationParser = new ReservationParser(context, null);
             IRepository<Resource> resourcesRepository = new EFRepository<Resource>(new AppContext());
             ISharePointResourceService sharePointResourceService =
-                new ShareProint.Data.Services.Concrete.ResourceService(resourceConverter, reservationConverter,
+                new SharePointServices.ResourceService(resourceConverter, reservationConverter,
                     resourceParser, reservationParser);
-            resourceService = new ResourceService(resourcesRepository, sharePointResourceService);
+            resourceService = new BLLServices.ResourceService(resourcesRepository, sharePointResourceService);
             this.reservationService = new ReservationService(resourceConverter, reservationConverter, resourceParser, reservationParser);
         }
 
