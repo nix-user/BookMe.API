@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BookMe.BusinessLogic.DTO;
+using BookMe.BusinessLogic.Interfaces.SharePoint;
 using BookMe.BusinessLogic.Repository;
 using BookMe.BusinessLogic.Services.Abstract;
 using BookMe.BusinessLogic.Services.Concrete;
@@ -41,7 +42,10 @@ namespace BookMe.IntegrationTests.SharePoint
             ResourceParser resourceParser = new ResourceParser(context, null);
             ReservationParser reservationParser = new ReservationParser(context, null);
             IRepository<Resource> resourcesRepository = new EFRepository<Resource>(new AppContext());
-            resourceService = new ResourceService(resourcesRepository);
+            ISharePointResourceService sharePointResourceService =
+                new ShareProint.Data.Services.Concrete.ResourceService(resourceConverter, reservationConverter,
+                    resourceParser, reservationParser);
+            resourceService = new ResourceService(resourcesRepository, sharePointResourceService);
             this.reservationService = new ReservationService(resourceConverter, reservationConverter, resourceParser, reservationParser);
         }
 

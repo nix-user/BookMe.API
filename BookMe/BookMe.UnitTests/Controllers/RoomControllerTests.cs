@@ -27,6 +27,7 @@ namespace BookMe.UnitTests.Controllers
             this.SPResourceServiceMock = new Mock<ISharePointResourceService>();
             this.resourceService = new Mock<IResourceService>();
             this.roomController = new RoomController(this.SPResourceServiceMock.Object, resourceService.Object);
+            this.resourceService.Setup(m => m.GetAll()).Returns(new OperationResult<IEnumerable<ResourceDTO>>() { IsSuccessful = true, Result = new List<ResourceDTO>() });
         }
 
         [TestMethod]

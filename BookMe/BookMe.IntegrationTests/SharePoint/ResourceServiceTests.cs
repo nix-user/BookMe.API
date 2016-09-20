@@ -41,8 +41,8 @@ namespace BookMe.IntegrationTests.SharePoint
             ReservationConverter reservationConverter = new ReservationConverter(recurrenceDataConverter);
             ReservationParser reservationParser = new ReservationParser(context, null);
             IRepository<Resource> resourcesRepository = new EFRepository<Resource>(new AppContext());
-            this.resourceService = new BusinessLogic.Services.Concrete.ResourceService(resourcesRepository);
             this.SPResourceService = new ResourceService(resourceConverter, reservationConverter, resourceParser, reservationParser);
+            this.resourceService = new BusinessLogic.Services.Concrete.ResourceService(resourcesRepository, this.SPResourceService);
             this.reservationService = new ReservationService(resourceConverter, reservationConverter, resourceParser, reservationParser);
         }
 

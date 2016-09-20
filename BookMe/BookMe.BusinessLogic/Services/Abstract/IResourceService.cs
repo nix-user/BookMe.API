@@ -12,6 +12,8 @@ namespace BookMe.BusinessLogic.Services.Abstract
     {
         OperationResult<IEnumerable<ResourceDTO>> GetAll();
 
+        OperationResult<IEnumerable<ResourceDTO>> GetAvailableResources(ResourceFilterParameters resourceFilterParameters);
+
         OperationResult.OperationResult AddResource(ResourceDTO resource);
     }
 }

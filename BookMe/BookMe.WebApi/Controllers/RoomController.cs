@@ -54,14 +54,8 @@ namespace BookMe.WebApi.Controllers
         [HttpGet]
         public ResponseModel<IEnumerable<Room>> GetAvailableRooms([FromUri]RoomFilterParameters filterParameters)
         {
-            var allResourcesRetrieval = this.resourceService.GetAll();
-            if (!allResourcesRetrieval.IsSuccessful)
-            {
-                return new ResponseModel<IEnumerable<Room>>() { IsOperationSuccessful = false };
-            }
-
             var mappedFilterParameters = Mapper.Map<RoomFilterParameters, ResourceFilterParameters>(filterParameters);
-            var operationResult = this.sharePointResourcesService.GetAvailableResources(mappedFilterParameters, allResourcesRetrieval.Result);
+            var operationResult = this.resourceService.GetAvailableResources(mappedFilterParameters);
             return new ResponseModel<IEnumerable<Room>>()
             {
                 IsOperationSuccessful = operationResult.IsSuccessful,
