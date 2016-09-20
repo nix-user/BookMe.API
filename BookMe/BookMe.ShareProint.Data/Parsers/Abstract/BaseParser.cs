@@ -16,11 +16,8 @@ namespace BookMe.ShareProint.Data.Parsers.Abstract
         {
             this.Context = clientContext;
             this.credentialsProvider = credentialsProvider;
-
-#if !DEBUG
             var credentials = credentialsProvider.Credentials;
             this.Context.Credentials = new NetworkCredential(credentials?.UserName, credentials?.Password, NixDomain);
-#endif
         }
 
         public void CheckConnection()
