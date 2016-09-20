@@ -33,12 +33,6 @@ namespace BookMe.ShareProint.Data.Parsers.Concrete
             return this.GetReservations(this.GetUserFilteringCondition(userName).AndAlso(this.GetExpiredReservationsFilteringCondition()));
         }
 
-        public IEnumerable<ListItem> GetUserReservations(string userName, Interval interval)
-        {
-            return this.GetReservations(this.GetUserFilteringCondition(userName)
-                .AndAlso(this.GetExpiredReservationsFilteringCondition()));
-        }
-
         public void AddReservation(IDictionary<string, object> reservatioFieldValues)
         {
             try
@@ -75,13 +69,18 @@ namespace BookMe.ShareProint.Data.Parsers.Concrete
             }
         }
 
-        public IEnumerable<ListItem> GetPossibleReservationsInInterval(Interval interval, IEnumerable<string> resourceNames)
+        public IEnumerable<ListItem> GetPossibleReservationsInInterval(Interval interval, IEnumerable<string> resourceNames, string userName)
         {
             if (resourceNames.Any())
             {
                 Expression<Func<ListItem, bool>> reservationsRetrievalCondition = this.GetRecurrentReservationCondition()
                     .OrElse(this.GetRegularReservationCondition(interval))
                     .AndAlso(this.GetRoomsFilteringCondition(resourceNames.ToList()));
+                if (userName != null)
+                {
+                    reservationsRetrievalCondition.AndAlso(this.GetUserFilteringCondition(userName));
+                }
+
                 return this.GetReservations(reservationsRetrievalCondition);
             }
 
