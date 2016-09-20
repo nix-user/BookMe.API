@@ -71,9 +71,16 @@ namespace BookMe.ShareProint.Data.Parsers.Concrete
 
         public IEnumerable<ListItem> GetPossibleReservationsInInterval(Interval interval, IEnumerable<string> resourceNames)
         {
-            Expression<Func<ListItem, bool>> reservationsRetrievalCondition = this.GetRecurrentReservationCondition(null)
-    .OrElse(this.GetRegularReservationCondition(interval, null)).AndAlso(this.GetRoomsFilteringCondition(resourceNames.ToList()));
-            return this.GetReservations(reservationsRetrievalCondition);
+            if (resourceNames.Any())
+            {
+                Expression<Func<ListItem, bool>> reservationsRetrievalCondition = this.GetRecurrentReservationCondition(
+                    null)
+                    .OrElse(this.GetRegularReservationCondition(interval, null))
+                    .AndAlso(this.GetRoomsFilteringCondition(resourceNames.ToList()));
+                return this.GetReservations(reservationsRetrievalCondition);
+            }
+
+            return new List<ListItem>();
         }
 
         private IEnumerable<ListItem> GetReservations(Expression<Func<ListItem, bool>> conditions)
@@ -81,7 +88,6 @@ namespace BookMe.ShareProint.Data.Parsers.Concrete
             try
             {
                 ListItemCollection items = this.ReservartionList.GetItems(this.GetCamlquery(conditions));
-                var a = this.GetCamlquery(conditions);
                 return this.LoadCollectionFromServer(items).ToList().Where(reservation => (reservation[FieldNames.FacilitiesKey] as IList<FieldLookupValue>)?[0].LookupId != null);
             }
             catch (Exception e)
@@ -138,10 +144,9 @@ namespace BookMe.ShareProint.Data.Parsers.Concrete
             return regularReservationCondition;
         }
 
-        private Expression<Func<ListItem, bool>> GetRoomsFilteringCondition(IList<string> roomsIds)
+        private Expression<Func<ListItem, bool>> GetRoomsFilteringCondition(IList<string> roomsTitles)
         {
-            Expression<Func<ListItem, bool>> expression = reservation => roomsIds.Contains((string)reservation[FieldNames.FacilitiesKey]);
-            return expression;
+            return reservation => roomsTitles.Contains((string)reservation[FieldNames.FacilitiesKey]);
         }
     }
 }

@@ -4,6 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BookMe.BusinessLogic.DTO;
+using BookMe.BusinessLogic.Repository;
+using BookMe.BusinessLogic.Services.Abstract;
+using BookMe.BusinessLogic.Services.Concrete;
+using BookMe.Core.Models;
+using BookMe.Data.Context;
+using BookMe.Data.Repository;
 using BookMe.Infrastructure.MapperConfiguration;
 using BookMe.ShareProint.Data;
 using BookMe.ShareProint.Data.Constants;
@@ -12,6 +18,7 @@ using BookMe.ShareProint.Data.Parsers.Concrete;
 using BookMe.ShareProint.Data.Services.Concrete;
 using Microsoft.SharePoint.Client;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ResourceService = BookMe.BusinessLogic.Services.Concrete.ResourceService;
 
 namespace BookMe.IntegrationTests.SharePoint
 {
@@ -19,7 +26,7 @@ namespace BookMe.IntegrationTests.SharePoint
     public class ReservationServiceTests
     {
         private ReservationService reservationService;
-        private ResourceService resourceService;
+        private IResourceService resourceService;
 
         [TestInitialize]
         public void Init()
@@ -33,8 +40,9 @@ namespace BookMe.IntegrationTests.SharePoint
             ClientContext context = new ClientContext(UriConstants.BaseAddress);
             ResourceParser resourceParser = new ResourceParser(context, null);
             ReservationParser reservationParser = new ReservationParser(context, null);
+            IRepository<Resource> resourcesRepository = new EFRepository<Resource>(new AppContext());
+            resourceService = new ResourceService(resourcesRepository);
             this.reservationService = new ReservationService(resourceConverter, reservationConverter, resourceParser, reservationParser);
-            this.resourceService = new ResourceService(resourceConverter, reservationConverter, resourceParser, reservationParser);
         }
 
         [TestMethod]
@@ -58,9 +66,9 @@ namespace BookMe.IntegrationTests.SharePoint
             //arrange
             DateTime startDateTime = DateTime.Now;
             DateTime endDateTime = DateTime.Now.AddHours(1);
-
+            var allResources = this.resourceService.GetAll().Result;
             //act
-            var operationResult = this.reservationService.GetPossibleReservationsInInterval(new IntervalDTO(startDateTime, endDateTime));
+            var operationResult = this.reservationService.GetPossibleReservationsInInterval(new IntervalDTO(startDateTime, endDateTime), allResources);
 
             //assert
             Assert.AreEqual(true, operationResult.IsSuccessful);

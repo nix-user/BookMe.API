@@ -9,8 +9,8 @@ namespace BookMe.BusinessLogic.Interfaces.SharePoint
     {
         OperationResult<IEnumerable<ResourceDTO>> GetAll();
 
-        OperationResult<IEnumerable<ResourceDTO>> GetAvailbleResources(ResourceFilterParameters resourceFilterParameters);
+        OperationResult<IEnumerable<ResourceDTO>> GetAvailableResources(ResourceFilterParameters resourceFilterParameters, IEnumerable<ResourceDTO> resources);
 
-        OperationResult<IEnumerable<ReservationDTO>> GetRoomReservations(IntervalDTO interval, int roomId);
+        OperationResult<IEnumerable<ReservationDTO>> GetRoomsReservations(IntervalDTO interval, IEnumerable<ResourceDTO> resources);
     }
 }

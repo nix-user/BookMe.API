@@ -3,6 +3,7 @@ using System.Linq;
 using BookMe.BusinessLogic.DTO;
 using BookMe.BusinessLogic.Interfaces.SharePoint;
 using BookMe.BusinessLogic.OperationResult;
+using BookMe.BusinessLogic.Services.Abstract;
 using BookMe.Core.Enums;
 using BookMe.Infrastructure.MapperConfiguration;
 using BookMe.WebApi.Controllers;
@@ -17,7 +18,9 @@ namespace BookMe.UnitTests.WebApi
     public class RoomControllertest
     {
         private RoomController controller;
-        private Mock<ISharePointResourceService> resourceService;
+        private Mock<ISharePointResourceService> SPresourceServiceMock;
+        private Mock<IResourceService> resourceServiceMock;
+
         private OperationResult<IEnumerable<ResourceDTO>> getResourceIsSucess = new OperationResult<IEnumerable<ResourceDTO>>()
         {
             Result = new List<ResourceDTO>
@@ -44,7 +47,8 @@ namespace BookMe.UnitTests.WebApi
         [TestInitialize]
         public void SetUp()
         {
-            this.resourceService = new Mock<ISharePointResourceService>();
+            this.SPresourceServiceMock = new Mock<ISharePointResourceService>();
+            this.resourceServiceMock = new Mock<IResourceService>();
             AutoMapperConfiguration.Configure();
         }
 
@@ -52,8 +56,8 @@ namespace BookMe.UnitTests.WebApi
         public void Get_Should_Return_All_Rooms_If_Request_Was_Success()
         {
             //arrange
-            this.resourceService.Setup(x => x.GetAll()).Returns(getResourceIsSucess);
-            this.controller = new RoomController(resourceService.Object);
+            this.SPresourceServiceMock.Setup(x => x.GetAll()).Returns(getResourceIsSucess);
+            this.controller = new RoomController(SPresourceServiceMock.Object, resourceServiceMock.Object);
             //act
             List<Room> rooms = this.controller.Get().Result.ToList();
 
@@ -65,10 +69,10 @@ namespace BookMe.UnitTests.WebApi
         public void Get_Should_Return_Null_If_Request_Was_Failed()
         {
             //arrange
-            this.resourceService.Setup(x => x.GetAll()).Returns(getResourceIsFailed);
-            this.controller = new RoomController(resourceService.Object);
+            this.SPresourceServiceMock.Setup(x => x.GetAll()).Returns(getResourceIsFailed);
+            this.controller = new RoomController(SPresourceServiceMock.Object, resourceServiceMock.Object);
             //act
-           var rooms = this.controller.Get();
+            var rooms = this.controller.Get();
 
             //assert
             Assert.AreEqual(false, rooms.IsOperationSuccessful);
@@ -78,8 +82,8 @@ namespace BookMe.UnitTests.WebApi
         public void Get_Should_Return_OneRoom_IfOperationIsSucces()
         {
             //arrange
-            this.resourceService.Setup(x => x.GetAll()).Returns(getResourceIsSucess);
-            this.controller = new RoomController(resourceService.Object);
+            this.SPresourceServiceMock.Setup(x => x.GetAll()).Returns(getResourceIsSucess);
+            this.controller = new RoomController(SPresourceServiceMock.Object, resourceServiceMock.Object);
             //act
             Room room = this.controller.Get(1).Result;
 
@@ -91,8 +95,8 @@ namespace BookMe.UnitTests.WebApi
         [TestMethod]
         public void Get_Should_Return_OneRoom_IfOperationIsFailed()
         {
-            this.resourceService.Setup(x => x.GetAll()).Returns(getResourceIsFailed);
-            this.controller = new RoomController(resourceService.Object);
+            this.SPresourceServiceMock.Setup(x => x.GetAll()).Returns(getResourceIsFailed);
+            this.controller = new RoomController(SPresourceServiceMock.Object, resourceServiceMock.Object);
             //act
             Room room = this.controller.Get(1).Result;
 
