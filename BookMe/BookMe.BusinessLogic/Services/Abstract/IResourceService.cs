@@ -14,6 +14,8 @@ namespace BookMe.BusinessLogic.Services.Abstract
 
         OperationResult<IEnumerable<ResourceDTO>> GetAvailableResources(ResourceFilterParameters resourceFilterParameters);
 
+        OperationResult<IEnumerable<ReservationDTO>> GetRoomsReservations(IntervalDTO interval);
+
         OperationResult.OperationResult AddResource(ResourceDTO resource);
     }
 }

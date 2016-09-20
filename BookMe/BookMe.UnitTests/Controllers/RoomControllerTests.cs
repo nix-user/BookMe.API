@@ -7,6 +7,7 @@ using BookMe.BusinessLogic.DTO;
 using BookMe.BusinessLogic.Interfaces.SharePoint;
 using BookMe.BusinessLogic.OperationResult;
 using BookMe.BusinessLogic.Services.Abstract;
+using BookMe.Infrastructure.MapperConfiguration;
 using BookMe.WebApi.Controllers;
 using BookMe.WebApi.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -24,6 +25,7 @@ namespace BookMe.UnitTests.Controllers
         [TestInitialize]
         public void Init()
         {
+            AutoMapperConfiguration.Configure();
             this.SPResourceServiceMock = new Mock<ISharePointResourceService>();
             this.resourceService = new Mock<IResourceService>();
             this.roomController = new RoomController(this.SPResourceServiceMock.Object, resourceService.Object);
@@ -39,13 +41,14 @@ namespace BookMe.UnitTests.Controllers
                 IsSuccessful = true,
                 Result = new List<ReservationDTO>() { new ReservationDTO(), new ReservationDTO(), new ReservationDTO() }
             };
-            this.SPResourceServiceMock.Setup(m => m.GetRoomsReservations(It.IsAny<IntervalDTO>(), It.IsAny<IEnumerable<ResourceDTO>>())).Returns(roomReservationsResult);
+
+            this.resourceService.Setup(m => m.GetRoomsReservations(It.IsAny<IntervalDTO>())).Returns(roomReservationsResult);
 
             //act
             var roomReservationsRetrieval = this.roomController.GetRoomCurrentReservations(new RoomReservationsRequestModel());
 
             //assert
-            this.SPResourceServiceMock.Verify(m => m.GetRoomsReservations(It.IsAny<IntervalDTO>(), It.IsAny<IEnumerable<ResourceDTO>>()), Times.Once);
+            this.resourceService.Verify(m => m.GetRoomsReservations(It.IsAny<IntervalDTO>()), Times.Once);
             Assert.AreEqual(roomReservationsResult.Result.Count(), roomReservationsRetrieval.Result.Count());
         }
 
@@ -55,12 +58,13 @@ namespace BookMe.UnitTests.Controllers
             //arrange
             var roomReservationsResult = new OperationResult<IEnumerable<ReservationDTO>> { IsSuccessful = false };
             this.SPResourceServiceMock.Setup(m => m.GetRoomsReservations(It.IsAny<IntervalDTO>(), It.IsAny<IEnumerable<ResourceDTO>>())).Returns(roomReservationsResult);
+            this.resourceService.Setup(m => m.GetRoomsReservations(It.IsAny<IntervalDTO>())).Returns(roomReservationsResult);
 
             //act
             var roomReservationsRetrieval = this.roomController.GetRoomCurrentReservations(new RoomReservationsRequestModel());
 
             //assert
-            this.SPResourceServiceMock.Verify(m => m.GetRoomsReservations(It.IsAny<IntervalDTO>(), It.IsAny<IEnumerable<ResourceDTO>>()), Times.Once);
+            this.resourceService.Verify(m => m.GetRoomsReservations(It.IsAny<IntervalDTO>()), Times.Once);
             Assert.AreEqual(false, roomReservationsRetrieval.IsOperationSuccessful);
             Assert.IsNull(roomReservationsRetrieval.Result);
         }

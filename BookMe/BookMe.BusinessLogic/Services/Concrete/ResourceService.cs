@@ -59,6 +59,22 @@ namespace BookMe.BusinessLogic.Services.Concrete
             };
         }
 
+        public OperationResult<IEnumerable<ReservationDTO>> GetRoomsReservations(IntervalDTO interval)
+        {
+            var allResourcesRetrieval = this.GetAll();
+            if (!allResourcesRetrieval.IsSuccessful)
+            {
+                return new OperationResult<IEnumerable<ReservationDTO>>() { IsSuccessful = false };
+            }
+
+            var operationResult = this.sharePointResourceService.GetRoomsReservations(interval, allResourcesRetrieval.Result);
+            return new OperationResult<IEnumerable<ReservationDTO>>()
+            {
+                IsSuccessful = operationResult.IsSuccessful,
+                Result = operationResult.Result
+            };
+        }
+
         public OperationResult.OperationResult AddResource(ResourceDTO resource)
         {
             try
