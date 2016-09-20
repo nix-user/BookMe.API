@@ -154,7 +154,7 @@ namespace BookMe.UnitTests.SharePoint.RecurrenceData
         }
 
         [TestMethod]
-        public void IsBusyInDate_DaysOfWeekAndEndDateCaseWithNotBusyDate_ShouldReturFalse()
+        public void IsBusyInDate_DaysOfWeekAndEndDateCaseWithNotBusyDate_ShouldReturnFalse()
         {
             // arrange 
             var today = new DateTime(2016, 9, 14);
@@ -174,7 +174,7 @@ namespace BookMe.UnitTests.SharePoint.RecurrenceData
         }
 
         [TestMethod]
-        public void ToString_RuleWithInterval_ShouldReturRightText()
+        public void ToString_RuleWithInterval_ShouldReturnRightText()
         {
             // arrange 
             var expectedResult = "Каждый 3 день.";
@@ -192,7 +192,7 @@ namespace BookMe.UnitTests.SharePoint.RecurrenceData
         }
 
         [TestMethod]
-        public void ToString_RuleWithDaysOfTheWeek_ShouldReturRightText()
+        public void ToString_RuleWithDaysOfTheWeek_ShouldReturnRightText()
         {
             // arrange 
             var expectedResult = "Каждый ПН, ПТ.";

@@ -117,5 +117,24 @@ namespace BookMe.UnitTests.SharePoint.RecurrenceData
             // assert
             Assert.IsFalse(result);
         }
+
+        [TestMethod]
+        public void ToString_ShouldReturnRightText()
+        {
+            // arrange 
+            var expectedResult = "Каждую 2 неделю, каждый день.";
+
+            var pattern = new WeeklyPattern()
+            {
+                Interval = 2,
+                DaysOfTheWeek = new List<DayOfTheWeek>() { DayOfTheWeek.Day }
+            };
+
+            // act
+            var result = pattern.ToString();
+
+            // assert
+            Assert.AreEqual(expectedResult, result);
+        }
     }
 }

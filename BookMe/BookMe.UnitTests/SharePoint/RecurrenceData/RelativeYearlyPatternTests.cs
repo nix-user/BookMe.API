@@ -126,5 +126,26 @@ namespace BookMe.UnitTests.SharePoint.RecurrenceData
             // assert
             Assert.IsFalse(result);
         }
+
+        [TestMethod]
+        public void ToString_ShouldReturnRightText()
+        {
+            // arrange 
+            var expectedResult = "Каждый 2 год, каждый ВС, ПН первой недели сентября.";
+
+            var pattern = new RelativeYearlyPattern()
+            {
+                Interval = 2,
+                DayOfTheWeekIndex = DayOfTheWeekIndex.First,
+                DaysOfTheWeek = new List<DayOfTheWeek>() { DayOfTheWeek.Sunday, DayOfTheWeek.Monday },
+                Month = Month.September
+            };
+
+            // act
+            var result = pattern.ToString();
+
+            // assert
+            Assert.AreEqual(expectedResult, result);
+        }
     }
 }
