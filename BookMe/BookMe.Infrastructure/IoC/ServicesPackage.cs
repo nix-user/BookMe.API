@@ -19,6 +19,7 @@ namespace BookMe.Infrastructure.IoC
 
             container.Register<IProfileService, ProfileService>(webApiRequestLifestyle);
             container.Register<IResourceService, ResourceService>(webApiRequestLifestyle);
+            container.Register<IReservationService, ReservationService>(webApiRequestLifestyle);
         }
     }
 }

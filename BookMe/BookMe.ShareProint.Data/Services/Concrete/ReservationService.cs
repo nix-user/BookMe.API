@@ -29,7 +29,7 @@ namespace BookMe.ShareProint.Data.Services.Concrete
             string userName = null)
         {
             var mappedResources = resources.Select(Mapper.Map<ResourceDTO, Resource>);
-            var reservationsRetrieval = this.GetPossibleReservationsInIntervalFromParser(Mapper.Map<IntervalDTO, Interval>(interval), mappedResources);
+            var reservationsRetrieval = this.GetPossibleReservationsInIntervalFromParser(Mapper.Map<IntervalDTO, Interval>(interval), mappedResources, userName);
             if (!reservationsRetrieval.IsSuccessful)
             {
                 return new OperationResult<IEnumerable<ReservationDTO>>() { IsSuccessful = false };

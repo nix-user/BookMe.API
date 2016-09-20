@@ -78,7 +78,7 @@ namespace BookMe.ShareProint.Data.Parsers.Concrete
                     .AndAlso(this.GetRoomsFilteringCondition(resourceNames.ToList()));
                 if (userName != null)
                 {
-                    reservationsRetrievalCondition.AndAlso(this.GetUserFilteringCondition(userName));
+                    reservationsRetrievalCondition = reservationsRetrievalCondition.AndAlso(this.GetUserFilteringCondition(userName));
                 }
 
                 return this.GetReservations(reservationsRetrievalCondition);
