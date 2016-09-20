@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using BookMe.BusinessLogic.DTO;
 using BookMe.BusinessLogic.Interfaces.SharePoint;
 using BookMe.BusinessLogic.OperationResult;
+using BookMe.BusinessLogic.Services.Abstract;
 using BookMe.Infrastructure.MapperConfiguration;
 using BookMe.WebApi.Controllers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -19,18 +20,20 @@ namespace BookMe.UnitTests.Controllers
         private ReservationController reservationController;
         private Mock<ISharePointReservationService> sharePointReservationServiceMock;
         private List<ReservationDTO> reservationsList = new List<ReservationDTO>();
+        private Mock<IReservationService> reservationServiceMock;
 
         [TestInitialize]
         public void Init()
         {
             AutoMapperConfiguration.Configure();
             this.sharePointReservationServiceMock = new Mock<ISharePointReservationService>();
+            this.reservationServiceMock = new Mock<IReservationService>();
             for (int i = 0; i < 10; i++)
             {
                 this.reservationsList.Add(new ReservationDTO());
             }
 
-            this.reservationController = new ReservationController(this.sharePointReservationServiceMock.Object);
+            this.reservationController = new ReservationController(this.sharePointReservationServiceMock.Object, this.reservationServiceMock.Object);
         }
 
         [TestMethod]
