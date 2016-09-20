@@ -18,6 +18,7 @@ namespace BookMe.Infrastructure.IoC
             var webApiRequestLifestyle = new WebApiRequestLifestyle();
 
             container.Register<IProfileService, ProfileService>(webApiRequestLifestyle);
+            container.Register<IResourceService, ResourceService>(webApiRequestLifestyle);
         }
     }
 }

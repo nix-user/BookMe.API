@@ -59,7 +59,7 @@ namespace BookMe.BusinessLogic.Services.Concrete
             };
         }
 
-        public OperationResult<IEnumerable<ReservationDTO>> GetRoomsReservations(IntervalDTO interval)
+        public OperationResult<IEnumerable<ReservationDTO>> GetRoomReservations(IntervalDTO interval, int resourceId)
         {
             var allResourcesRetrieval = this.GetAll();
             if (!allResourcesRetrieval.IsSuccessful)
@@ -67,7 +67,8 @@ namespace BookMe.BusinessLogic.Services.Concrete
                 return new OperationResult<IEnumerable<ReservationDTO>>() { IsSuccessful = false };
             }
 
-            var operationResult = this.sharePointResourceService.GetRoomsReservations(interval, allResourcesRetrieval.Result);
+            var neededResource = allResourcesRetrieval.Result.Where(resource => resource.Id == resourceId);
+            var operationResult = this.sharePointResourceService.GetRoomsReservations(interval, neededResource);
             return new OperationResult<IEnumerable<ReservationDTO>>()
             {
                 IsSuccessful = operationResult.IsSuccessful,
