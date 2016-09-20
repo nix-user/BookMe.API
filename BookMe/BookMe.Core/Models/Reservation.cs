@@ -59,5 +59,20 @@ namespace BookMe.Core.Models
 
             return new Interval(startDate, endDate);
         }
+
+        public string TextPeriod
+        {
+            get
+            {
+                var result = string.Empty;
+                result += this.EventDate.ToString("t") + " - " + this.EndDate.ToString("t");
+                if (this.RecurrenceData != null)
+                {
+                    result += ". " + this.RecurrenceData.ToString();
+                }
+
+                return result;
+            }
+        }
     }
 }
