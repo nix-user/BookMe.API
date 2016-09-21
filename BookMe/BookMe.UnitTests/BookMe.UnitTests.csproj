@@ -85,6 +85,7 @@
     <Compile Include="SharePoint\Converters\ReservationConverterTests.cs" />
     <Compile Include="SharePoint\Converters\ResourceConverterTests.cs" />
     <Compile Include="SharePoint\RecurrenceData\DailyPatternTests.cs" />
+    <Compile Include="SharePoint\RecurrenceData\ReservationTests.cs" />
     <Compile Include="WebApi\RoomControllerTest.cs" />
     <Compile Include="SharePoint\RecurrenceData\MonthlyPatternTests.cs" />
     <Compile Include="SharePoint\RecurrenceData\RelativeMonthlyPatternTests.cs" />

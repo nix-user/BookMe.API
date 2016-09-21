@@ -64,11 +64,21 @@ namespace BookMe.Core.Models
         {
             get
             {
+                const string TimeFormat = "HH:mm";
+
                 var result = string.Empty;
-                result += this.EventDate.ToString("t") + " - " + this.EndDate.ToString("t");
+                if (this.IsAllDayEvent)
+                {
+                    result += "Весь день. ";
+                }
+                else
+                {
+                    result += $"{this.EventDate.ToString(TimeFormat)} - {this.EndDate.ToString(TimeFormat)}. ";
+                }
+
                 if (this.RecurrenceData != null)
                 {
-                    result += ". " + this.RecurrenceData.ToString();
+                    result += this.RecurrenceData.ToString();
                 }
 
                 return result;
