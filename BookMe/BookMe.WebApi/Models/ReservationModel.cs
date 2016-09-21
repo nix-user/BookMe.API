@@ -20,6 +20,8 @@ namespace BookMe.WebApi.Models
 
         public Room Room { get; set; }
 
+        public string TextPeriod { get; set; }
+
         public bool Equals(ReservationModel other)
         {
             return this.Id == other.Id;
