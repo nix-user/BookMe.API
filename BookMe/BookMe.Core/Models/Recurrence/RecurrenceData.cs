@@ -10,7 +10,7 @@ namespace BookMe.Core.Models.Recurrence
 {
     public abstract class RecurrenceData
     {
-        protected static readonly IDictionary<DayOfWeek, IEnumerable<DayOfTheWeek>> DaysOTheWeekByDayOfWeek = new Dictionary<DayOfWeek, IEnumerable<DayOfTheWeek>>()
+        protected static readonly IDictionary<DayOfWeek, IEnumerable<DayOfTheWeek>> DaysOfTheWeekByDayOfWeek = new Dictionary<DayOfWeek, IEnumerable<DayOfTheWeek>>()
         {
             { DayOfWeek.Sunday, new List<DayOfTheWeek>() { DayOfTheWeek.Sunday, DayOfTheWeek.Day, DayOfTheWeek.WeekendDay } },
             { DayOfWeek.Monday, new List<DayOfTheWeek>() { DayOfTheWeek.Monday, DayOfTheWeek.Day, DayOfTheWeek.Weekday } },
@@ -72,7 +72,7 @@ namespace BookMe.Core.Models.Recurrence
         {
             foreach (var item in daysOfTheWeek)
             {
-                if (DaysOTheWeekByDayOfWeek[date.DayOfWeek].Contains(item))
+                if (DaysOfTheWeekByDayOfWeek[date.DayOfWeek].Contains(item))
                 {
                     return true;
                 }
