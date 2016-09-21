@@ -66,5 +66,64 @@ namespace BookMe.UnitTests.Controllers
             Assert.AreEqual(false, userReservationsRetrieval.IsOperationSuccessful);
             Assert.IsNull(userReservationsRetrieval.Result);
         }
+
+        [TestMethod]
+        public void GetCurrentUserReservations_Should_Return_User_Reservations_Groups_If_Request_Was_Successful()
+        {
+            //arrange
+            var userReservationsOperationResult = new OperationResult<UserReservationsDTO>()
+            {
+                IsSuccessful = true,
+                Result = new UserReservationsDTO()
+                {
+                    TodayReservations = new List<ReservationDTO>()
+                    {
+                        new ReservationDTO() {Id = 1},
+                        new ReservationDTO() {Id = 2},
+                    },
+                    AllReservations = new List<ReservationDTO>()
+                    {
+                        new ReservationDTO() {Id = 3},
+                        new ReservationDTO() {Id = 4},
+                        new ReservationDTO() {Id = 5}
+                    },
+                }
+            };
+
+            this.reservationServiceMock.Setup(m => m.GetUserReservations(It.IsAny<string>())).Returns(userReservationsOperationResult);
+
+            //act
+            var userReservations = this.reservationController.GetCurrentUserReservations();
+
+            //assert
+            this.reservationServiceMock.Verify(m => m.GetUserReservations(It.IsAny<string>()), Times.AtLeastOnce);
+            Assert.IsTrue(userReservations.IsOperationSuccessful);
+            Assert.AreEqual(userReservationsOperationResult.Result.TodayReservations.Count(), userReservations.Result.TodayReservations.Count());
+            Assert.AreEqual(userReservationsOperationResult.Result.AllReservations.Count(), userReservations.Result.AllReservations.Count());
+            foreach (var reservation in userReservations.Result.TodayReservations)
+            {
+                Assert.IsTrue(userReservationsOperationResult.Result.TodayReservations.Any(r => r.Id == reservation.Id));
+            }
+            foreach (var reservation in userReservations.Result.AllReservations)
+            {
+                Assert.IsTrue(userReservationsOperationResult.Result.AllReservations.Any(r => r.Id == reservation.Id));
+            }
+        }
+
+        [TestMethod]
+        public void GetCurrentUserReservations_Should_Return_Failed_Status_If_Operation_Failed()
+        {
+            //arrange
+            var userReservationsOperationResult = new OperationResult<UserReservationsDTO>() { IsSuccessful = false };
+
+            this.reservationServiceMock.Setup(m => m.GetUserReservations(It.IsAny<string>())).Returns(userReservationsOperationResult);
+
+            //act
+            var userReservations = this.reservationController.GetCurrentUserReservations();
+
+            //assert
+            this.reservationServiceMock.Verify(m => m.GetUserReservations(It.IsAny<string>()), Times.AtLeastOnce);
+            Assert.IsFalse(userReservations.IsOperationSuccessful);
+        }
     }
 }
