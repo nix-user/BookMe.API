@@ -65,15 +65,17 @@ namespace BookMe.Core.Models
             get
             {
                 const string TimeFormat = "HH:mm";
+                var timeZoneOffset = TimeZoneInfo.Local.GetUtcOffset(this.EventDate);
 
                 var result = string.Empty;
+
                 if (this.IsAllDayEvent)
                 {
                     result += "Весь день. ";
                 }
                 else
                 {
-                    result += $"{this.EventDate.ToString(TimeFormat)} - {this.EndDate.ToString(TimeFormat)}. ";
+                    result += $"{this.EventDate.Add(timeZoneOffset).ToString(TimeFormat)} - {this.EndDate.Add(timeZoneOffset).ToString(TimeFormat)}. ";
                 }
 
                 if (this.RecurrenceData != null)

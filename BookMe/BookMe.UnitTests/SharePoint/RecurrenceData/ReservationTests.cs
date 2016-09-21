@@ -17,7 +17,7 @@ namespace BookMe.UnitTests.SharePoint.RecurrenceData
         public void TextPeriod_NotResurrenceWithTime_ShouldReturnOnlyTimePeriodText()
         {
             // arrange
-            var expectedResult = "11:30 - 14:30. ";
+            var expectedResult = "14:30 - 17:30. ";
 
             var reservation = new Reservation()
             {
@@ -55,7 +55,7 @@ namespace BookMe.UnitTests.SharePoint.RecurrenceData
         {
             // arrange
             var expectedRecurrenceDataToString = "Каждую 2 неделю, каждый день.";
-            var expectedResult = "11:30 - 14:30. " + expectedRecurrenceDataToString;
+            var expectedResult = "14:30 - 17:30. " + expectedRecurrenceDataToString;
 
             var recurrenceDataMock = new Mock<RecurrenceDataType>();
             recurrenceDataMock
