@@ -30,7 +30,7 @@ namespace BookMe.ShareProint.Data.Parsers.Concrete
 
         public IEnumerable<ListItem> GetUserActiveReservations(string userName)
         {
-            return this.GetReservations(reservation => (string)reservation[FieldNames.AuthorKey] == userName && (DateTime)reservation[FieldNames.EndDateKey] > DateTime.Today.AddDays(-1));
+            return this.GetReservations(this.GetUserFilteringCondition(userName).AndAlso(this.GetExpiredReservationsFilteringCondition()));
         }
 
         public void AddReservation(IDictionary<string, object> reservatioFieldValues)
@@ -69,13 +69,18 @@ namespace BookMe.ShareProint.Data.Parsers.Concrete
             }
         }
 
-        public IEnumerable<ListItem> GetPossibleReservationsInInterval(Interval interval, IEnumerable<string> resourceNames)
+        public IEnumerable<ListItem> GetPossibleReservationsInInterval(Interval interval, IEnumerable<string> resourceNames, string userName)
         {
             if (resourceNames.Any())
             {
                 Expression<Func<ListItem, bool>> reservationsRetrievalCondition = this.GetRecurrentReservationCondition()
                     .OrElse(this.GetRegularReservationCondition(interval))
                     .AndAlso(this.GetRoomsFilteringCondition(resourceNames.ToList()));
+                if (userName != null)
+                {
+                    reservationsRetrievalCondition = reservationsRetrievalCondition.AndAlso(this.GetUserFilteringCondition(userName));
+                }
+
                 return this.GetReservations(reservationsRetrievalCondition);
             }
 
@@ -132,6 +137,16 @@ namespace BookMe.ShareProint.Data.Parsers.Concrete
         private Expression<Func<ListItem, bool>> GetRoomsFilteringCondition(IList<string> roomsTitles)
         {
             return reservation => roomsTitles.Contains((string)reservation[FieldNames.FacilitiesKey]);
+        }
+
+        private Expression<Func<ListItem, bool>> GetUserFilteringCondition(string userName)
+        {
+            return reservation => (string)reservation[FieldNames.AuthorKey] == userName;
+        }
+
+        private Expression<Func<ListItem, bool>> GetExpiredReservationsFilteringCondition()
+        {
+            return reservation => (DateTime)reservation[FieldNames.EndDateKey] > DateTime.Today.AddDays(-1);
         }
     }
 }

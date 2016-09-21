@@ -27,7 +27,7 @@ namespace BookMe.IntegrationTests.SharePoint
     [TestClass]
     public class ReservationServiceTests
     {
-        private ReservationService reservationService;
+        private SharePointServices.ReservationService reservationService;
         private IResourceService resourceService;
 
         [TestInitialize]
@@ -47,7 +47,7 @@ namespace BookMe.IntegrationTests.SharePoint
                 new SharePointServices.ResourceService(resourceConverter, reservationConverter,
                     resourceParser, reservationParser);
             resourceService = new BLLServices.ResourceService(resourcesRepository, sharePointResourceService);
-            this.reservationService = new ReservationService(resourceConverter, reservationConverter, resourceParser, reservationParser);
+            this.reservationService = new SharePointServices.ReservationService(resourceConverter, reservationConverter, resourceParser, reservationParser);
         }
 
         [TestMethod]
