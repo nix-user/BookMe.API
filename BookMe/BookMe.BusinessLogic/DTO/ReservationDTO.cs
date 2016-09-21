@@ -25,5 +25,7 @@ namespace BookMe.BusinessLogic.DTO
         public TimeSpan Duration { get; set; }
 
         public string OwnerName { get; set; }
+
+        public string TextPeriod { get; set; }
     }
 }

@@ -59,5 +59,32 @@ namespace BookMe.Core.Models
 
             return new Interval(startDate, endDate);
         }
+
+        public string TextPeriod
+        {
+            get
+            {
+                const string TimeFormat = "HH:mm";
+                var timeZoneOffset = TimeZoneInfo.Local.GetUtcOffset(this.EventDate);
+
+                var result = string.Empty;
+
+                if (this.IsAllDayEvent)
+                {
+                    result += "Весь день. ";
+                }
+                else
+                {
+                    result += $"{this.EventDate.Add(timeZoneOffset).ToString(TimeFormat)} - {this.EndDate.Add(timeZoneOffset).ToString(TimeFormat)}. ";
+                }
+
+                if (this.RecurrenceData != null)
+                {
+                    result += this.RecurrenceData.ToString();
+                }
+
+                return result;
+            }
+        }
     }
 }

@@ -116,5 +116,24 @@ namespace BookMe.UnitTests.SharePoint.RecurrenceData
             // assert
             Assert.IsFalse(result);
         }
+
+        [TestMethod]
+        public void ToString_ShouldReturnRightText()
+        {
+            // arrange 
+            var expectedResult = "Каждый 3 месяц 23 числа.";
+
+            var pattern = new MonthlyPattern()
+            {
+                Interval = 3,
+                DayOfMonth = 23
+            };
+
+            // act
+            var result = pattern.ToString();
+
+            // assert
+            Assert.AreEqual(expectedResult, result);
+        }
     }
 }

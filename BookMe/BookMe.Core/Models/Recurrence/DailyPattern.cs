@@ -47,5 +47,21 @@ namespace BookMe.Core.Models.Recurrence
             return this.EachDay(this.StartDate, to)
                 .Count(item => this.IsDateInDaysOfTheWeek(item, this.DaysOfTheWeek));
         }
+
+        public override string ToString()
+        {
+            var result = string.Empty;
+
+            if (this.Interval != null)
+            {
+                result += $"Каждый {this.Interval} день.";
+            }
+            else
+            {
+                result += $"Каждый {DaysOfWeekToString(this.DaysOfTheWeek)}.";
+            }
+
+            return result;
+        }
     }
 }

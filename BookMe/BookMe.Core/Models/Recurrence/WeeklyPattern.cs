@@ -52,5 +52,10 @@ namespace BookMe.Core.Models.Recurrence
         {
             return days[index].DayOfWeek == DayOfWeek.Monday && index != 0;
         }
+
+        public override string ToString()
+        {
+            return $"Каждую {this.Interval} неделю, каждый {DaysOfWeekToString(this.DaysOfTheWeek)}.";
+        }
     }
 }

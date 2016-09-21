@@ -13,6 +13,15 @@ namespace BookMe.Core.Models.Recurrence
 
         public DayOfTheWeekIndex DayOfTheWeekIndex { get; set; }
 
+        protected static readonly IDictionary<DayOfTheWeekIndex, string> DayOfTheWeekIndexToText = new Dictionary<DayOfTheWeekIndex, string>()
+        {
+            { DayOfTheWeekIndex.First, "первой" },
+            { DayOfTheWeekIndex.Second, "второй" },
+            { DayOfTheWeekIndex.Third, "третьей" },
+            { DayOfTheWeekIndex.Fourth, "четвертой" },
+            { DayOfTheWeekIndex.Last, "последней" },
+        };
+
         protected WeekRange GetNeededWeek(int firstWeekHasWeekdayIndex, int firstDayHasNotWeekdayIndex, IList<WeekRange> weeks, DateTime date)
         {
             var firstWeek = weeks[0];

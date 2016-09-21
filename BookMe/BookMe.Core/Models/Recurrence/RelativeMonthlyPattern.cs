@@ -18,5 +18,10 @@ namespace BookMe.Core.Models.Recurrence
         {
             return days[index].Day == 1 && index != 0;
         }
+
+        public override string ToString()
+        {
+            return $"Каждый {this.Interval} месяц, каждый {DaysOfWeekToString(this.DaysOfTheWeek)} {DayOfTheWeekIndexToText[this.DayOfTheWeekIndex]} недели.";
+        }
     }
 }
