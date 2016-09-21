@@ -35,13 +35,13 @@ namespace BookMe.WebApi.Controllers
             };
         }
 
-        public ResponseModel<IEnumerable<ReservationModel>> Get()
+        public ResponseModel<UserReservationsModel> Get()
         {
-            var operationResult = this.sharePointReservationService.GetUserActiveReservations(User.Identity.Name);
-            return new ResponseModel<IEnumerable<ReservationModel>>()
+            var operationResult = this.reservationService.GetUserReservations(User.Identity.Name);
+            return new ResponseModel<UserReservationsModel>()
             {
                 IsOperationSuccessful = operationResult.IsSuccessful,
-                Result = operationResult.Result?.Select(Mapper.Map<ReservationDTO, ReservationModel>)
+                Result = Mapper.Map<UserReservationsDTO, UserReservationsModel>(operationResult.Result)
             };
         }
 
@@ -52,18 +52,6 @@ namespace BookMe.WebApi.Controllers
             return new ResponseModel()
             {
                 IsOperationSuccessful = operationResult.IsSuccessful
-            };
-        }
-
-        [Route("api/reservations/currentUser")]
-        [HttpGet]
-        public ResponseModel<UserReservationsModel> GetCurrentUserReservations()
-        {
-            var operationResult = this.reservationService.GetUserReservations(User.Identity.Name);
-            return new ResponseModel<UserReservationsModel>()
-            {
-                IsOperationSuccessful = operationResult.IsSuccessful,
-                Result = Mapper.Map<UserReservationsDTO, UserReservationsModel>(operationResult.Result)
             };
         }
     }

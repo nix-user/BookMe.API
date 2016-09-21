@@ -37,38 +37,7 @@ namespace BookMe.UnitTests.Controllers
         }
 
         [TestMethod]
-        public void GetUserReservations_Should_Return_All_Reservations_If_Request_Was_Successful()
-        {
-            //arrange
-            var userActiveReservationResult = new OperationResult<IEnumerable<ReservationDTO>> { IsSuccessful = true, Result = reservationsList };
-            this.sharePointReservationServiceMock.Setup(m => m.GetUserActiveReservations(It.IsAny<string>())).Returns(userActiveReservationResult);
-
-            //act
-            var userReservations = this.reservationController.Get();
-
-            //assert
-            this.sharePointReservationServiceMock.Verify(m => m.GetUserActiveReservations(It.IsAny<string>()), Times.Once);
-            Assert.AreEqual(this.reservationsList.Count, userReservations.Result.Count());
-        }
-
-        [TestMethod]
-        public void GetUserReservations_Should_Return_Failed_Status_If_Request_Failed()
-        {
-            //arrange
-            var userActiveReservationResult = new OperationResult<IEnumerable<ReservationDTO>> { IsSuccessful = false };
-            this.sharePointReservationServiceMock.Setup(m => m.GetUserActiveReservations(It.IsAny<string>())).Returns(userActiveReservationResult);
-
-            //act
-            var userReservationsRetrieval = this.reservationController.Get();
-
-            //assert
-            this.sharePointReservationServiceMock.Verify(m => m.GetUserActiveReservations(It.IsAny<string>()), Times.Once);
-            Assert.AreEqual(false, userReservationsRetrieval.IsOperationSuccessful);
-            Assert.IsNull(userReservationsRetrieval.Result);
-        }
-
-        [TestMethod]
-        public void GetCurrentUserReservations_Should_Return_User_Reservations_Groups_If_Request_Was_Successful()
+        public void Get_Should_Return_User_Reservations_Groups_If_Request_Was_Successful()
         {
             //arrange
             var userReservationsOperationResult = new OperationResult<UserReservationsDTO>()
@@ -93,7 +62,7 @@ namespace BookMe.UnitTests.Controllers
             this.reservationServiceMock.Setup(m => m.GetUserReservations(It.IsAny<string>())).Returns(userReservationsOperationResult);
 
             //act
-            var userReservations = this.reservationController.GetCurrentUserReservations();
+            var userReservations = this.reservationController.Get();
 
             //assert
             this.reservationServiceMock.Verify(m => m.GetUserReservations(It.IsAny<string>()), Times.AtLeastOnce);
@@ -111,7 +80,7 @@ namespace BookMe.UnitTests.Controllers
         }
 
         [TestMethod]
-        public void GetCurrentUserReservations_Should_Return_Failed_Status_If_Operation_Failed()
+        public void Get_Should_Return_Failed_Status_If_Operation_Failed()
         {
             //arrange
             var userReservationsOperationResult = new OperationResult<UserReservationsDTO>() { IsSuccessful = false };
@@ -119,7 +88,7 @@ namespace BookMe.UnitTests.Controllers
             this.reservationServiceMock.Setup(m => m.GetUserReservations(It.IsAny<string>())).Returns(userReservationsOperationResult);
 
             //act
-            var userReservations = this.reservationController.GetCurrentUserReservations();
+            var userReservations = this.reservationController.Get();
 
             //assert
             this.reservationServiceMock.Verify(m => m.GetUserReservations(It.IsAny<string>()), Times.AtLeastOnce);
