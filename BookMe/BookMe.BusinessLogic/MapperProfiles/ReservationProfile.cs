@@ -15,8 +15,8 @@ namespace BookMe.BusinessLogic.MapperProfiles
         {
             this.CreateMap<Reservation, ReservationDTO>()
                 .ForMember(dest => dest.TextPeriod, opt => opt.MapFrom(x => x.ToString()))
-                .ForMember(dest => dest.TextRule, opt => opt
-                .MapFrom(x => x.RecurrenceData != null ? x.RecurrenceData.ToString() : string.Empty));
+                .ForMember(dest => dest.TextRule, opt => opt.MapFrom(x => x.RecurrenceData != null ? x.RecurrenceData.ToString() : string.Empty));
+
             this.CreateMap<ReservationDTO, Reservation>();
         }
     }
