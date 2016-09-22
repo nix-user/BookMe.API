@@ -9,7 +9,7 @@ namespace BookMe.Core.Models.Recurrence
 {
     public abstract class CommonPattern : RecurrenceData
     {
-        public override bool IsBusyInDate(DateTime date)
+        protected override bool DoesDateMatchRuleCondition(DateTime date)
         {
             var totalPeriodsCount = this.CalculatePeriodsCount(date);
             var doesMatchDateCondition = this.DoesMatchDateCondition(date);

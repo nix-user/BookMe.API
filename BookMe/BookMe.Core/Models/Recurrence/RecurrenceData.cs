@@ -59,8 +59,6 @@ namespace BookMe.Core.Models.Recurrence
 
         public int? Interval { get; set; }
 
-        public abstract bool IsBusyInDate(DateTime date);
-
         protected static string DaysOfWeekToString(IEnumerable<DayOfTheWeek> daysOfTheWeek)
         {
             const string Separator = ", ";
@@ -88,5 +86,17 @@ namespace BookMe.Core.Models.Recurrence
                 yield return day;
             }
         }
+
+        public bool IsBusyInDate(DateTime date)
+        {
+            if (this.StartDate > date)
+            {
+                return false;
+            }
+
+            return this.DoesDateMatchRuleCondition(date);
+        }
+
+        protected abstract bool DoesDateMatchRuleCondition(DateTime date);
     }
 }
