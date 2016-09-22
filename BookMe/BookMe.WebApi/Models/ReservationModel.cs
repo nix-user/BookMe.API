@@ -24,6 +24,8 @@ namespace BookMe.WebApi.Models
 
         public string TextPeriod { get; set; }
 
+        public string TextRule { get; set; }
+
         public bool Equals(ReservationModel other)
         {
             return this.Id == other.Id;

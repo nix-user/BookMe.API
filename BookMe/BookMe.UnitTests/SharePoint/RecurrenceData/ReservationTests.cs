@@ -14,10 +14,10 @@ namespace BookMe.UnitTests.SharePoint.RecurrenceData
     public class ReservationTests
     {
         [TestMethod]
-        public void TextPeriod_NotResurrenceWithTime_ShouldReturnOnlyTimePeriodText()
+        public void ToString_ReservationWithTime_ShouldReturnOnlyTimePeriodText()
         {
             // arrange
-            var expectedResult = "14:30 - 17:30. ";
+            var expectedResult = "14:30 - 17:30";
 
             var reservation = new Reservation()
             {
@@ -26,17 +26,17 @@ namespace BookMe.UnitTests.SharePoint.RecurrenceData
             };
 
             // act
-            var result = reservation.TextPeriod;
+            var result = reservation.ToString();
 
             // assert
             Assert.AreEqual(expectedResult, result);
         }
 
         [TestMethod]
-        public void TextPeriod_NotResurrenceAllDay_ShouldReturnOnlyAllDayText()
+        public void ToString_AllDayReservation_ShouldReturnOnlyAllDayText()
         {
             // arrange
-            var expectedResult = "Весь день. ";
+            var expectedResult = "Весь день";
 
             var reservation = new Reservation()
             {
@@ -44,60 +44,7 @@ namespace BookMe.UnitTests.SharePoint.RecurrenceData
             };
 
             // act
-            var result = reservation.TextPeriod;
-
-            // assert
-            Assert.AreEqual(expectedResult, result);
-        }
-
-        [TestMethod]
-        public void TextPeriod_ResurrenceWithTime_ShouldReturnTimePeriodAndRecurrenceDataText()
-        {
-            // arrange
-            var expectedRecurrenceDataToString = "Каждую 2 неделю, каждый день.";
-            var expectedResult = "14:30 - 17:30. " + expectedRecurrenceDataToString;
-
-            var recurrenceDataMock = new Mock<RecurrenceDataType>();
-            recurrenceDataMock
-                .Setup(x => x.ToString())
-                .Returns(expectedRecurrenceDataToString);
-
-            var reservation = new Reservation()
-            {
-                EventDate = new DateTime(2012, 4, 5, 11, 30, 0),
-                EndDate = new DateTime(2012, 4, 5, 14, 30, 0),
-                RecurrenceData = recurrenceDataMock.Object,
-                IsRecurrence = true
-            };
-
-            // act
-            var result = reservation.TextPeriod;
-
-            // assert
-            Assert.AreEqual(expectedResult, result);
-        }
-
-        [TestMethod]
-        public void TextPeriod_ResurrenceAllDay_ShouldReturnAllDayAndRecurrenceDataText()
-        {
-            // arrange
-            var expectedRecurrenceDataToString = "Каждую 2 неделю, каждый день.";
-            var expectedResult = "Весь день. " + expectedRecurrenceDataToString;
-
-            var recurrenceDataMock = new Mock<RecurrenceDataType>();
-            recurrenceDataMock
-                .Setup(x => x.ToString())
-                .Returns(expectedRecurrenceDataToString);
-
-            var reservation = new Reservation()
-            {
-                IsAllDayEvent = true,
-                RecurrenceData = recurrenceDataMock.Object,
-                IsRecurrence = true
-            };
-
-            // act
-            var result = reservation.TextPeriod;
+            var result = reservation.ToString();
 
             // assert
             Assert.AreEqual(expectedResult, result);

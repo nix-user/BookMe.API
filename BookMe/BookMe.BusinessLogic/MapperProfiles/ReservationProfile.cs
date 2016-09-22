@@ -13,7 +13,10 @@ namespace BookMe.BusinessLogic.MapperProfiles
     {
         public ReservationProfile()
         {
-            this.CreateMap<Reservation, ReservationDTO>();
+            this.CreateMap<Reservation, ReservationDTO>()
+                .ForMember(dest => dest.TextPeriod, opt => opt.MapFrom(x => x.ToString()))
+                .ForMember(dest => dest.TextRule, opt => opt.MapFrom(x => x.RecurrenceData != null ? x.RecurrenceData.ToString() : string.Empty));
+
             this.CreateMap<ReservationDTO, Reservation>();
         }
     }
