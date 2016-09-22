@@ -11,7 +11,7 @@ namespace BookMe.Core.Models.Recurrence
     {
         public IEnumerable<DayOfTheWeek> DaysOfTheWeek { get; set; }
 
-        public override bool IsBusyInDate(DateTime date)
+        protected override bool DoesDateMatchRuleCondition(DateTime date)
         {
             if (this.Interval == null)
             {

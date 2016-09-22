@@ -22,7 +22,7 @@ namespace BookMe.UnitTests.SharePoint.RecurrenceData
             {
                 Interval = 2,
                 NumberOfOccurrences = 10,
-                StartDate = new DateTime(2016, 9, 8),
+                StartDate = new DateTime(2016, 3, 8),
                 DayOfMonth = 23,
                 Month = Month.April
             };
@@ -88,7 +88,7 @@ namespace BookMe.UnitTests.SharePoint.RecurrenceData
             {
                 Interval = 2,
                 EndDate = new DateTime(2016, 9, 24),
-                StartDate = new DateTime(2016, 9, 8),
+                StartDate = new DateTime(2016, 3, 8),
                 DayOfMonth = 23,
                 Month = Month.April
             };
