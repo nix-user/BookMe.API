@@ -89,7 +89,7 @@ namespace BookMe.Core.Models.Recurrence
 
         public bool IsBusyInDate(DateTime date)
         {
-            if (this.StartDate > date)
+            if (this.StartDate.Date > date.Date)
             {
                 return false;
             }

@@ -10,13 +10,31 @@ namespace BookMe.Core.Models
 {
     public class Reservation : BaseEntity
     {
+        private DateTime eventDate;
+
+        private DateTime endDate;
+
         public string Title { get; set; }
 
         public string Description { get; set; }
 
-        public DateTime EventDate { get; set; }
+        public DateTime EventDate
+        {
+            get { return this.eventDate; }
+            set
+            {
+                this.eventDate = value.Add(TimeZoneInfo.Local.GetUtcOffset(value) - TimeZoneInfo.Local.GetUtcOffset(DateTime.Now));
+            }
+        }
 
-        public DateTime EndDate { get; set; }
+        public DateTime EndDate
+        {
+            get { return this.endDate; }
+            set
+            {
+                this.endDate = value.Add(TimeZoneInfo.Local.GetUtcOffset(value) - TimeZoneInfo.Local.GetUtcOffset(DateTime.Now));
+            }
+        }
 
         public DateTime? RecurrenceDate { get; set; }
 
@@ -62,7 +80,7 @@ namespace BookMe.Core.Models
 
         public override string ToString()
         {
-            const string TimeFormat = "HH:mm";
+            const string TimeFormat = "M/dd/yy HH:mm";
             var timeZoneOffset = TimeZoneInfo.Local.GetUtcOffset(this.EventDate);
 
             var result = string.Empty;
