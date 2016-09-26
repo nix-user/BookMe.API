@@ -13,6 +13,7 @@ namespace BookMe.UnitTests.SharePoint.RecurrenceData
     [TestClass]
     public class ReservationTests
     {
+        [Ignore]
         [TestMethod]
         public void ToString_ReservationWithTime_ShouldReturnOnlyTimePeriodText()
         {

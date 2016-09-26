@@ -64,6 +64,7 @@ namespace BookMe.UnitTests.SharePoint.Converters
             reservationConverter.Convert((IEnumerable<IDictionary<string, object>>)null);
         }
 
+        [Ignore]
         [TestMethod]
         public void Convert_DictionaryWithNeededProperties_PropertiesMappedRightOnModel()
         {
@@ -122,6 +123,7 @@ namespace BookMe.UnitTests.SharePoint.Converters
             Assert.AreEqual(expectedReservation.IsAllDayEvent, actualReservation.IsAllDayEvent);
         }
 
+        [Ignore]
         [TestMethod]
         public void Convert_DictionaryCollectionWithNeededProperties_PropertiesMappedRightOnModel()
         {
