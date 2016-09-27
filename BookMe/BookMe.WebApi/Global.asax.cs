@@ -24,7 +24,6 @@ namespace BookMe.WebApi
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             IoCConfig.RegisterControllers(GlobalConfiguration.Configuration);
             AutoMapperConfiguration.Configure();
-            GlobalConfiguration.Configuration.MessageHandlers.Add(new XHttpMethodDelegatingHandler());
         }
     }
 }
