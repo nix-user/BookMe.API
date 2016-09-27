@@ -35,6 +35,7 @@ namespace BookMe.WebApi.Controllers
             };
         }
 
+        [HttpGet]
         public ResponseModel<UserReservationsModel> Get()
         {
             var operationResult = this.reservationService.GetUserReservations(User.Identity.Name);
@@ -45,6 +46,7 @@ namespace BookMe.WebApi.Controllers
             };
         }
 
+        [HttpDelete]
         public ResponseModel Delete(int id)
         {
             var operationResult = this.sharePointReservationService.RemoveReservation(id);
